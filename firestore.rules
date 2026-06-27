@@ -1,0 +1,67 @@
+rules_version = '2';
+
+// Reglas de seguridad de Firestore para Patitas.
+//
+// Idea general: cada dueño solo puede ver y modificar SUS PROPIAS mascotas
+// y todo lo que cuelga de ellas (vacunas, turnos, consultas). Sin estas
+// reglas, cualquiera con la app instalada podría leer o borrar los datos
+// de cualquier otra mascota con solo conocer su id — estas reglas son las
+// que de verdad protegen los datos, no el código de la app.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function estaLogueado() {
+      return request.auth != null;
+    }
+
+    // Compara el ownerId del documento de mascota contra el usuario logueado.
+    function esDueñoDeMascota(mascotaId) {
+      return get(/databases/$(database)/documents/mascotas/$(mascotaId)).data.ownerId == request.auth.uid;
+    }
+
+    // --- usuarios: cada uno solo ve y edita su propio perfil ---
+    match /usuarios/{usuarioId} {
+      allow read, write: if estaLogueado() && request.auth.uid == usuarioId;
+    }
+
+    // --- mascotas: solo el dueño (ownerId) puede leer o escribir ---
+    match /mascotas/{mascotaId} {
+      allow read, update, delete: if estaLogueado() && resource.data.ownerId == request.auth.uid;
+      allow create: if estaLogueado() && request.resource.data.ownerId == request.auth.uid;
+    }
+
+    // --- vacunas: solo quien es dueño de la mascota asociada ---
+    match /vacunas/{vacunaId} {
+      allow read, update, delete: if estaLogueado() && esDueñoDeMascota(resource.data.mascotaId);
+      allow create: if estaLogueado() && esDueñoDeMascota(request.resource.data.mascotaId);
+    }
+
+    // --- turnos: solo quien es dueño de la mascota asociada ---
+    match /turnos/{turnoId} {
+      allow read, update, delete: if estaLogueado() && esDueñoDeMascota(resource.data.mascotaId);
+      allow create: if estaLogueado() && esDueñoDeMascota(request.resource.data.mascotaId);
+    }
+
+    // --- consultas: solo quien es dueño de la mascota asociada ---
+    // Más adelante, cuando existan cuentas de veterinaria, van a necesitar
+    // su propio permiso de escritura (son ellas las que cargan la consulta).
+    match /consultas/{consultaId} {
+      allow read, update, delete: if estaLogueado() && esDueñoDeMascota(resource.data.mascotaId);
+      allow create: if estaLogueado() && esDueñoDeMascota(request.resource.data.mascotaId);
+    }
+
+    // --- veterinarias: directorio público de lectura, sin escritura ---
+    // Todavía no hay pantallas para que una veterinaria gestione su propio
+    // perfil, así que por ahora la escritura queda bloqueada por completo.
+    match /veterinarias/{veterinariaId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Por defecto, todo lo que no esté explícitamente permitido arriba
+    // queda bloqueado.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

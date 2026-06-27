@@ -1,4 +1,4 @@
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, updateDoc, arrayUnion, arrayRemove, serverTimestamp } from 'firebase/firestore';
 import { db } from './firebase';
 import { makeCollection } from './firestoreCollection';
 import { COLLECTIONS } from '../constants/collections';
@@ -19,5 +19,13 @@ export const usuariosService = {
       ...datos,
       creadoEn: serverTimestamp(),
     });
+  },
+
+  async agregarMascota(uid: string, mascotaId: string): Promise<void> {
+    await updateDoc(doc(db, COLLECTIONS.usuarios, uid), { mascotas: arrayUnion(mascotaId) });
+  },
+
+  async quitarMascota(uid: string, mascotaId: string): Promise<void> {
+    await updateDoc(doc(db, COLLECTIONS.usuarios, uid), { mascotas: arrayRemove(mascotaId) });
   },
 };
