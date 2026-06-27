@@ -62,6 +62,11 @@ export function LoginScreen({ navigation }: Props) {
         variant="ghost"
         onPress={() => navigation.navigate('Register')}
       />
+      <Button
+        title="Soy una veterinaria"
+        variant="ghost"
+        onPress={() => navigation.navigate('RegisterVeterinaria')}
+      />
     </KeyboardAvoidingView>
   );
 }

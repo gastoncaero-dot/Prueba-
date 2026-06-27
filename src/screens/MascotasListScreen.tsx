@@ -72,6 +72,12 @@ export function MascotasListScreen({ navigation }: Props) {
 
       <View style={styles.footer}>
         <Button title="🐾 Agregar mascota" onPress={() => navigation.navigate('NuevaMascota')} />
+        <Button
+          title="🏥 Ver veterinarias"
+          variant="ghost"
+          onPress={() => navigation.navigate('Veterinarias')}
+          style={styles.verVeterinarias}
+        />
       </View>
     </View>
   );
@@ -97,5 +103,6 @@ const styles = StyleSheet.create({
   cardEmoji: { fontSize: 36 },
   cardName: { fontSize: 17, fontWeight: '800', color: COLORS.carbon },
   cardBreed: { fontSize: 13, color: COLORS.humo, marginTop: 2 },
-  footer: { padding: 20, paddingTop: 0 },
+  footer: { padding: 20, paddingTop: 0, gap: 8 },
+  verVeterinarias: { marginTop: 0 },
 });

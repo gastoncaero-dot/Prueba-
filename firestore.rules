@@ -20,8 +20,16 @@ service cloud.firestore {
     }
 
     // --- usuarios: cada uno solo ve y edita su propio perfil ---
+    // Además de ser dueño del documento, nadie puede cambiarse a sí mismo el
+    // campo "tipo" después de creado: evita que un dueño se autoasigne
+    // tipo "veterinaria" (y con eso, acceso a pantallas de negocio) sin
+    // pasar por el flujo real de registro de veterinaria.
     match /usuarios/{usuarioId} {
-      allow read, write: if estaLogueado() && request.auth.uid == usuarioId;
+      allow read: if estaLogueado() && request.auth.uid == usuarioId;
+      allow create: if estaLogueado() && request.auth.uid == usuarioId;
+      allow update: if estaLogueado() && request.auth.uid == usuarioId
+        && request.resource.data.tipo == resource.data.tipo;
+      allow delete: if estaLogueado() && request.auth.uid == usuarioId;
     }
 
     // --- mascotas: solo el dueño (ownerId) puede leer o escribir ---
@@ -50,12 +58,23 @@ service cloud.firestore {
       allow create: if estaLogueado() && esDueñoDeMascota(request.resource.data.mascotaId);
     }
 
-    // --- veterinarias: directorio público de lectura, sin escritura ---
-    // Todavía no hay pantallas para que una veterinaria gestione su propio
-    // perfil, así que por ahora la escritura queda bloqueada por completo.
+    // --- veterinarias: directorio público de lectura ---
+    // La veterinaria (ownerId) puede crear y editar su propio perfil, pero
+    // NUNCA puede tocar estadoSuscripcion ni mercadoPagoSubscriptionId desde
+    // la app: esos campos los actualiza únicamente el webhook de
+    // MercadoPago (Cloud Function con permisos de administrador, que no
+    // pasa por estas reglas). Si una veterinaria pudiera escribir esos
+    // campos, se podría auto-otorgar una suscripción "activa" sin pagar.
     match /veterinarias/{veterinariaId} {
       allow read: if true;
-      allow write: if false;
+      allow create: if estaLogueado() && request.resource.data.ownerId == request.auth.uid
+        && request.resource.data.estadoSuscripcion == 'pendiente'
+        && request.resource.data.mercadoPagoSubscriptionId == null;
+      allow update: if estaLogueado() && resource.data.ownerId == request.auth.uid
+        && request.resource.data.ownerId == resource.data.ownerId
+        && request.resource.data.estadoSuscripcion == resource.data.estadoSuscripcion
+        && request.resource.data.mercadoPagoSubscriptionId == resource.data.mercadoPagoSubscriptionId;
+      allow delete: if false;
     }
 
     // Por defecto, todo lo que no esté explícitamente permitido arriba

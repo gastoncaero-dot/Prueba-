@@ -4,6 +4,7 @@ import { NuevaMascotaScreen } from '../screens/NuevaMascotaScreen';
 import { MascotaDetailScreen } from '../screens/MascotaDetailScreen';
 import { NuevaVacunaScreen } from '../screens/NuevaVacunaScreen';
 import { NuevoTurnoScreen } from '../screens/NuevoTurnoScreen';
+import { VeterinariasListScreen } from '../screens/VeterinariasListScreen';
 import { COLORS } from '../constants/theme';
 import type { MascotasStackParamList } from './types';
 
@@ -23,6 +24,7 @@ export function MascotasNavigator() {
       <Stack.Screen name="MascotaDetail" component={MascotaDetailScreen} options={{ title: '' }} />
       <Stack.Screen name="NuevaVacuna" component={NuevaVacunaScreen} options={{ title: 'Nueva vacuna' }} />
       <Stack.Screen name="NuevoTurno" component={NuevoTurnoScreen} options={{ title: 'Nuevo turno' }} />
+      <Stack.Screen name="Veterinarias" component={VeterinariasListScreen} options={{ title: 'Veterinarias' }} />
     </Stack.Navigator>
   );
 }

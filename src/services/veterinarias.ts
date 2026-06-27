@@ -11,4 +11,9 @@ export const veterinariasService = {
   listarPorZona(zona: string) {
     return veterinariasCollection.listar(where('zona', '==', zona));
   },
+
+  async porOwner(ownerId: string) {
+    const resultados = await veterinariasCollection.listar(where('ownerId', '==', ownerId));
+    return resultados[0] ?? null;
+  },
 };

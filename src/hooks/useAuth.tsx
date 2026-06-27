@@ -8,6 +8,7 @@ import {
 } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import { usuariosService } from '../services/usuarios';
+import { veterinariasService } from '../services/veterinarias';
 import type { Usuario } from '../types';
 
 type DatosRegistro = {
@@ -17,11 +18,21 @@ type DatosRegistro = {
   zona: string;
 };
 
+type DatosRegistroVeterinaria = {
+  nombreVeterinaria: string;
+  email: string;
+  password: string;
+  zona: string;
+  direccion: string;
+  telefono: string;
+};
+
 type AuthContextValue = {
   user: User | null;
   usuario: Usuario | null;
   cargando: boolean;
   registrarse: (datos: DatosRegistro) => Promise<void>;
+  registrarVeterinaria: (datos: DatosRegistroVeterinaria) => Promise<void>;
   iniciarSesion: (email: string, password: string) => Promise<void>;
   cerrarSesion: () => Promise<void>;
 };
@@ -57,7 +68,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       nombre,
       email,
       zona,
+      tipo: 'dueño',
       mascotas: [],
+      veterinariaId: null,
+    });
+    setUsuario(await usuariosService.obtener(credencial.user.uid));
+  }
+
+  // A diferencia de registrarse(), acá además del usuario creamos su
+  // documento en "veterinarias" (con estadoSuscripcion: 'pendiente') y lo
+  // enlazamos con veterinariaId. Es lo que separa una cuenta que va a pagar
+  // suscripción de una que usa la app gratis.
+  async function registrarVeterinaria({
+    nombreVeterinaria,
+    email,
+    password,
+    zona,
+    direccion,
+    telefono,
+  }: DatosRegistroVeterinaria) {
+    const credencial = await createUserWithEmailAndPassword(auth, email, password);
+    const veterinariaId = await veterinariasService.crear({
+      ownerId: credencial.user.uid,
+      nombre: nombreVeterinaria,
+      direccion,
+      zona,
+      telefono,
+      lat: 0,
+      lng: 0,
+      premium: false,
+      fotos: [],
+      estadoSuscripcion: 'pendiente',
+      mercadoPagoSubscriptionId: null,
+    });
+    await usuariosService.crearConId(credencial.user.uid, {
+      nombre: nombreVeterinaria,
+      email,
+      zona,
+      tipo: 'veterinaria',
+      mascotas: [],
+      veterinariaId,
     });
     setUsuario(await usuariosService.obtener(credencial.user.uid));
   }
@@ -71,7 +121,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, usuario, cargando, registrarse, iniciarSesion, cerrarSesion }}>
+    <AuthContext.Provider
+      value={{ user, usuario, cargando, registrarse, registrarVeterinaria, iniciarSesion, cerrarSesion }}
+    >
       {children}
     </AuthContext.Provider>
   );
