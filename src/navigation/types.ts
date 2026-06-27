@@ -21,8 +21,15 @@ export type AppTabParamList = {
   PerfilTab: undefined;
 };
 
-// Pantallas para una cuenta de veterinaria logueada.
-export type VeterinariaStackParamList = {
-  VeterinariaDashboard: undefined;
-  VeterinariaPerfil: undefined;
+// Pestañas principales para una cuenta de veterinaria logueada.
+export type VeterinariaTabParamList = {
+  VeterinariaTurnosTab: undefined;
+  VeterinariaSuscripcionTab: undefined;
+  VeterinariaPerfilTab: undefined;
+};
+
+// Pantallas dentro de la pestaña "Turnos" de una veterinaria.
+export type VeterinariaTurnosStackParamList = {
+  VeterinariaTurnos: undefined;
+  NuevaConsulta: { turnoId: string; mascotaId: string; veterinariaId: string };
 };

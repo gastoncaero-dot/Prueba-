@@ -19,6 +19,11 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/mascotas/$(mascotaId)).data.ownerId == request.auth.uid;
     }
 
+    // Compara el ownerId del documento de veterinaria contra el usuario logueado.
+    function esPropiaVeterinaria(veterinariaId) {
+      return get(/databases/$(database)/documents/veterinarias/$(veterinariaId)).data.ownerId == request.auth.uid;
+    }
+
     // --- usuarios: cada uno solo ve y edita su propio perfil ---
     // Además de ser dueño del documento, nadie puede cambiarse a sí mismo el
     // campo "tipo" después de creado: evita que un dueño se autoasigne
@@ -44,18 +49,30 @@ service cloud.firestore {
       allow create: if estaLogueado() && esDueñoDeMascota(request.resource.data.mascotaId);
     }
 
-    // --- turnos: solo quien es dueño de la mascota asociada ---
+    // --- turnos: el dueño de la mascota tiene control total; la
+    // veterinaria asociada puede leer sus turnos y cambiarles el estado
+    // (confirmar/cancelar/completar), pero no puede tocar a qué mascota,
+    // veterinaria o fecha corresponden.
     match /turnos/{turnoId} {
-      allow read, update, delete: if estaLogueado() && esDueñoDeMascota(resource.data.mascotaId);
+      allow read: if estaLogueado()
+        && (esDueñoDeMascota(resource.data.mascotaId) || esPropiaVeterinaria(resource.data.veterinariaId));
       allow create: if estaLogueado() && esDueñoDeMascota(request.resource.data.mascotaId);
+      allow update: if estaLogueado()
+        && (esDueñoDeMascota(resource.data.mascotaId)
+          || (esPropiaVeterinaria(resource.data.veterinariaId)
+            && request.resource.data.mascotaId == resource.data.mascotaId
+            && request.resource.data.veterinariaId == resource.data.veterinariaId
+            && request.resource.data.fecha == resource.data.fecha));
+      allow delete: if estaLogueado() && esDueñoDeMascota(resource.data.mascotaId);
     }
 
-    // --- consultas: solo quien es dueño de la mascota asociada ---
-    // Más adelante, cuando existan cuentas de veterinaria, van a necesitar
-    // su propio permiso de escritura (son ellas las que cargan la consulta).
+    // --- consultas: el dueño de la mascota solo puede leer; quien las
+    // carga es la veterinaria que atendió el turno.
     match /consultas/{consultaId} {
-      allow read, update, delete: if estaLogueado() && esDueñoDeMascota(resource.data.mascotaId);
-      allow create: if estaLogueado() && esDueñoDeMascota(request.resource.data.mascotaId);
+      allow read: if estaLogueado()
+        && (esDueñoDeMascota(resource.data.mascotaId) || esPropiaVeterinaria(resource.data.veterinariaId));
+      allow create: if estaLogueado() && esPropiaVeterinaria(request.resource.data.veterinariaId);
+      allow update, delete: if estaLogueado() && esPropiaVeterinaria(resource.data.veterinariaId);
     }
 
     // --- veterinarias: directorio público de lectura ---

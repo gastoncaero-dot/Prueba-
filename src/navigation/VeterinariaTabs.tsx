@@ -1,11 +1,12 @@
 import { Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { VeterinariaTurnosNavigator } from './VeterinariaTurnosNavigator';
 import { VeterinariaDashboardScreen } from '../screens/VeterinariaDashboardScreen';
 import { VeterinariaPerfilScreen } from '../screens/VeterinariaPerfilScreen';
 import { COLORS } from '../constants/theme';
-import type { VeterinariaStackParamList } from './types';
+import type { VeterinariaTabParamList } from './types';
 
-const Tab = createBottomTabNavigator<VeterinariaStackParamList>();
+const Tab = createBottomTabNavigator<VeterinariaTabParamList>();
 
 export function VeterinariaTabs() {
   return (
@@ -17,7 +18,15 @@ export function VeterinariaTabs() {
       }}
     >
       <Tab.Screen
-        name="VeterinariaDashboard"
+        name="VeterinariaTurnosTab"
+        component={VeterinariaTurnosNavigator}
+        options={{
+          title: 'Turnos',
+          tabBarIcon: ({ color }) => <Text style={{ fontSize: 20, color }}>📅</Text>,
+        }}
+      />
+      <Tab.Screen
+        name="VeterinariaSuscripcionTab"
         component={VeterinariaDashboardScreen}
         options={{
           title: 'Suscripción',
@@ -25,7 +34,7 @@ export function VeterinariaTabs() {
         }}
       />
       <Tab.Screen
-        name="VeterinariaPerfil"
+        name="VeterinariaPerfilTab"
         component={VeterinariaPerfilScreen}
         options={{
           title: 'Mi veterinaria',
