@@ -35,7 +35,10 @@ export const auth: Auth =
         persistence: getReactNativePersistence(AsyncStorage),
       });
 
-export const db = getFirestore(app);
+// La base de datos de Firestore se creó con el id "patitas" (no el
+// "(default)" que el SDK busca por defecto), así que hay que indicárselo
+// explícitamente o Firestore tira 'Database (default) not found'.
+export const db = getFirestore(app, 'patitas');
 export const storage = getStorage(app);
 // Las Cloud Functions corren en "southamerica-east1" (San Pablo): es la
 // región más cercana a Argentina entre las disponibles en el plan gratis/Blaze.
