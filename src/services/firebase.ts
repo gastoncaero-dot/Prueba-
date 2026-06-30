@@ -1,5 +1,6 @@
+import { Platform } from 'react-native';
 import { getApps, initializeApp } from 'firebase/app';
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { initializeAuth, getReactNativePersistence, getAuth, type Auth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { getFunctions } from 'firebase/functions';
@@ -22,11 +23,17 @@ const firebaseConfig = {
 // (pasa seguido con Fast Refresh durante el desarrollo).
 const app = getApps().length ? getApps()[0]! : initializeApp(firebaseConfig);
 
-// En React Native (a diferencia de la web) hay que decirle a Firebase Auth
-// dónde guardar la sesión para que el usuario siga logueado al cerrar la app.
-export const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(AsyncStorage),
-});
+// La persistencia de sesión se configura distinto según la plataforma:
+// - En web, getReactNativePersistence no existe (es solo de React Native) y
+//   getAuth ya usa la persistencia del navegador por defecto.
+// - En celular (iOS/Android) hay que pasarle AsyncStorage para que el
+//   usuario siga logueado al cerrar la app.
+export const auth: Auth =
+  Platform.OS === 'web'
+    ? getAuth(app)
+    : initializeAuth(app, {
+        persistence: getReactNativePersistence(AsyncStorage),
+      });
 
 export const db = getFirestore(app);
 export const storage = getStorage(app);
