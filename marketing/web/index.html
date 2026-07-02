@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patitas — La salud de tu mascota, en tu bolsillo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --tierra: #FF6B3D;
+    --tierra-oscuro: #F2541E;
+    --bosque: #2EBD85;
+    --bosque-oscuro: #1FA372;
+    --amarillo: #FFC94D;
+    --carbon: #232121;
+    --humo: #7d7676;
+    --blanco: #FFFFFF;
+    --fondo: #FFFBF5;
+    --borde: rgba(35, 33, 33, 0.09);
+    --error: #E0453D;
+    --display: 'Baloo 2', 'Segoe UI', -apple-system, sans-serif;
+    --body: 'Nunito', 'Segoe UI', -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { transition: none !important; opacity: 1 !important; transform: none !important; }
+  }
+  body {
+    background: var(--fondo);
+    color: var(--carbon);
+    font-family: var(--body);
+    line-height: 1.6;
+    font-size: 16px;
+  }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+  a:focus-visible { outline: 2.5px solid var(--tierra); outline-offset: 3px; border-radius: 4px; }
+
+  /* ---------- nav ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255, 251, 245, 0.94);
+    backdrop-filter: blur(8px);
+    border-bottom: 1.5px solid var(--borde);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 13px 24px; max-width: 1060px; margin: 0 auto; }
+  .logo { font-family: var(--display); font-size: 22px; font-weight: 800; letter-spacing: -0.01em; }
+  .logo span { color: var(--tierra); }
+  .nav-links { display: flex; gap: 22px; font-size: 14px; font-weight: 800; }
+  .nav-links a { color: var(--humo); text-decoration: none; }
+  .nav-links a:hover { color: var(--tierra); }
+
+  /* ---------- hero ---------- */
+  .hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 44px; align-items: center; padding: 72px 0 80px; }
+  .eyebrow {
+    display: inline-block; font-size: 12.5px; font-weight: 900; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--bosque-oscuro);
+    background: rgba(46, 189, 133, 0.13); padding: 7px 14px; border-radius: 100px; margin-bottom: 18px;
+  }
+  h1 {
+    font-family: var(--display);
+    font-size: clamp(36px, 5.2vw, 56px); font-weight: 800; line-height: 1.06;
+    letter-spacing: -0.02em; text-wrap: balance; margin-bottom: 16px;
+  }
+  h1 em { font-style: normal; color: var(--tierra); }
+  .hero > div > p { font-size: 18px; color: var(--humo); max-width: 44ch; margin-bottom: 28px; font-weight: 600; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    font-size: 14.5px; font-weight: 800; padding: 13px 22px; border-radius: 100px;
+    text-decoration: none; display: inline-block;
+  }
+  .chip.solid { background: var(--tierra); color: var(--blanco); box-shadow: 0 8px 20px -8px rgba(255, 107, 61, 0.55); }
+  .chip.line { border: 2px solid var(--borde); background: var(--blanco); color: var(--carbon); }
+
+  /* ---------- phone mockup ---------- */
+  .phone {
+    width: 296px; background: var(--fondo);
+    border-radius: 34px; border: 9px solid #171414;
+    overflow: hidden; display: flex; flex-direction: column;
+    box-shadow: 0 28px 56px -22px rgba(35, 33, 33, 0.4);
+    flex-shrink: 0;
+  }
+  .phone .screen { padding: 24px 15px 14px; display: flex; flex-direction: column; gap: 9px; }
+  .phone .titulo { font-family: var(--display); font-size: 17px; font-weight: 800; margin-bottom: 2px; }
+  .tabs { display: flex; border-top: 1.5px solid var(--borde); background: var(--blanco); }
+  .tab { flex: 1; text-align: center; padding: 8px 0 10px; font-size: 9px; font-weight: 800; color: var(--humo); }
+  .tab .ic { font-size: 16px; display: block; margin-bottom: 1px; }
+  .tab.on { color: var(--tierra); }
+
+  .racha {
+    display: flex; align-items: center; gap: 9px;
+    background: var(--blanco); border: 1.5px solid var(--amarillo);
+    border-radius: 14px; padding: 9px 13px;
+  }
+  .racha .f { font-size: 18px; }
+  .racha .t { font-size: 11.5px; font-weight: 800; }
+
+  .pcard {
+    display: flex; align-items: center; gap: 11px;
+    background: var(--blanco); border: 1.5px solid var(--borde);
+    border-radius: 16px; padding: 12px 13px;
+  }
+  .pcard .em { font-size: 26px; }
+  .pcard .in { flex: 1; min-width: 0; }
+  .pcard .nm { font-size: 13.5px; font-weight: 800; }
+  .pcard .rz { font-size: 10.5px; color: var(--humo); margin-top: 1px; font-weight: 600; }
+
+  .anillo {
+    width: 40px; height: 40px; border-radius: 50%; border: 3.5px solid;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12.5px; font-weight: 900; background: var(--blanco); flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .a-verde { border-color: var(--bosque-oscuro); color: var(--bosque-oscuro); }
+  .a-medio { border-color: var(--amarillo); color: #a87714; }
+  .a-rojo  { border-color: var(--error); color: var(--error); }
+  .anillo.xl { width: 54px; height: 54px; font-size: 16px; }
+
+  .mision {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--blanco); border: 1.5px solid var(--borde);
+    border-radius: 13px; padding: 10px 12px;
+  }
+  .mision.ok { opacity: 0.55; }
+  .mision .me { font-size: 16px; }
+  .mision .mi { flex: 1; }
+  .mision .mt { font-size: 11px; font-weight: 800; }
+  .mision .md { font-size: 9.5px; color: var(--humo); margin-top: 1px; font-weight: 600; }
+  .mision .mp { font-size: 12px; font-weight: 900; color: var(--tierra); }
+
+  .estado { font-size: 10px; font-weight: 800; color: var(--tierra); text-transform: capitalize; margin-top: 2px; }
+  .btnrow { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .btn-s { font-size: 10px; font-weight: 800; padding: 6px 12px; border-radius: 100px; background: var(--tierra); color: var(--blanco); }
+  .btn-s.g { background: transparent; color: var(--carbon); border: 1.5px solid var(--borde); }
+
+  /* ---------- sections ---------- */
+  section { padding: 76px 0; }
+  .sec-head { max-width: 60ch; margin-bottom: 44px; }
+  .sec-head.centrado { margin-left: auto; margin-right: auto; text-align: center; }
+  h2 {
+    font-family: var(--display);
+    font-size: clamp(28px, 3.6vw, 40px); font-weight: 800; letter-spacing: -0.015em;
+    line-height: 1.1; text-wrap: balance; margin-bottom: 12px;
+  }
+  .sec-head p { color: var(--humo); font-size: 17px; font-weight: 600; }
+
+  /* pasos */
+  .pasos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: paso; }
+  .paso {
+    background: var(--blanco); border: 1.5px solid var(--borde);
+    border-radius: 22px; padding: 26px 24px; position: relative; counter-increment: paso;
+  }
+  .paso::before {
+    content: counter(paso);
+    font-family: var(--display); font-weight: 800; font-size: 15px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--tierra); color: var(--blanco);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 14px;
+  }
+  .paso h3 { font-family: var(--display); font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .paso p { font-size: 14.5px; color: var(--humo); font-weight: 600; }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 52px; align-items: center; }
+  .split .txt h2 { margin-bottom: 14px; }
+  .split .txt > p { color: var(--humo); font-size: 16px; max-width: 46ch; margin-bottom: 22px; font-weight: 600; }
+  .bullets { display: flex; flex-direction: column; gap: 15px; }
+  .bullet { display: flex; gap: 14px; align-items: flex-start; }
+  .bullet .bi {
+    width: 40px; height: 40px; border-radius: 13px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 19px;
+    background: var(--blanco); border: 1.5px solid var(--borde);
+  }
+  .bullet .bt { font-size: 15px; font-weight: 800; }
+  .bullet .bd { font-size: 13.5px; color: var(--humo); margin-top: 2px; max-width: 44ch; font-weight: 600; }
+
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .fcard {
+    background: var(--blanco); border: 1.5px solid var(--borde);
+    border-radius: 22px; padding: 26px 24px;
+  }
+  .fcard .fe { font-size: 30px; margin-bottom: 12px; }
+  .fcard h3 { font-family: var(--display); font-size: 17.5px; font-weight: 700; margin-bottom: 6px; }
+  .fcard p { font-size: 14.5px; color: var(--humo); font-weight: 600; }
+
+  /* ---------- vet section (dark) ---------- */
+  .vet-outer { padding: 0 16px; }
+  .vet { background: var(--carbon); color: var(--fondo); border-radius: 34px; padding: 68px 48px; max-width: 1092px; margin: 0 auto; }
+  .vet .eyebrow { background: rgba(255, 201, 77, 0.16); color: var(--amarillo); }
+  .vet .split .txt > p { color: rgba(255, 251, 245, 0.68); }
+  .vet .bullet .bi { background: rgba(255, 251, 245, 0.07); border-color: rgba(255, 251, 245, 0.14); }
+  .vet .bullet .bd { color: rgba(255, 251, 245, 0.62); }
+  .precio {
+    display: inline-flex; align-items: baseline; gap: 9px; margin-top: 26px;
+    background: rgba(46, 189, 133, 0.14); border: 1.5px solid rgba(46, 189, 133, 0.35);
+    border-radius: 18px; padding: 15px 22px;
+  }
+  .precio .n { font-family: var(--display); font-size: 30px; font-weight: 800; color: var(--bosque); font-variant-numeric: tabular-nums; }
+  .precio .d { font-size: 13.5px; font-weight: 700; color: rgba(255, 251, 245, 0.75); }
+
+  /* ---------- galería ---------- */
+  .galeria { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; justify-items: center; }
+  .gal-item { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .phone.chico { width: 260px; border-radius: 30px; border-width: 8px; }
+  .phone.chico .screen { padding: 20px 13px 12px; gap: 8px; }
+  .gal-cap { font-size: 13.5px; font-weight: 700; color: var(--humo); text-align: center; max-width: 30ch; }
+  .input-mock {
+    background: var(--blanco); border: 1.5px solid var(--borde); border-radius: 12px;
+    padding: 9px 12px; font-size: 9.5px; color: var(--humo); font-weight: 600; line-height: 1.5;
+  }
+  .input-mock strong { font-size: 12px; color: var(--carbon); font-weight: 800; }
+  .btn-full {
+    background: var(--tierra); color: var(--blanco); text-align: center;
+    padding: 11px; border-radius: 100px; font-weight: 800; font-size: 11.5px; margin-top: 4px;
+  }
+
+  /* ---------- faq ---------- */
+  .faqs { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+  .faq {
+    background: var(--blanco); border: 1.5px solid var(--borde);
+    border-radius: 18px; padding: 4px 22px;
+  }
+  .faq summary {
+    font-size: 15.5px; font-weight: 800; padding: 16px 0; cursor: pointer; list-style: none;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: '+'; font-family: var(--display); font-size: 22px; color: var(--tierra); font-weight: 700; flex-shrink: 0; }
+  .faq[open] summary::after { content: '–'; }
+  .faq p { font-size: 14.5px; color: var(--humo); font-weight: 600; padding-bottom: 18px; max-width: 62ch; }
+
+  /* ---------- contacto ---------- */
+  .contacto {
+    background: var(--blanco); border: 2px solid var(--borde);
+    border-radius: 30px; padding: 52px 40px; text-align: center;
+  }
+  .contacto h2 { margin-bottom: 10px; }
+  .contacto p { color: var(--humo); font-size: 16.5px; font-weight: 600; max-width: 52ch; margin: 0 auto 26px; }
+  .contacto .chips { justify-content: center; }
+
+  /* ---------- footer ---------- */
+  footer { padding: 56px 24px 44px; text-align: center; }
+  footer .logo { font-size: 26px; margin-bottom: 8px; }
+  footer p { font-size: 14px; color: var(--humo); font-weight: 600; }
+
+  /* ---------- reveal ---------- */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- responsive ---------- */
+  .phone-col { display: flex; justify-content: center; }
+  @media (max-width: 880px) {
+    .hero { grid-template-columns: 1fr; padding: 44px 0 56px; gap: 36px; }
+    .hero .phone-col { order: 2; }
+    .split { grid-template-columns: 1fr; gap: 34px; }
+    .grid3, .pasos { grid-template-columns: 1fr; }
+    .galeria { grid-template-columns: 1fr; }
+    .vet { padding: 48px 26px; }
+    .nav-links { display: none; }
+    section { padding: 54px 0; }
+    .contacto { padding: 40px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">🐾 Pat<span>itas</span></div>
+    <div class="nav-links">
+      <a href="#como">Cómo funciona</a>
+      <a href="#salud">Salud al día</a>
+      <a href="#pantallas">La app</a>
+      <a href="#veterinarias">Para veterinarias</a>
+      <a href="#faq">Preguntas</a>
+      <a href="#contacto">Contacto</a>
+    </div>
+  </div>
+</nav>
+
+<header class="wrap">
+  <div class="hero">
+    <div>
+      <span class="eyebrow">Gratis para siempre · Empezamos en CABA</span>
+      <h1>La salud de tu mascota, <em>en tu bolsillo</em>.</h1>
+      <p>Carnet de vacunas digital, turnos con tu veterinaria y el historial completo de cada mascota. Sin libretas de papel, sin WhatsApp, sin olvidos.</p>
+      <div class="chips">
+        <a class="chip solid" href="#como">🐾 Quiero la app</a>
+        <a class="chip line" href="#veterinarias">🏥 Soy una veterinaria</a>
+      </div>
+    </div>
+    <div class="phone-col">
+      <div class="phone">
+        <div class="screen">
+          <div class="titulo">Mis mascotas</div>
+          <div class="racha"><span class="f">🔥</span><span class="t">¡5 días seguidos cuidándolos!</span></div>
+          <div class="pcard"><span class="em">🐶</span><span class="in"><span class="nm">Simón</span><br><span class="rz">Golden Retriever</span></span><span class="anillo a-verde">100</span></div>
+          <div class="pcard"><span class="em">🐱</span><span class="in"><span class="nm">Mishi</span><br><span class="rz">Siamés</span></span><span class="anillo a-medio">40</span></div>
+          <div class="pcard"><span class="em">🐶</span><span class="in"><span class="nm">Toby</span><br><span class="rz">Caniche</span></span><span class="anillo a-rojo">0</span></div>
+        </div>
+        <div class="tabs">
+          <div class="tab on"><span class="ic">🐾</span>Mis mascotas</div>
+          <div class="tab"><span class="ic">🧑</span>Perfil</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="como" class="wrap">
+  <div class="sec-head centrado reveal">
+    <span class="eyebrow">Cómo funciona</span>
+    <h2>Tres pasos y tu mascota está protegida.</h2>
+  </div>
+  <div class="pasos">
+    <div class="paso reveal"><h3>Registrá a tu mascota</h3><p>Nombre, especie, raza y fecha de nacimiento. Podés cargar todas las que tengas: cada una con su perfil.</p></div>
+    <div class="paso reveal"><h3>Cargá sus vacunas</h3><p>Cada vacuna con su fecha de vencimiento. La app te avisa antes de que venza — no te enterás en la sala de espera.</p></div>
+    <div class="paso reveal"><h3>Agendá turnos desde la app</h3><p>Elegís una veterinaria de tu zona en el directorio y reservás. La veterinaria lo confirma y listo.</p></div>
+  </div>
+</section>
+
+<section id="salud" class="wrap">
+  <div class="split">
+    <div class="phone-col reveal">
+      <div class="phone">
+        <div class="screen">
+          <div style="text-align:center; padding: 4px 0 2px;">
+            <div style="font-size: 38px;">🐱</div>
+            <div style="font-family: var(--display); font-size: 18px; font-weight: 800;">Mishi</div>
+            <div style="font-size: 11px; color: var(--humo); font-weight: 600;">Siamés · 2 años</div>
+          </div>
+          <div class="pcard">
+            <span class="anillo a-medio xl">40</span>
+            <span class="in"><span class="nm">Salud al día</span><br><span class="rz">Vas bien. Completá las misiones.</span></span>
+          </div>
+          <div class="mision ok"><span class="me">✅</span><span class="mi"><span class="mt">Vacunas al día</span><br><span class="md">Todas sus vacunas están vigentes.</span></span></div>
+          <div class="mision"><span class="me">⚖️</span><span class="mi"><span class="mt">Peso registrado</span><br><span class="md">En la próxima consulta le registran el peso.</span></span><span class="mp">+30</span></div>
+          <div class="mision"><span class="me">📅</span><span class="mi"><span class="mt">Próximo control agendado</span><br><span class="md">Agendá un turno con tu veterinaria.</span></span><span class="mp">+30</span></div>
+        </div>
+        <div class="tabs">
+          <div class="tab on"><span class="ic">🐾</span>Mis mascotas</div>
+          <div class="tab"><span class="ic">🧑</span>Perfil</div>
+        </div>
+      </div>
+    </div>
+    <div class="txt reveal">
+      <span class="eyebrow">La función estrella</span>
+      <h2>Salud al día: el puntaje que te empuja a cuidarlos mejor.</h2>
+      <p>Cada mascota tiene un anillo de 0 a 100 que se calcula solo con sus datos reales: vacunas vigentes, peso al día y próximo control agendado. Completás misiones, sumás puntos — y tu mascota gana salud de verdad.</p>
+      <div class="bullets">
+        <div class="bullet"><span class="bi">💉</span><span><span class="bt">Vacunas vigentes suman +40</span><br><span class="bd">Si una vence, el anillo baja y la app te muestra exactamente qué renovar.</span></span></div>
+        <div class="bullet"><span class="bi">🔥</span><span><span class="bt">Racha de cuidado</span><br><span class="bd">Días seguidos entrando a revisar a tus mascotas. Nadie quiere volver a cero.</span></span></div>
+        <div class="bullet"><span class="bi">🎯</span><span><span class="bt">Misiones que llevan a la acción</span><br><span class="bd">Tocás una misión incompleta y te lleva directo a la pantalla que la resuelve.</span></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="sec-head reveal">
+    <span class="eyebrow">Para dueños · Gratis</span>
+    <h2>Todo lo de tu mascota, ordenado en un solo lugar.</h2>
+    <p>Argentina es uno de los países con más mascotas por hogar del mundo. Lo que falta no es amor: es organización.</p>
+  </div>
+  <div class="grid3">
+    <div class="fcard reveal"><div class="fe">💉</div><h3>Carnet de vacunas digital</h3><p>Cada vacuna con su vencimiento. Te avisa antes de que venza, no cuando ya es tarde.</p></div>
+    <div class="fcard reveal"><div class="fe">📅</div><h3>Turnos sin WhatsApp</h3><p>Elegís la veterinaria de tu zona y agendás desde la app. Se acabó el «¿tenés turno para el sábado?»</p></div>
+    <div class="fcard reveal"><div class="fe">🐶</div><h3>Multi-mascota</h3><p>¿Perro y gato? ¿Dos de cada uno? Cada mascota con su perfil, su historial y su peso por separado.</p></div>
+  </div>
+</section>
+
+<section id="pantallas" class="wrap">
+  <div class="sec-head centrado reveal">
+    <span class="eyebrow">La app por dentro</span>
+    <h2>Así se ve Patitas.</h2>
+    <p>Cada pantalla pensada para resolver algo concreto, sin vueltas.</p>
+  </div>
+  <div class="galeria">
+    <div class="gal-item reveal">
+      <div class="phone chico">
+        <div class="screen">
+          <div class="titulo">Veterinarias</div>
+          <div class="pcard"><span class="em">🏥</span><span class="in"><span class="nm">Vet Belgrano Norte</span><br><span class="rz">Av. Cabildo 2400 · 📍 Belgrano</span></span></div>
+          <div class="pcard"><span class="em">🏥</span><span class="in"><span class="nm">Patas &amp; Salud</span><br><span class="rz">Av. Santa Fe 3800 · 📍 Palermo</span></span></div>
+          <div class="pcard"><span class="em">🏥</span><span class="in"><span class="nm">Huellitas Recoleta</span><br><span class="rz">Av. Pueyrredón 1900 · 📍 Recoleta</span></span></div>
+        </div>
+        <div class="tabs">
+          <div class="tab on"><span class="ic">🐾</span>Mis mascotas</div>
+          <div class="tab"><span class="ic">🧑</span>Perfil</div>
+        </div>
+      </div>
+      <p class="gal-cap">Directorio de veterinarias por zona</p>
+    </div>
+    <div class="gal-item reveal">
+      <div class="phone chico">
+        <div class="screen">
+          <div style="text-align:center; padding: 2px 0;">
+            <div style="font-size: 34px;">🐶</div>
+            <div style="font-family: var(--display); font-size: 16px; font-weight: 800;">Simón</div>
+            <div style="font-size: 10.5px; color: var(--humo); font-weight: 600;">Golden Retriever · 3 años</div>
+          </div>
+          <div class="mision ok"><span class="me">💉</span><span class="mi"><span class="mt">Antirrábica</span><br><span class="md">Vence: 12/08/2026 · En 41 días</span></span></div>
+          <div class="mision"><span class="me">💉</span><span class="mi"><span class="mt">Polivalente</span><br><span class="md" style="color: var(--error);">Vencida el 02/06/2026</span></span></div>
+          <div class="mision"><span class="me">📅</span><span class="mi"><span class="mt">Turno 10/07 · 10:00</span><br><span class="md">Vet Belgrano Norte · pendiente</span></span></div>
+        </div>
+        <div class="tabs">
+          <div class="tab on"><span class="ic">🐾</span>Mis mascotas</div>
+          <div class="tab"><span class="ic">🧑</span>Perfil</div>
+        </div>
+      </div>
+      <p class="gal-cap">Perfil con vacunas y turnos</p>
+    </div>
+    <div class="gal-item reveal">
+      <div class="phone chico">
+        <div class="screen">
+          <div class="titulo">Cargar consulta</div>
+          <div class="input-mock">Motivo<br><strong>Control anual</strong></div>
+          <div class="input-mock">Diagnóstico<br><strong>Sano, sin observaciones</strong></div>
+          <div class="input-mock">Peso (kg)<br><strong>7.5</strong></div>
+          <div class="btn-full">Guardar consulta</div>
+        </div>
+        <div class="tabs">
+          <div class="tab on"><span class="ic">📅</span>Turnos</div>
+          <div class="tab"><span class="ic">💳</span>Suscripción</div>
+          <div class="tab"><span class="ic">🏥</span>Mi vet</div>
+        </div>
+      </div>
+      <p class="gal-cap">La veterinaria carga la consulta y el historial se arma solo</p>
+    </div>
+  </div>
+</section>
+
+<div class="vet-outer" id="veterinarias">
+  <div class="vet">
+    <div class="split">
+      <div class="txt reveal">
+        <span class="eyebrow">Para veterinarias</span>
+        <h2>Tus clientes ya usan Patitas. Aparecé donde te buscan.</h2>
+        <p>Entrás al directorio que ven los dueños de tu zona, recibís los turnos directo en la app y cargás cada consulta en el historial de la mascota — que el dueño ve y valora.</p>
+        <div class="bullets">
+          <div class="bullet"><span class="bi">📍</span><span><span class="bt">Directorio por zona</span><br><span class="bd">Los dueños de tu barrio te encuentran y agendan solos.</span></span></div>
+          <div class="bullet"><span class="bi">📅</span><span><span class="bt">Gestión de turnos</span><br><span class="bd">Confirmá, cancelá o completá cada turno desde tu panel.</span></span></div>
+          <div class="bullet"><span class="bi">📋</span><span><span class="bt">Consultas e historial clínico</span><br><span class="bd">Diagnóstico, peso y notas quedan en el perfil de la mascota.</span></span></div>
+        </div>
+        <div class="precio"><span class="n">USD 15</span><span class="d">por mes · vía MercadoPago · sin permanencia</span></div>
+      </div>
+      <div class="phone-col reveal">
+        <div class="phone">
+          <div class="screen">
+            <div class="titulo">Turnos</div>
+            <div class="pcard" style="display:block;">
+              <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:15px;">🐾</span><span class="nm">Simón</span></div>
+              <div class="rz" style="margin-top:3px;">10/07/2026 10:00</div>
+              <div class="estado">pendiente</div>
+              <div class="btnrow"><span class="btn-s">Confirmar</span><span class="btn-s">Completar</span><span class="btn-s g">Cancelar</span></div>
+            </div>
+            <div class="pcard" style="display:block;">
+              <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:15px;">🐾</span><span class="nm">Mishi</span></div>
+              <div class="rz" style="margin-top:3px;">10/07/2026 11:30</div>
+              <div class="estado">confirmado</div>
+              <div class="btnrow"><span class="btn-s">Completar</span><span class="btn-s g">Cancelar</span></div>
+            </div>
+            <div class="pcard" style="display:block; opacity:0.6;">
+              <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:15px;">🐾</span><span class="nm">Toby</span></div>
+              <div class="rz" style="margin-top:3px;">09/07/2026 16:00</div>
+              <div class="estado" style="color: var(--bosque);">completado</div>
+            </div>
+          </div>
+          <div class="tabs">
+            <div class="tab on"><span class="ic">📅</span>Turnos</div>
+            <div class="tab"><span class="ic">💳</span>Suscripción</div>
+            <div class="tab"><span class="ic">🏥</span>Mi veterinaria</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="faq" class="wrap">
+  <div class="sec-head centrado reveal">
+    <span class="eyebrow">Preguntas frecuentes</span>
+    <h2>Lo que todos preguntan.</h2>
+  </div>
+  <div class="faqs">
+    <details class="faq reveal">
+      <summary>¿Cuánto cuesta para los dueños de mascotas?</summary>
+      <p>Nada. Cero. Gratis para siempre — carnet de vacunas, recordatorios, turnos y todas tus mascotas. El modelo de Patitas se sostiene con la suscripción de las veterinarias, no con tu bolsillo.</p>
+    </details>
+    <details class="faq reveal">
+      <summary>¿Cómo paga una veterinaria la suscripción?</summary>
+      <p>Por MercadoPago, con débito mensual automático. Sin permanencia: si un mes no te sirve, la das de baja y listo.</p>
+    </details>
+    <details class="faq reveal">
+      <summary>¿En qué zonas funciona?</summary>
+      <p>Estamos lanzando por barrios de CABA (Belgrano, Palermo, Recoleta) y vamos sumando zonas a medida que entran veterinarias. El carnet de vacunas y los recordatorios funcionan en cualquier lado desde el día uno.</p>
+    </details>
+    <details class="faq reveal">
+      <summary>¿Quién puede ver los datos de mi mascota?</summary>
+      <p>Solo vos. La veterinaria únicamente ve los turnos que agendaste con ella y las consultas que ella misma te cargó. Los datos están protegidos con reglas de seguridad a nivel de base de datos.</p>
+    </details>
+    <details class="faq reveal">
+      <summary>¿Sirve si tengo varias mascotas?</summary>
+      <p>Es justo para eso. Cada mascota tiene su perfil, su carnet, su historial de peso y sus turnos por separado. Perros, gatos, los dos, la cantidad que sea.</p>
+    </details>
+  </div>
+</section>
+
+<section id="contacto" class="wrap">
+  <div class="contacto reveal">
+    <span class="eyebrow">Lanzamiento</span>
+    <h2>Estamos empezando por CABA.</h2>
+    <p>¿Tenés una veterinaria y querés recibir turnos desde la app? ¿Querés Patitas para tus mascotas apenas salga? Escribinos y sumate al lanzamiento.</p>
+    <div class="chips">
+      <span class="chip solid">📱 Escribinos por WhatsApp</span>
+      <span class="chip line">📷 Seguinos en Instagram</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo">🐾 Pat<span style="color: var(--tierra);">itas</span></div>
+  <p>Hecho en Argentina 🇦🇷 · Gratis para dueños, para siempre.</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+</script>
+</body>
+</html>
