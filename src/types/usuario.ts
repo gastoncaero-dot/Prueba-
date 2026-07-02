@@ -15,6 +15,11 @@ export interface Usuario {
   tipo: TipoUsuario;
   mascotas: string[]; // ids de documentos en la colección "mascotas" (vacío si tipo === 'veterinaria')
   veterinariaId: string | null; // id del documento en "veterinarias" si tipo === 'veterinaria'
+  // "Racha de cuidado": días calendario seguidos que el dueño abrió la app,
+  // y la última visita que ya contó para la racha. Opcionales porque los
+  // usuarios creados antes de esta función no tienen los campos.
+  racha?: number;
+  ultimaVisita?: Timestamp | null;
   creadoEn: Timestamp;
 }
 

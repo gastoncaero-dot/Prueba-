@@ -6,9 +6,11 @@ import {
   onAuthStateChanged,
   type User,
 } from 'firebase/auth';
+import { Timestamp } from 'firebase/firestore';
 import { auth } from '../services/firebase';
 import { usuariosService } from '../services/usuarios';
 import { veterinariasService } from '../services/veterinarias';
+import { diasCalendarioEntre } from '../utils/date';
 import type { Usuario } from '../types';
 
 type DatosRegistro = {
@@ -39,6 +41,26 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+// La "racha de cuidado": cuántos días calendario seguidos el dueño abrió la
+// app. Cuenta como mucho una vez por día; si se saltea un día entero, vuelve
+// a 1. Si la escritura falla no bloqueamos el login: la racha es un
+// incentivo, no un dato crítico.
+async function registrarVisitaDiaria(perfil: Usuario): Promise<Usuario> {
+  if (perfil.tipo !== 'dueño') return perfil;
+  const ahora = Timestamp.now();
+  const dias = perfil.ultimaVisita
+    ? diasCalendarioEntre(perfil.ultimaVisita.toDate(), ahora.toDate())
+    : null;
+  if (dias === 0) return perfil; // hoy ya contó
+  const racha = dias === 1 ? (perfil.racha ?? 0) + 1 : 1;
+  try {
+    await usuariosService.actualizar(perfil.id, { racha, ultimaVisita: ahora });
+  } catch {
+    return perfil;
+  }
+  return { ...perfil, racha, ultimaVisita: ahora };
+}
+
 // Provider que envuelve toda la app. Se encarga de dos cosas:
 // 1) saber si hay alguien logueado (Firebase Auth)
 // 2) traer su perfil de la colección "usuarios" (nombre, zona, etc.)
@@ -53,7 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(firebaseUser);
       if (firebaseUser) {
         const perfil = await usuariosService.obtener(firebaseUser.uid);
-        setUsuario(perfil);
+        setUsuario(perfil ? await registrarVisitaDiaria(perfil) : perfil);
       } else {
         setUsuario(null);
       }
@@ -71,6 +93,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       tipo: 'dueño',
       mascotas: [],
       veterinariaId: null,
+      racha: 1,
+      ultimaVisita: Timestamp.now(),
     });
     setUsuario(await usuariosService.obtener(credencial.user.uid));
   }

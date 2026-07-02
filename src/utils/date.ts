@@ -11,6 +11,15 @@ export function diasHasta(ts: Timestamp): number {
   return Math.ceil(ms / (1000 * 60 * 60 * 24));
 }
 
+// Diferencia en días calendario (ignorando la hora) entre dos fechas:
+// diasCalendarioEntre(ayer 23:59, hoy 00:01) === 1 aunque falten minutos
+// para las 24 horas. Es lo que necesita la racha diaria.
+export function diasCalendarioEntre(desde: Date, hasta: Date): number {
+  const inicioDesde = new Date(desde.getFullYear(), desde.getMonth(), desde.getDate());
+  const inicioHasta = new Date(hasta.getFullYear(), hasta.getMonth(), hasta.getDate());
+  return Math.round((inicioHasta.getTime() - inicioDesde.getTime()) / (24 * 60 * 60 * 1000));
+}
+
 export function edadEnAnios(fechaNacimiento: Timestamp): number {
   const hoy = new Date();
   const nacimiento = fechaNacimiento.toDate();

@@ -1,14 +1,16 @@
 import { useCallback, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { mascotasService } from '../services/mascotas';
 import { vacunasService } from '../services/vacunas';
 import { turnosService } from '../services/turnos';
 import { Button } from '../components/Button';
+import { AnilloSalud } from '../components/AnilloSalud';
 import { COLORS } from '../constants/theme';
 import { emojiPorEspecie } from '../utils/petEmoji';
 import { edadEnAnios, formatDate, diasHasta } from '../utils/date';
+import { calcularSalud, mensajeSalud, type ItemSalud } from '../utils/salud';
 import type { MascotasStackParamList } from '../navigation/types';
 import type { Mascota, Vacuna, Turno } from '../types';
 
@@ -50,6 +52,19 @@ export function MascotaDetailScreen({ route, navigation }: Props) {
     );
   }
 
+  const salud = calcularSalud(mascota, vacunas, turnos);
+
+  // Cada "misión" incompleta lleva directo a la pantalla que la resuelve.
+  function irAMision(item: ItemSalud) {
+    if (item.clave === 'vacunas') {
+      navigation.navigate('NuevaVacuna', { mascotaId });
+    } else {
+      // Tanto el peso (se registra en la consulta) como el control se
+      // resuelven agendando un turno.
+      navigation.navigate('NuevoTurno', { mascotaId });
+    }
+  }
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.header}>
@@ -58,6 +73,31 @@ export function MascotaDetailScreen({ route, navigation }: Props) {
         <Text style={styles.breed}>
           {mascota.raza} · {edadEnAnios(mascota.fechaNacimiento)} años
         </Text>
+      </View>
+
+      <View style={styles.section}>
+        <View style={styles.saludCard}>
+          <AnilloSalud puntaje={salud.puntaje} tamanio={64} />
+          <View style={styles.saludInfo}>
+            <Text style={styles.saludTitulo}>Salud al día</Text>
+            <Text style={styles.saludMensaje}>{mensajeSalud(salud.puntaje)}</Text>
+          </View>
+        </View>
+        {salud.items.map((item) => (
+          <Pressable
+            key={item.clave}
+            disabled={item.completo}
+            onPress={() => irAMision(item)}
+            style={[styles.misionRow, item.completo && styles.misionCompleta]}
+          >
+            <Text style={styles.misionEmoji}>{item.completo ? '✅' : item.emoji}</Text>
+            <View style={styles.misionInfo}>
+              <Text style={styles.misionTitulo}>{item.titulo}</Text>
+              <Text style={styles.misionDetalle}>{item.detalle}</Text>
+            </View>
+            {!item.completo && <Text style={styles.misionPuntos}>+{item.puntos}</Text>}
+          </Pressable>
+        ))}
       </View>
 
       <View style={styles.section}>
@@ -125,6 +165,37 @@ const styles = StyleSheet.create({
   name: { fontSize: 26, fontWeight: '900', color: COLORS.carbon, marginTop: 8 },
   breed: { fontSize: 14, color: COLORS.humo, marginTop: 4 },
   section: { marginBottom: 28 },
+  saludCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    backgroundColor: COLORS.blanco,
+    borderRadius: 18,
+    padding: 16,
+    borderWidth: 1.5,
+    borderColor: COLORS.borde,
+    marginBottom: 10,
+  },
+  saludInfo: { flex: 1 },
+  saludTitulo: { fontSize: 16, fontWeight: '800', color: COLORS.carbon },
+  saludMensaje: { fontSize: 12, color: COLORS.humo, marginTop: 3 },
+  misionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: COLORS.blanco,
+    borderRadius: 14,
+    padding: 12,
+    marginBottom: 8,
+    borderWidth: 1.5,
+    borderColor: COLORS.borde,
+  },
+  misionCompleta: { opacity: 0.55 },
+  misionEmoji: { fontSize: 20 },
+  misionInfo: { flex: 1 },
+  misionTitulo: { fontSize: 13, fontWeight: '700', color: COLORS.carbon },
+  misionDetalle: { fontSize: 11.5, color: COLORS.humo, marginTop: 2 },
+  misionPuntos: { fontSize: 14, fontWeight: '900', color: COLORS.tierra },
   sectionHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
   sectionTitle: { fontSize: 17, fontWeight: '800', color: COLORS.carbon },
   smallButton: { paddingVertical: 8, paddingHorizontal: 14 },
