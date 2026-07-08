@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d1033">
+<title>Nappy — Sueño del bebé</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>">
+</head>
+<body>
+<div class="sky" aria-hidden="true">
+  <div class="stars" id="stars"></div>
+  <div class="moon"></div>
+</div>
+
+<!-- ══════════ ONBOARDING ══════════ -->
+<div class="onboarding" id="onboarding" hidden>
+  <div class="onboarding-card">
+    <div class="onboarding-moon">🌙</div>
+    <h1>Nappy</h1>
+    <p class="tagline">Predicciones de sueño para tu bebé, basadas en la ciencia del descanso infantil.</p>
+    <label for="ob-name">¿Cómo se llama tu bebé?</label>
+    <input type="text" id="ob-name" placeholder="Nombre del bebé" maxlength="30" autocomplete="off">
+    <label for="ob-birth">¿Cuándo nació?</label>
+    <input type="date" id="ob-birth">
+    <button class="btn-primary" id="ob-start">Comenzar ✨</button>
+  </div>
+</div>
+
+<!-- ══════════ APP ══════════ -->
+<div class="app" id="app" hidden>
+
+  <header class="app-header">
+    <div>
+      <h1 id="baby-name">Bebé</h1>
+      <p class="baby-age" id="baby-age"></p>
+    </div>
+    <button class="btn-icon" id="btn-settings" title="Ajustes" aria-label="Ajustes">⚙️</button>
+  </header>
+
+  <main id="main">
+
+    <!-- ── HOY ── -->
+    <section class="view" id="view-hoy">
+      <div class="card prediction-card" id="prediction-card">
+        <p class="prediction-label" id="prediction-label">Próxima siesta en</p>
+        <p class="prediction-time" id="prediction-time">—</p>
+        <p class="prediction-sub" id="prediction-sub"></p>
+      </div>
+
+      <div class="card sleep-timer-card">
+        <div id="timer-idle">
+          <p class="timer-hint" id="awake-since">Registrá cuándo se despertó para calcular la próxima siesta.</p>
+          <div class="timer-actions">
+            <button class="btn-primary" id="btn-sleep-start">😴 Se durmió</button>
+            <button class="btn-secondary" id="btn-woke-up">☀️ Se despertó</button>
+          </div>
+        </div>
+        <div id="timer-running" hidden>
+          <p class="timer-hint">Durmiendo desde hace</p>
+          <p class="timer-display" id="timer-display">00:00</p>
+          <button class="btn-primary btn-wake" id="btn-sleep-stop">☀️ Se despertó</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">Horario de hoy</h2>
+        <div class="schedule" id="schedule"></div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">Guía para su edad</h2>
+        <div class="age-guide" id="age-guide"></div>
+      </div>
+    </section>
+
+    <!-- ── REGISTRO ── -->
+    <section class="view" id="view-registro" hidden>
+      <div class="quick-log">
+        <button class="quick-btn" data-log="toma-pecho"><span>🤱</span>Pecho</button>
+        <button class="quick-btn" data-log="toma-bibe"><span>🍼</span>Biberón</button>
+        <button class="quick-btn" data-log="panal-pis"><span>💧</span>Pis</button>
+        <button class="quick-btn" data-log="panal-caca"><span>💩</span>Caca</button>
+      </div>
+      <div class="card">
+        <h2 class="card-title">Actividad de hoy</h2>
+        <ul class="log-list" id="log-list"></ul>
+      </div>
+    </section>
+
+    <!-- ── SONIDOS ── -->
+    <section class="view" id="view-sonidos" hidden>
+      <p class="view-intro">Sonidos relajantes generados en tiempo real para ayudar a tu bebé a dormir.</p>
+      <div class="sounds-grid">
+        <button class="sound-btn" data-sound="blanco"><span class="sound-icon">🌫️</span><span>Ruido blanco</span></button>
+        <button class="sound-btn" data-sound="lluvia"><span class="sound-icon">🌧️</span><span>Lluvia</span></button>
+        <button class="sound-btn" data-sound="vientre"><span class="sound-icon">🫀</span><span>Vientre materno</span></button>
+        <button class="sound-btn" data-sound="olas"><span class="sound-icon">🌊</span><span>Olas del mar</span></button>
+      </div>
+      <div class="card sound-controls" id="sound-controls" hidden>
+        <p id="sound-playing">Reproduciendo…</p>
+        <label class="volume-label">Volumen
+          <input type="range" id="sound-volume" min="0" max="100" value="50">
+        </label>
+        <label class="volume-label">Apagar en
+          <select id="sound-timer">
+            <option value="0">Nunca</option>
+            <option value="15">15 min</option>
+            <option value="30">30 min</option>
+            <option value="60">1 hora</option>
+          </select>
+        </label>
+        <button class="btn-secondary" id="btn-sound-stop">⏹ Detener</button>
+      </div>
+    </section>
+
+    <!-- ── TENDENCIAS ── -->
+    <section class="view" id="view-tendencias" hidden>
+      <div class="card">
+        <h2 class="card-title">Sueño de los últimos 7 días</h2>
+        <canvas id="chart-sleep" width="640" height="320"></canvas>
+      </div>
+      <div class="stats-grid" id="stats-grid"></div>
+      <div class="card">
+        <h2 class="card-title">Historial de sueño</h2>
+        <ul class="log-list" id="sleep-history"></ul>
+      </div>
+    </section>
+
+    <!-- ── CONSEJOS ── -->
+    <section class="view" id="view-consejos" hidden>
+      <p class="view-intro">Consejos basados en la ciencia del sueño infantil, adaptados a la edad de tu bebé.</p>
+      <div id="tips-list"></div>
+    </section>
+
+  </main>
+
+  <nav class="tabbar">
+    <button class="tab active" data-view="hoy"><span>🌙</span>Hoy</button>
+    <button class="tab" data-view="registro"><span>📝</span>Registro</button>
+    <button class="tab" data-view="sonidos"><span>🎵</span>Sonidos</button>
+    <button class="tab" data-view="tendencias"><span>📊</span>Tendencias</button>
+    <button class="tab" data-view="consejos"><span>💡</span>Consejos</button>
+  </nav>
+</div>
+
+<!-- ══════════ AJUSTES ══════════ -->
+<dialog id="settings-dialog">
+  <h2>Ajustes</h2>
+  <label for="set-name">Nombre del bebé</label>
+  <input type="text" id="set-name" maxlength="30">
+  <label for="set-birth">Fecha de nacimiento</label>
+  <input type="date" id="set-birth">
+  <div class="dialog-actions">
+    <button class="btn-secondary" id="set-cancel">Cancelar</button>
+    <button class="btn-primary" id="set-save">Guardar</button>
+  </div>
+  <button class="btn-danger" id="set-reset">Borrar todos los datos</button>
+</dialog>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
