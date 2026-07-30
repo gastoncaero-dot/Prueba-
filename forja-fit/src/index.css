@@ -1,0 +1,196 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------- tokens */
+
+:root,
+:root[data-theme='dark'] {
+  --c-bg: #08090b;
+  --c-bg-elev: #0d0f13;
+  --c-surface: #12151a;
+  --c-surface-2: #191d23;
+  --c-surface-3: #222730;
+  --c-line: #262c35;
+  --c-line-soft: #1b2027;
+  --c-text: #f3f5f8;
+  --c-muted: #98a2b0;
+  --c-faint: #5f6874;
+  --c-accent: #c7f634;
+  --c-accent-soft: #1d2a06;
+  --c-accent-ink: #0c1004;
+  --c-danger: #ff5f56;
+  --c-warn: #ffc53d;
+  --c-ok: #34d399;
+  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 8px 24px -12px rgb(0 0 0 / 0.8);
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --c-bg: #f4f5f7;
+  --c-bg-elev: #ffffff;
+  --c-surface: #ffffff;
+  --c-surface-2: #f5f6f8;
+  --c-surface-3: #eceef2;
+  --c-line: #dfe3e9;
+  --c-line-soft: #eaedf1;
+  --c-text: #0b0e12;
+  --c-muted: #5b6472;
+  --c-faint: #8a939f;
+  --c-accent: #6fa000;
+  --c-accent-soft: #edf7cf;
+  --c-accent-ink: #ffffff;
+  --c-danger: #d23a30;
+  --c-warn: #b47800;
+  --c-ok: #14875b;
+  --shadow-card: 0 1px 2px rgb(16 24 40 / 0.05), 0 8px 24px -16px rgb(16 24 40 / 0.25);
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-bg-elev: var(--c-bg-elev);
+  --color-surface: var(--c-surface);
+  --color-surface-2: var(--c-surface-2);
+  --color-surface-3: var(--c-surface-3);
+  --color-line: var(--c-line);
+  --color-line-soft: var(--c-line-soft);
+  --color-ink: var(--c-text);
+  --color-muted: var(--c-muted);
+  --color-faint: var(--c-faint);
+  --color-accent: var(--c-accent);
+  --color-accent-soft: var(--c-accent-soft);
+  --color-accent-ink: var(--c-accent-ink);
+  --color-danger: var(--c-danger);
+  --color-warn: var(--c-warn);
+  --color-ok: var(--c-ok);
+
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-display: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+
+  --radius-card: 1rem;
+}
+
+/* ------------------------------------------------------------------ base */
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  background: var(--c-bg);
+}
+
+body {
+  margin: 0;
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* Números que no bailan al cambiar (cronómetros, cargas, marcadores) */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.overline {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Barrido diagonal para headers de modalidad */
+.hatch {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgb(255 255 255 / 0.05) 0 1px,
+    transparent 1px 7px
+  );
+}
+
+:root[data-theme='light'] .hatch {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgb(0 0 0 / 0.05) 0 1px,
+    transparent 1px 7px
+  );
+}
+
+@keyframes forja-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-in {
+  animation: forja-in 0.22s ease-out both;
+}
+
+@keyframes forja-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.animate-beat {
+  animation: forja-pulse 1s steps(2, jump-none) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-in,
+  .animate-beat {
+    animation: none;
+  }
+}
+
+input[type='range'] {
+  accent-color: var(--c-accent);
+}
+
+::selection {
+  background: var(--c-accent);
+  color: var(--c-accent-ink);
+}
