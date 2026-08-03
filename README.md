@@ -1,53 +1,104 @@
 # 🌙 Nappy — app de sueño para bebés
 
-Aplicación web inspirada en [Napper](https://napper.app), la app de seguimiento
-de sueño infantil. Predice las siestas y la hora de dormir de tu bebé según su
-edad, usando las **ventanas de vigilia** recomendadas por las guías de sueño
-infantil.
+App web inspirada en [Napper](https://napper.app). Predice **a qué hora y
+cuánto** va a dormir tu bebé según su edad, y registra sueño, tomas y pañales.
 
-## Funcionalidades
+Sin dependencias, sin servidor y sin cuentas: todo funciona en el navegador y
+los datos se guardan en el propio dispositivo (`localStorage`).
 
-- **Predicción de siestas** — al registrar cuándo se despertó el bebé, la app
-  calcula cuándo debería ser la próxima siesta o la hora de dormir según su
-  edad (ventana de vigilia, número de siestas y sueño total recomendado).
-- **Cronómetro de sueño** — botones «Se durmió» / «Se despertó» que registran
-  cada sueño con su duración.
-- **Horario estimado del día** — proyección de las siestas restantes y la hora
-  de dormir de la noche.
-- **Registro del bebé** — tomas de pecho, biberones y cambios de pañal con un
-  toque.
-- **Sonidos para dormir** — ruido blanco, lluvia, vientre materno (con latido)
-  y olas del mar, generados en tiempo real con Web Audio (sin archivos de
-  audio), con control de volumen y temporizador de apagado.
-- **Tendencias** — gráfico de horas de sueño de los últimos 7 días con línea de
-  objetivo, estadísticas e historial.
-- **Consejos** — recomendaciones de sueño adaptadas a la edad del bebé.
+---
 
-Todos los datos se guardan localmente en el navegador (`localStorage`); no hay
-servidor ni cuentas.
+## Cómo predice el sueño
 
-## Cómo usarla
-
-No requiere instalación ni dependencias. Opciones:
-
-1. Abrir `index.html` directamente en el navegador, o
-2. Servirla localmente:
-
-   ```bash
-   python3 -m http.server 8000
-   # → http://localhost:8000
-   ```
-
-Funciona muy bien en el móvil (diseño *mobile-first*); podés «Añadir a pantalla
-de inicio» para usarla como una app.
-
-## Estructura
+El motor no usa una ventana de vigilia suelta: modela **la forma completa del
+día** para cada franja de edad — cuántas siestas tocan, cuánto sueño diurno
+corresponde y cuántas horas dura la noche. De ahí deduce el tiempo despierto y
+lo reparte en ventanas crecientes, porque un bebé aguanta menos despierto por
+la mañana que antes de acostarse.
 
 ```
-index.html      Interfaz (onboarding, pestañas Hoy/Registro/Sonidos/Tendencias/Consejos)
-css/style.css   Estética nocturna: cielo estrellado, luna, tarjetas translúcidas
-js/app.js       Lógica: predicción por edad, cronómetro, registro, Web Audio, gráficos
+despertar → ventana 1 → siesta 1 → ventana 2 → siesta 2 → … → hora de dormir
 ```
 
-> ⚠️ Esta app es un proyecto educativo y no sustituye el consejo de
-> profesionales de la salud infantil.
+Las siestas también se estiman: la de la mañana es la más larga y la última del
+día queda como una siesta corta de recuperación. Ese reparto es el que produce,
+para un bebé de 4–6 meses, una cuarta siesta de poco más de media hora.
+
+Para un bebé de 4 meses y medio que se despertó de su tercera siesta a las
+15:12, Nappy calcula:
+
+> **Cuarta siesta en 52 min · Aprox. 17:12**
+> Hora estimada de siesta **17:12 – 17:47**, 35 min de duración.
+> Buscá señales de sueño a partir de las 16:42.
+
+Cada edad cierra el día con una hora de dormir realista (entre las 19:00 y las
+20:00 partiendo de un despertar a las 7:00), en lugar de acumular ventanas
+hasta una hora imposible.
+
+## Qué incluye
+
+| Pantalla | Qué hace |
+|---|---|
+| **Hoy** | Anillo del día: cada sueño es una cápsula cuya longitud es su duración real. Cuenta atrás al centro y la ventana estimada abajo, con «Omitir» y «Registrar». |
+| **Registro** | Alta rápida de pecho, biberón, pis y caca; resumen del día y actividad editable. Navegación por días. |
+| **Sonidos** | Ruido blanco, lluvia, vientre materno (con latido a 140 lpm) y olas, sintetizados en vivo con Web Audio. Volumen y temporizador de apagado. |
+| **Datos** | Sueño y tomas de los últimos 7 días, con línea de objetivo por edad, e historial. |
+| **Consejos** | Orientación de sueño adaptada a la etapa del bebé. |
+
+Se registra: sueño (con inicio y fin editables), pecho (lado y duración),
+biberón (ml), sólidos, pañales, medicación y notas libres.
+
+---
+
+## Publicar en Netlify
+
+El repositorio ya viene configurado: `netlify.toml` publica la carpeta `public/`
+y no hace falta ningún paso de compilación.
+
+**Opción A — arrastrar y soltar (lo más rápido)**
+
+1. Entrá en [app.netlify.com/drop](https://app.netlify.com/drop).
+2. Arrastrá la carpeta **`public/`** a la ventana.
+3. Listo: Netlify te da la URL al instante.
+
+**Opción B — conectar el repositorio (se actualiza sola en cada push)**
+
+1. En Netlify: *Add new site → Import an existing project → GitHub*.
+2. Elegí este repositorio y la rama.
+3. Netlify lee `netlify.toml`. Dejá el comando de compilación vacío y el
+   directorio de publicación en `public`.
+
+**Opción C — desde la terminal**
+
+```bash
+npm install -g netlify-cli
+netlify deploy --dir=public --prod
+```
+
+### Instalarla en el iPhone
+
+Abrí la URL en Safari → botón **Compartir** → **Añadir a pantalla de inicio**.
+Queda con su icono y se abre a pantalla completa, sin barra del navegador.
+Gracias al *service worker*, después de la primera visita funciona sin conexión.
+
+---
+
+## Desarrollo
+
+```bash
+python3 -m http.server 8000 --directory public   # → http://localhost:8000
+node build-standalone.mjs                        # regenera nappy.html
+```
+
+```
+public/           el sitio que se publica
+  index.html      estructura
+  styles.css      identidad visual nocturna
+  app.js          predicción, registro, sonidos y gráficos
+  manifest.webmanifest, sw.js, icons/
+netlify.toml      configuración de despliegue
+nappy.html        la app entera en un solo archivo (generado)
+```
+
+> Nappy es una guía orientativa basada en rangos de sueño infantil habituales.
+> No sustituye la consulta con tu pediatra.

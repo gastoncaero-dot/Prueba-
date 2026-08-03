@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<title>Nappy — Sueño del bebé</title>
+<meta name="description" content="Predice las siestas y la hora de dormir de tu bebé, y registrá tomas, pañales y sueño.">
+<meta name="theme-color" content="#070a1c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nappy">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+
+<noscript><p class="noscript">Nappy necesita JavaScript para calcular los horarios de sueño.</p></noscript>
+
+<!-- ══════════════ ALTA DEL BEBÉ ══════════════ -->
+<div class="welcome" id="welcome" hidden>
+  <div class="welcome-inner">
+    <div class="welcome-mark" id="welcome-mark"></div>
+    <h1 class="welcome-title">Nappy</h1>
+    <p class="welcome-sub">Sabé cuándo y cuánto va a dormir tu bebé.</p>
+
+    <div class="field">
+      <label for="w-name">Nombre del bebé</label>
+      <input type="text" id="w-name" placeholder="Ej. Luna" maxlength="30" autocomplete="off" enterkeyhint="next">
+    </div>
+    <div class="field">
+      <label for="w-birth">Fecha de nacimiento</label>
+      <input type="date" id="w-birth">
+    </div>
+    <p class="field-note" id="w-band"></p>
+
+    <button class="btn btn-primary btn-block" id="w-start">Empezar</button>
+  </div>
+</div>
+
+<!-- ══════════════ APLICACIÓN ══════════════ -->
+<div class="app" id="app" hidden>
+
+  <header class="topbar">
+    <div class="baby">
+      <span class="baby-dot" id="baby-dot"></span>
+      <div>
+        <h1 id="baby-name">Bebé</h1>
+        <p id="baby-age"></p>
+      </div>
+    </div>
+    <button class="icon-btn" id="open-settings" aria-label="Ajustes"></button>
+  </header>
+
+  <main>
+    <!-- ─────────── HOY ─────────── -->
+    <section class="view view-hoy" id="view-hoy">
+      <div class="orbit">
+        <svg id="ring" viewBox="0 0 320 320" role="img" aria-label="Ritmo de sueño del día"></svg>
+        <div class="orbit-core">
+          <p class="core-label" id="core-label">—</p>
+          <p class="core-value" id="core-value">—</p>
+          <p class="core-note" id="core-note"></p>
+        </div>
+      </div>
+
+      <div class="ring-legend">
+        <span><i class="chip chip-nap"></i>Sueño</span>
+        <span><i class="chip chip-wake"></i>Despierto</span>
+        <span><i class="chip chip-est"></i>Estimado</span>
+      </div>
+
+      <div class="sheet" id="sheet"></div>
+
+      <div class="quickgrid" data-quickgrid></div>
+    </section>
+
+    <!-- ─────────── REGISTRO ─────────── -->
+    <section class="view" id="view-registro" hidden>
+      <div class="daynav">
+        <button class="icon-btn sm" id="day-prev" aria-label="Día anterior">‹</button>
+        <p id="day-title">Hoy</p>
+        <button class="icon-btn sm" id="day-next" aria-label="Día siguiente">›</button>
+      </div>
+
+      <div class="quickgrid" data-quickgrid></div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Resumen del día</h2></div>
+        <div class="daysum" id="daysum"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Actividad</h2></div>
+        <ul class="feed" id="feed"></ul>
+      </div>
+    </section>
+
+    <!-- ─────────── SONIDOS ─────────── -->
+    <section class="view" id="view-sonidos" hidden>
+      <p class="view-lead">Sonidos generados en vivo, sin descargas. Bajá el volumen y dejalos correr toda la siesta.</p>
+      <div class="soundgrid" id="soundgrid"></div>
+      <div class="panel sound-panel" id="sound-panel" hidden>
+        <p class="now-playing" id="now-playing"></p>
+        <label class="row-ctl">Volumen<input type="range" id="vol" min="0" max="100" value="45"></label>
+        <label class="row-ctl">Apagar en
+          <select id="offtimer">
+            <option value="0">Nunca</option>
+            <option value="15">15 min</option>
+            <option value="30">30 min</option>
+            <option value="45">45 min</option>
+            <option value="60">1 hora</option>
+          </select>
+        </label>
+        <button class="btn btn-ghost btn-block" id="sound-stop">Detener</button>
+      </div>
+    </section>
+
+    <!-- ─────────── TENDENCIAS ─────────── -->
+    <section class="view" id="view-tendencias" hidden>
+      <div class="statrow" id="statrow"></div>
+      <div class="panel">
+        <div class="panel-head"><h2>Sueño diario</h2><span class="panel-hint" id="goal-hint"></span></div>
+        <canvas id="chart" width="680" height="320"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>Tomas por día</h2></div>
+        <canvas id="chart-feeds" width="680" height="220"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>Últimos sueños</h2></div>
+        <ul class="feed" id="sleeplog"></ul>
+      </div>
+    </section>
+
+    <!-- ─────────── CONSEJOS ─────────── -->
+    <section class="view" id="view-consejos" hidden>
+      <p class="view-lead">Orientación para la etapa de <b id="tips-band"></b>.</p>
+      <div id="tips"></div>
+      <p class="disclaimer">Nappy es una guía orientativa basada en rangos de sueño infantil habituales. No sustituye la consulta con tu pediatra.</p>
+    </section>
+  </main>
+
+  <button class="fab" id="fab" aria-label="Registrar algo">+</button>
+
+  <nav class="tabs" id="tabs"></nav>
+</div>
+
+<!-- ══════════════ MODAL DE REGISTRO ══════════════ -->
+<dialog id="log-dialog">
+  <form method="dialog" id="log-form">
+    <header class="dlg-head">
+      <h2 id="log-title">Registrar</h2>
+      <button type="button" class="icon-btn sm" id="log-close" aria-label="Cerrar">✕</button>
+    </header>
+
+    <div class="typegrid" id="typegrid"></div>
+
+    <div class="field">
+      <label for="log-time" id="log-time-label">Hora</label>
+      <input type="datetime-local" id="log-time">
+    </div>
+
+    <div id="log-extra"></div>
+
+    <div class="field">
+      <label for="log-note">Nota (opcional)</label>
+      <input type="text" id="log-note" maxlength="120" placeholder="Ej. se durmió en brazos" autocomplete="off">
+    </div>
+
+    <div class="dlg-actions">
+      <button type="button" class="btn btn-ghost" id="log-delete" hidden>Eliminar</button>
+      <button type="button" class="btn btn-primary" id="log-save">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- ══════════════ AJUSTES ══════════════ -->
+<dialog id="settings-dialog">
+  <header class="dlg-head">
+    <h2>Ajustes</h2>
+    <button type="button" class="icon-btn sm" id="settings-close" aria-label="Cerrar">✕</button>
+  </header>
+  <div class="field">
+    <label for="s-name">Nombre</label>
+    <input type="text" id="s-name" maxlength="30">
+  </div>
+  <div class="field">
+    <label for="s-birth">Fecha de nacimiento</label>
+    <input type="date" id="s-birth">
+  </div>
+  <p class="field-note" id="s-band"></p>
+  <div class="dlg-actions">
+    <button type="button" class="btn btn-primary" id="s-save">Guardar</button>
+  </div>
+  <div class="danger-zone">
+    <button type="button" class="btn btn-ghost" id="s-export">Exportar datos (.json)</button>
+    <button type="button" class="btn btn-danger" id="s-reset">Borrar todo</button>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>

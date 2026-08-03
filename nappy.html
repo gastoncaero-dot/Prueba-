@@ -1,1308 +1,1702 @@
 <meta charset="UTF-8">
-<title>Nappy — Sueño del bebé</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0d1033">
+<meta name="theme-color" content="#070a1c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nappy">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<title>Nappy — Sueño del bebé</title>
 <style>
-/* ─────────────────────────────────────────────
-   Nappy — estética nocturna inspirada en Napper
-   ───────────────────────────────────────────── */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* ═══════════════════════════════════════════════════════════════
+   Nappy — identidad nocturna
+   El producto vive de noche, en una habitación a oscuras, sostenido
+   con una mano. Por eso se compromete con un único mundo visual
+   oscuro y con tipografía redondeada (SF Pro Rounded, nativa en iOS).
+   ═══════════════════════════════════════════════════════════════ */
 
-/* display:flex/grid en las vistas no debe pisar el atributo hidden */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; padding: 0; }
 [hidden] { display: none !important; }
 
 :root {
-  --bg-1: #0d1033;
-  --bg-2: #1a1c4e;
-  --bg-3: #2b2a6b;
-  --card: rgba(255, 255, 255, 0.07);
-  --card-border: rgba(255, 255, 255, 0.12);
-  --text: #f0efff;
-  --text-dim: #a9a7d6;
-  --accent: #f7c873;
-  --accent-2: #b79cff;
-  --success: #7fe0b0;
-  --danger: #ff8a9d;
-  --radius: 20px;
-  --font: "Nunito", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color-scheme: dark;
+
+  /* Cielo: neutros sesgados a índigo, nunca gris puro */
+  --sky-0:   #070a1c;
+  --sky-1:   #0c1029;
+  --surface: #12163a;
+  --raised:  #1b1f4d;
+  --line:    #2a2f63;
+
+  /* Acentos */
+  --luna:  #c2b4ff;   /* sueño */
+  --luna-d:#7b6bd6;
+  --dawn:  #74d6a4;   /* despierto */
+  --amber: #f6c98b;   /* acción */
+  --rose:  #ff92a8;   /* destructivo */
+
+  --text:  #eeecff;
+  --dim:   #9491c4;
+  --faint: #6d6b99;
+
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 26px;
+  --r-full: 999px;
+
+  --shell: 480px;
+  --ease: cubic-bezier(.22,.68,.32,1);
+
+  --font: ui-rounded, "SF Pro Rounded", "Nunito", "Avenir Next Rounded",
+          "Varela Round", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
-html, body { height: 100%; }
+html { -webkit-text-size-adjust: 100%; }
 
 body {
   font-family: var(--font);
+  background: var(--sky-0);
   color: var(--text);
-  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 55%, var(--bg-3) 100%);
-  background-attachment: fixed;
   min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* ── Cielo estrellado ── */
-.sky { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
-.stars { position: absolute; inset: 0; }
-.star {
-  position: absolute;
-  background: #fff;
-  border-radius: 50%;
-  opacity: 0.7;
-  animation: twinkle 3s ease-in-out infinite;
-}
-@keyframes twinkle {
-  0%, 100% { opacity: 0.25; }
-  50% { opacity: 0.9; }
-}
-.moon {
-  position: absolute;
-  top: 42px; right: 34px;
-  width: 64px; height: 64px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #fff8e1, #f7c873 70%);
-  box-shadow: 0 0 40px 8px rgba(247, 200, 115, 0.35);
+#sky {
+  position: fixed; inset: 0;
+  width: 100%; height: 100%;
+  z-index: -1;
+  background:
+    radial-gradient(120% 70% at 50% -10%, #1a1b47 0%, transparent 62%),
+    radial-gradient(90% 55% at 50% 108%, #171a44 0%, transparent 58%),
+    var(--sky-0);
 }
 
-/* ── Onboarding ── */
-.onboarding {
-  min-height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  padding: 24px;
+.noscript { padding: 40px; text-align: center; color: var(--dim); }
+
+/* ── Tipografía base ── */
+h1, h2, h3 { font-weight: 800; letter-spacing: -0.02em; text-wrap: balance; }
+.num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+
+/* ── Controles ── */
+.btn {
+  font: inherit; font-weight: 700;
+  border: 1px solid transparent;
+  border-radius: var(--r-full);
+  padding: 14px 24px;
+  cursor: pointer;
+  transition: transform .14s var(--ease), filter .14s var(--ease), background .14s var(--ease);
 }
-.onboarding-card {
-  width: 100%; max-width: 380px;
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius);
-  padding: 36px 28px;
-  backdrop-filter: blur(12px);
-  text-align: center;
+.btn:active { transform: scale(.97); }
+.btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+
+.btn-primary { background: linear-gradient(180deg, #ddd4ff, #b9a8f8); color: #221a4b; }
+.btn-primary:hover { filter: brightness(1.06); }
+.btn-ghost { background: transparent; border-color: var(--line); color: var(--text); }
+.btn-ghost:hover { background: rgba(255,255,255,.05); }
+.btn-danger { background: transparent; border-color: rgba(255,146,168,.45); color: var(--rose); }
+.btn-danger:hover { background: rgba(255,146,168,.1); }
+.btn-block { width: 100%; }
+
+.icon-btn {
+  width: 42px; height: 42px;
+  display: grid; place-items: center;
+  border-radius: var(--r-full);
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color: var(--dim);
+  font: inherit; font-size: 18px;
+  cursor: pointer;
+  transition: color .14s var(--ease), border-color .14s var(--ease);
 }
-.onboarding-moon { font-size: 56px; }
-.onboarding-card h1 {
-  font-size: 34px; letter-spacing: 1px; margin: 8px 0 4px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+.icon-btn:hover { color: var(--text); border-color: var(--luna-d); }
+.icon-btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+.icon-btn.sm { width: 34px; height: 34px; font-size: 16px; }
+.icon-btn svg { width: 20px; height: 20px; }
+
+/* ── Campos ── */
+.field { display: flex; flex-direction: column; gap: 6px; margin-top: 16px; }
+.field > label,
+.row-ctl {
+  font-size: 12px; font-weight: 700;
+  letter-spacing: .09em; text-transform: uppercase;
+  color: var(--faint);
+}
+input[type="text"], input[type="date"], input[type="datetime-local"],
+input[type="number"], select {
+  font: inherit; font-size: 16px;
+  width: 100%;
+  padding: 13px 15px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line);
+  background: rgba(0,0,0,.3);
+  color: var(--text);
+}
+input:focus, select:focus { outline: none; border-color: var(--luna-d); }
+.field-note { font-size: 13px; color: var(--dim); margin-top: 10px; }
+
+/* ═══════════ ALTA ═══════════ */
+.welcome {
+  min-height: 100dvh;
+  display: grid; place-items: center;
+  padding: 28px 22px calc(28px + env(safe-area-inset-bottom));
+}
+.welcome-inner { width: 100%; max-width: 380px; }
+.welcome-mark { width: 84px; height: 84px; margin: 0 auto 18px; color: var(--luna); }
+.welcome-mark svg { width: 100%; height: 100%; }
+.welcome-title {
+  font-size: 40px; text-align: center; letter-spacing: -.03em;
+  background: linear-gradient(100deg, var(--luna) 10%, var(--amber) 92%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.tagline { color: var(--text-dim); font-size: 14px; margin-bottom: 26px; }
-.onboarding-card label {
-  display: block; text-align: left;
-  font-size: 13px; color: var(--text-dim); margin: 14px 0 6px;
-}
+.welcome-sub { text-align: center; color: var(--dim); font-size: 15px; margin-top: 6px; }
+#w-start { margin-top: 28px; }
 
-input[type="text"], input[type="date"], select {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--card-border);
-  background: rgba(0, 0, 0, 0.25);
-  color: var(--text);
-  font-family: inherit;
-  font-size: 15px;
-  outline: none;
-  color-scheme: dark;
-}
-input:focus, select:focus { border-color: var(--accent-2); }
-
-/* ── Botones ── */
-button { font-family: inherit; cursor: pointer; }
-.btn-primary, .btn-secondary, .btn-danger {
-  border: none;
-  border-radius: 14px;
-  padding: 13px 22px;
-  font-size: 15px;
-  font-weight: 700;
-  transition: transform 0.12s ease, filter 0.12s ease;
-}
-.btn-primary {
-  background: linear-gradient(90deg, var(--accent), #f0a656);
-  color: #33250c;
-}
-.btn-secondary {
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid var(--card-border);
-  color: var(--text);
-}
-.btn-danger {
-  background: transparent;
-  border: 1px solid var(--danger);
-  color: var(--danger);
-  width: 100%;
-  margin-top: 18px;
-}
-.btn-primary:active, .btn-secondary:active { transform: scale(0.97); }
-.btn-primary:hover, .btn-secondary:hover { filter: brightness(1.1); }
-#ob-start { width: 100%; margin-top: 26px; }
-.btn-icon {
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  border-radius: 50%;
-  width: 42px; height: 42px;
-  font-size: 18px;
-}
-
-/* ── Layout de la app ── */
+/* ═══════════ ARMAZÓN ═══════════ */
 .app {
-  max-width: 520px;
+  max-width: var(--shell);
   margin: 0 auto;
-  padding: 22px 18px 96px;
+  padding: max(14px, env(safe-area-inset-top)) 18px calc(120px + env(safe-area-inset-bottom));
 }
-.app-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 18px;
+
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 0 14px; }
+.baby { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.baby h1 { font-size: 21px; line-height: 1.2; }
+.baby p { font-size: 12.5px; color: var(--dim); }
+.baby-dot {
+  width: 38px; height: 38px; flex: none;
+  border-radius: var(--r-full);
+  display: grid; place-items: center;
+  background: linear-gradient(160deg, var(--luna-d), #3d3480);
+  color: #fff; font-weight: 800; font-size: 16px;
 }
-.app-header h1 { font-size: 26px; }
-.baby-age { color: var(--text-dim); font-size: 13px; margin-top: 2px; }
 
 .view { display: flex; flex-direction: column; gap: 16px; }
-.view-intro { color: var(--text-dim); font-size: 14px; padding: 0 4px; }
+.view-hoy { gap: 13px; }
+.view-lead { color: var(--dim); font-size: 14px; padding: 0 2px; max-width: 60ch; }
 
-.card {
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius);
-  padding: 20px;
-  backdrop-filter: blur(10px);
-}
-.card-title { font-size: 15px; color: var(--text-dim); font-weight: 700; margin-bottom: 14px; }
-
-/* ── Predicción ── */
-.prediction-card {
-  text-align: center;
-  background: linear-gradient(135deg, rgba(183, 156, 255, 0.18), rgba(247, 200, 115, 0.12));
-  border-color: rgba(183, 156, 255, 0.35);
-}
-.prediction-label { color: var(--text-dim); font-size: 14px; }
-.prediction-time {
-  font-size: 44px; font-weight: 800; margin: 6px 0;
-  color: var(--accent);
-  font-variant-numeric: tabular-nums;
-}
-.prediction-sub { color: var(--text-dim); font-size: 13px; }
-
-/* ── Cronómetro ── */
-.sleep-timer-card { text-align: center; }
-.timer-hint { color: var(--text-dim); font-size: 14px; margin-bottom: 14px; }
-.timer-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-.timer-display {
-  font-size: 46px; font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  color: var(--accent-2);
-  margin-bottom: 14px;
-}
-.btn-wake { width: 100%; }
-
-/* ── Horario ── */
-.schedule { display: flex; flex-direction: column; gap: 10px; }
-.schedule-item {
-  display: flex; align-items: center; gap: 12px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.18);
-}
-.schedule-item.done { opacity: 0.45; }
-.schedule-item.next { border: 1px solid var(--accent); background: rgba(247, 200, 115, 0.1); }
-.schedule-icon { font-size: 20px; }
-.schedule-info { flex: 1; }
-.schedule-what { font-size: 14px; font-weight: 700; }
-.schedule-when { font-size: 12px; color: var(--text-dim); }
-.schedule-time { font-weight: 800; font-variant-numeric: tabular-nums; color: var(--accent-2); }
-
-/* ── Guía por edad ── */
-.age-guide { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-.guide-item {
-  background: rgba(0, 0, 0, 0.18);
-  border-radius: 12px;
-  padding: 12px;
-  text-align: center;
-}
-.guide-value { font-size: 20px; font-weight: 800; color: var(--accent); }
-.guide-label { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
-
-/* ── Registro rápido ── */
-.quick-log { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-.quick-btn {
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  border-radius: 16px;
-  padding: 14px 6px;
-  color: var(--text);
-  font-size: 13px; font-weight: 700;
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
-  transition: transform 0.12s ease;
-}
-.quick-btn span { font-size: 26px; }
-.quick-btn:active { transform: scale(0.94); }
-
-.log-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-.log-item {
-  display: flex; align-items: center; gap: 12px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.18);
-  font-size: 14px;
-}
-.log-item .log-time { margin-left: auto; color: var(--text-dim); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.log-item .log-del {
-  background: none; border: none; color: var(--text-dim); font-size: 15px; padding: 2px 6px;
-}
-.log-item .log-del:hover { color: var(--danger); }
-.log-empty { color: var(--text-dim); font-size: 14px; text-align: center; padding: 12px 0; }
-
-/* ── Sonidos ── */
-.sounds-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-.sound-btn {
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius);
-  padding: 26px 12px;
-  color: var(--text);
-  font-size: 14px; font-weight: 700;
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
-  transition: transform 0.12s ease, border-color 0.12s ease;
-}
-.sound-btn .sound-icon { font-size: 38px; }
-.sound-btn:hover { border-color: var(--accent-2); }
-.sound-btn.playing {
-  border-color: var(--accent);
-  background: rgba(247, 200, 115, 0.12);
-  animation: pulse 2.4s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(247, 200, 115, 0.25); }
-  50% { box-shadow: 0 0 22px 4px rgba(247, 200, 115, 0.25); }
-}
-.sound-controls { display: flex; flex-direction: column; gap: 14px; }
-.volume-label { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--text-dim); }
-.volume-label input[type="range"] { flex: 1; accent-color: var(--accent); }
-.volume-label select { flex: 1; width: auto; padding: 8px 10px; }
-
-/* ── Tendencias ── */
-canvas { width: 100%; height: auto; }
-.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.stat-card {
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  border-radius: 16px;
-  padding: 14px 8px;
-  text-align: center;
-}
-.stat-value { font-size: 20px; font-weight: 800; color: var(--accent); }
-.stat-label { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
-
-/* ── Consejos ── */
-.tip-card {
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius);
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
   padding: 18px;
-  margin-bottom: 12px;
 }
-.tip-card h3 { font-size: 15px; margin-bottom: 6px; color: var(--accent-2); }
-.tip-card p { font-size: 14px; color: var(--text-dim); line-height: 1.55; }
+.panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.panel-head h2 { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+.panel-hint { font-size: 12px; color: var(--faint); }
 
-/* ── Barra de pestañas ── */
-.tabbar {
-  position: fixed;
+/* ═══════════ ÓRBITA ═══════════ */
+.orbit { position: relative; margin: 2px auto 0; width: 100%; max-width: 300px; aspect-ratio: 1; }
+#ring { width: 100%; height: 100%; overflow: visible; display: block; }
+
+.ring-track { fill: none; stroke: rgba(255,255,255,.045); stroke-width: 24; stroke-linecap: round; }
+.ring-elapsed { fill: none; stroke: rgba(194,180,255,.055); stroke-width: 24; stroke-linecap: round; }
+.arc-sleep { fill: none; stroke: var(--luna-d); stroke-width: 11; stroke-linecap: round; opacity: .9; }
+.arc-sleep.est { stroke: var(--luna); stroke-dasharray: 2 6; stroke-opacity: .75; }
+.arc-sleep.live { stroke: var(--luna); filter: drop-shadow(0 0 8px rgba(194,180,255,.6)); }
+.node-ring { fill: none; stroke-width: 1.6; }
+.node-bg { fill: #151a41; }
+.tick-label { font: 700 11px var(--font); fill: var(--faint); letter-spacing: .04em; }
+.now-hand { stroke: var(--amber); stroke-width: 2; stroke-linecap: round; }
+
+.orbit-core {
+  position: absolute; inset: 27%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; gap: 2px; pointer-events: none;
+}
+.core-label { font-size: 13.5px; color: var(--dim); }
+.core-value {
+  font-size: clamp(26px, 8.5vw, 38px); font-weight: 800; letter-spacing: -.035em;
+  line-height: 1.05; font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--text);
+}
+.core-note { font-size: 13px; color: var(--faint); }
+
+.ring-legend {
+  display: flex; justify-content: center; gap: 18px;
+  font-size: 11.5px; color: var(--faint);
+  margin-top: -4px;
+}
+.ring-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.chip { width: 9px; height: 9px; border-radius: var(--r-full); display: inline-block; }
+.chip-nap { background: var(--luna-d); }
+.chip-wake { background: var(--dawn); }
+.chip-est { border: 1.5px dashed var(--luna); }
+
+/* ═══════════ HOJA INFERIOR ═══════════ */
+.sheet {
+  background: linear-gradient(180deg, var(--raised), var(--surface));
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 20px 18px 18px;
+  text-align: center;
+  position: relative;
+}
+.sheet::before {
+  content: ""; position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+  width: 40px; height: 4px; border-radius: var(--r-full); background: var(--line);
+}
+.sheet-badge {
+  width: 52px; height: 52px; margin: 2px auto 10px;
+  border-radius: var(--r-full);
+  display: grid; place-items: center;
+  color: var(--luna);
+  background: rgba(123,107,214,.16);
+  border: 1.5px dashed rgba(194,180,255,.45);
+}
+.sheet-badge svg { width: 26px; height: 26px; }
+.sheet-badge.live { border-style: solid; animation: breathe 4s var(--ease) infinite; }
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(194,180,255,.28); }
+  50%      { box-shadow: 0 0 0 14px rgba(194,180,255,0); }
+}
+.sheet-kicker { font-size: 15px; color: var(--dim); }
+.sheet-window {
+  font-size: clamp(30px, 9vw, 40px); font-weight: 800; letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums; margin: 4px 0 2px;
+}
+.sheet-len { font-size: 14px; color: var(--luna); font-weight: 700; }
+.sheet-tip { font-size: 13.5px; color: var(--dim); margin: 11px auto 0; max-width: 34ch; line-height: 1.45; }
+.sheet-actions { display: flex; gap: 10px; margin-top: 16px; }
+.sheet-actions .btn { flex: 1; }
+
+/* ═══════════ REGISTRO ═══════════ */
+.daynav { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.daynav p { font-weight: 700; font-size: 15px; }
+.icon-btn.sm:disabled { opacity: .3; cursor: default; }
+
+.quickgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; }
+.quick {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 14px 4px 11px;
+  color: var(--text);
+  font: inherit; font-size: 11.5px; font-weight: 700;
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  cursor: pointer;
+  transition: transform .14s var(--ease), border-color .14s var(--ease);
+}
+.quick:active { transform: scale(.94); }
+.quick:hover { border-color: var(--luna-d); }
+.quick:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+.quick svg { width: 24px; height: 24px; }
+
+.daysum { display: grid; grid-template-columns: repeat(auto-fit, minmax(78px, 1fr)); gap: 10px; }
+.sum-cell { text-align: center; }
+.sum-val { font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sum-lbl { font-size: 11px; color: var(--faint); margin-top: 1px; }
+
+.feed { list-style: none; display: flex; flex-direction: column; }
+.feed-item {
+  display: flex; align-items: center; gap: 13px;
+  padding: 11px 2px;
+  border-top: 1px solid var(--line);
+  cursor: pointer;
+  text-align: left;
+  background: none; border-left: 0; border-right: 0; border-bottom: 0;
+  color: inherit; font: inherit; width: 100%;
+}
+.feed-item:first-child { border-top: 0; }
+.feed-item:hover { background: rgba(255,255,255,.03); }
+.feed-item:focus-visible { outline: 2px solid var(--amber); outline-offset: -2px; border-radius: var(--r-sm); }
+.feed-icon {
+  width: 36px; height: 36px; flex: none;
+  border-radius: var(--r-full);
+  display: grid; place-items: center;
+  background: rgba(255,255,255,.05);
+}
+.feed-icon svg { width: 19px; height: 19px; }
+.feed-body { flex: 1; min-width: 0; }
+.feed-title { display: block; font-size: 14.5px; font-weight: 700; }
+.feed-sub { display: block; font-size: 12.5px; color: var(--faint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.feed-time { font-size: 13px; color: var(--dim); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.empty { color: var(--faint); font-size: 14px; text-align: center; padding: 16px 0; }
+
+/* ═══════════ SONIDOS ═══════════ */
+.soundgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.sound {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 24px 14px;
+  color: var(--text);
+  font: inherit; font-size: 14px; font-weight: 700;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  cursor: pointer;
+  transition: border-color .16s var(--ease), background .16s var(--ease), transform .14s var(--ease);
+}
+.sound svg { width: 32px; height: 32px; color: var(--dim); transition: color .16s var(--ease); }
+.sound small { display: block; font-weight: 400; font-size: 11.5px; color: var(--faint); }
+.sound:hover { border-color: var(--luna-d); }
+.sound:active { transform: scale(.97); }
+.sound:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+.sound.on { border-color: var(--luna); background: rgba(123,107,214,.16); }
+.sound.on svg { color: var(--luna); }
+.sound-panel { display: flex; flex-direction: column; gap: 15px; }
+.now-playing { font-size: 14.5px; font-weight: 700; color: var(--luna); }
+.row-ctl { display: flex; align-items: center; gap: 14px; }
+.row-ctl input[type="range"] { flex: 1; accent-color: var(--luna); }
+.row-ctl select { flex: 1; width: auto; padding: 9px 12px; }
+
+/* ═══════════ TENDENCIAS ═══════════ */
+canvas { width: 100%; height: auto; display: block; }
+.statrow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.stat {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r-md); padding: 15px 8px; text-align: center;
+}
+.stat-val { font-size: 19px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--luna); white-space: nowrap; }
+.stat-lbl { font-size: 11px; color: var(--faint); margin-top: 2px; }
+
+/* ═══════════ CONSEJOS ═══════════ */
+.tip {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r-lg); padding: 18px; margin-bottom: 12px;
+}
+.tip h3 { font-size: 15.5px; color: var(--luna); margin-bottom: 6px; }
+.tip p { font-size: 14px; color: var(--dim); line-height: 1.6; max-width: 62ch; }
+.disclaimer { font-size: 12px; color: var(--faint); text-align: center; padding: 4px 10px 0; line-height: 1.5; }
+
+/* ═══════════ FAB Y PESTAÑAS ═══════════ */
+.fab {
+  position: fixed; z-index: 20;
+  right: max(18px, calc(50vw - var(--shell)/2 + 18px));
+  bottom: calc(86px + env(safe-area-inset-bottom));
+  width: 56px; height: 56px;
+  border-radius: var(--r-full); border: none;
+  background: linear-gradient(180deg, #ddd4ff, #b9a8f8);
+  color: #221a4b; font: 300 30px/1 var(--font);
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(0,0,0,.5);
+  transition: transform .14s var(--ease);
+}
+.fab:active { transform: scale(.92); }
+.fab:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+
+.tabs {
+  position: fixed; z-index: 20;
   bottom: 0; left: 0; right: 0;
-  display: flex;
-  justify-content: space-around;
-  background: rgba(13, 16, 51, 0.92);
-  backdrop-filter: blur(14px);
-  border-top: 1px solid var(--card-border);
-  padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
-  z-index: 10;
+  display: flex; justify-content: space-around;
+  max-width: var(--shell); margin: 0 auto;
+  background: rgba(9,12,32,.9);
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  border-top: 1px solid var(--line);
+  padding: 7px 4px calc(7px + env(safe-area-inset-bottom));
 }
 .tab {
-  background: none; border: none;
-  color: var(--text-dim);
-  font-size: 11px; font-weight: 700;
+  background: none; border: none; cursor: pointer;
+  color: var(--faint);
+  font: inherit; font-size: 10.5px; font-weight: 700;
   display: flex; flex-direction: column; align-items: center; gap: 3px;
-  padding: 5px 10px;
-  border-radius: 12px;
+  padding: 6px 8px; border-radius: var(--r-sm);
+  transition: color .14s var(--ease);
+  flex: 1;
 }
-.tab span { font-size: 20px; }
-.tab.active { color: var(--accent); background: rgba(247, 200, 115, 0.1); }
+.tab svg { width: 22px; height: 22px; }
+.tab.on { color: var(--luna); }
+.tab:focus-visible { outline: 2px solid var(--amber); outline-offset: -2px; }
 
-/* ── Dialog ── */
+/* ═══════════ DIÁLOGOS ═══════════ */
 dialog {
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius);
-  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
   color: var(--text);
-  padding: 26px;
-  width: min(92vw, 400px);
+  padding: 20px;
+  width: min(94vw, 420px);
+  max-height: 88dvh;
+  overflow-y: auto;
   margin: auto;
 }
-dialog::backdrop { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(3px); }
-dialog h2 { margin-bottom: 14px; font-size: 20px; }
-dialog label { display: block; font-size: 13px; color: var(--text-dim); margin: 12px 0 6px; }
-.dialog-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px; }
+dialog::backdrop { background: rgba(3,4,14,.72); backdrop-filter: blur(4px); }
+.dlg-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.dlg-head h2 { font-size: 19px; }
+.dlg-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px; }
+.dlg-actions .btn { flex: 1; }
+.danger-zone { display: flex; flex-direction: column; gap: 9px; margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--line); }
 
-/* ── Toast ── */
+.typegrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 16px; }
+.type {
+  background: rgba(0,0,0,.25); border: 1px solid var(--line);
+  border-radius: var(--r-sm); padding: 11px 3px 9px;
+  color: var(--dim); font: inherit; font-size: 10.5px; font-weight: 700;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  cursor: pointer; transition: all .14s var(--ease);
+}
+.type svg { width: 21px; height: 21px; }
+.type.on { border-color: var(--luna); background: rgba(123,107,214,.2); color: var(--text); }
+.type:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+
+.seg { display: flex; gap: 7px; }
+.seg button {
+  flex: 1; font: inherit; font-size: 13px; font-weight: 700;
+  padding: 11px 6px; border-radius: var(--r-sm);
+  border: 1px solid var(--line); background: rgba(0,0,0,.25);
+  color: var(--dim); cursor: pointer; transition: all .14s var(--ease);
+}
+.seg button.on { border-color: var(--luna); background: rgba(123,107,214,.2); color: var(--text); }
+
+/* ═══════════ AVISOS ═══════════ */
 .toast {
-  position: fixed;
-  bottom: 92px; left: 50%;
-  transform: translateX(-50%);
-  background: var(--accent);
-  color: #33250c;
-  font-weight: 700; font-size: 14px;
-  padding: 11px 20px;
-  border-radius: 30px;
-  z-index: 50;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
-  animation: toast-in 0.25s ease;
-  max-width: 90vw;
-  text-align: center;
+  position: fixed; z-index: 60;
+  bottom: calc(94px + env(safe-area-inset-bottom));
+  left: 50%; transform: translateX(-50%);
+  background: var(--raised);
+  border: 1px solid var(--luna-d);
+  color: var(--text);
+  font-size: 14px; font-weight: 700;
+  padding: 12px 20px;
+  border-radius: var(--r-full);
+  box-shadow: 0 10px 30px rgba(0,0,0,.55);
+  max-width: 88vw; text-align: center;
+  animation: rise .24s var(--ease);
 }
-@keyframes toast-in {
-  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+@keyframes rise {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
-@media (min-width: 560px) {
-  .quick-log { grid-template-columns: repeat(4, 1fr); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
 }
 
 </style>
 
-<div class="sky" aria-hidden="true">
-  <div class="stars" id="stars"></div>
-  <div class="moon"></div>
-</div>
+<canvas id="sky" aria-hidden="true"></canvas>
 
-<!-- ══════════ ONBOARDING ══════════ -->
-<div class="onboarding" id="onboarding" hidden>
-  <div class="onboarding-card">
-    <div class="onboarding-moon">🌙</div>
-    <h1>Nappy</h1>
-    <p class="tagline">Predicciones de sueño para tu bebé, basadas en la ciencia del descanso infantil.</p>
-    <label for="ob-name">¿Cómo se llama tu bebé?</label>
-    <input type="text" id="ob-name" placeholder="Nombre del bebé" maxlength="30" autocomplete="off">
-    <label for="ob-birth">¿Cuándo nació?</label>
-    <input type="date" id="ob-birth">
-    <button class="btn-primary" id="ob-start">Comenzar ✨</button>
+<noscript><p class="noscript">Nappy necesita JavaScript para calcular los horarios de sueño.</p></noscript>
+
+<!-- ══════════════ ALTA DEL BEBÉ ══════════════ -->
+<div class="welcome" id="welcome" hidden>
+  <div class="welcome-inner">
+    <div class="welcome-mark" id="welcome-mark"></div>
+    <h1 class="welcome-title">Nappy</h1>
+    <p class="welcome-sub">Sabé cuándo y cuánto va a dormir tu bebé.</p>
+
+    <div class="field">
+      <label for="w-name">Nombre del bebé</label>
+      <input type="text" id="w-name" placeholder="Ej. Luna" maxlength="30" autocomplete="off" enterkeyhint="next">
+    </div>
+    <div class="field">
+      <label for="w-birth">Fecha de nacimiento</label>
+      <input type="date" id="w-birth">
+    </div>
+    <p class="field-note" id="w-band"></p>
+
+    <button class="btn btn-primary btn-block" id="w-start">Empezar</button>
   </div>
 </div>
 
-<!-- ══════════ APP ══════════ -->
+<!-- ══════════════ APLICACIÓN ══════════════ -->
 <div class="app" id="app" hidden>
 
-  <header class="app-header">
-    <div>
-      <h1 id="baby-name">Bebé</h1>
-      <p class="baby-age" id="baby-age"></p>
+  <header class="topbar">
+    <div class="baby">
+      <span class="baby-dot" id="baby-dot"></span>
+      <div>
+        <h1 id="baby-name">Bebé</h1>
+        <p id="baby-age"></p>
+      </div>
     </div>
-    <button class="btn-icon" id="btn-settings" title="Ajustes" aria-label="Ajustes">⚙️</button>
+    <button class="icon-btn" id="open-settings" aria-label="Ajustes"></button>
   </header>
 
-  <main id="main">
-
-    <!-- ── HOY ── -->
-    <section class="view" id="view-hoy">
-      <div class="card prediction-card" id="prediction-card">
-        <p class="prediction-label" id="prediction-label">Próxima siesta en</p>
-        <p class="prediction-time" id="prediction-time">—</p>
-        <p class="prediction-sub" id="prediction-sub"></p>
-      </div>
-
-      <div class="card sleep-timer-card">
-        <div id="timer-idle">
-          <p class="timer-hint" id="awake-since">Registrá cuándo se despertó para calcular la próxima siesta.</p>
-          <div class="timer-actions">
-            <button class="btn-primary" id="btn-sleep-start">😴 Se durmió</button>
-            <button class="btn-secondary" id="btn-woke-up">☀️ Se despertó</button>
-          </div>
-        </div>
-        <div id="timer-running" hidden>
-          <p class="timer-hint">Durmiendo desde hace</p>
-          <p class="timer-display" id="timer-display">00:00</p>
-          <button class="btn-primary btn-wake" id="btn-sleep-stop">☀️ Se despertó</button>
+  <main>
+    <!-- ─────────── HOY ─────────── -->
+    <section class="view view-hoy" id="view-hoy">
+      <div class="orbit">
+        <svg id="ring" viewBox="0 0 320 320" role="img" aria-label="Ritmo de sueño del día"></svg>
+        <div class="orbit-core">
+          <p class="core-label" id="core-label">—</p>
+          <p class="core-value" id="core-value">—</p>
+          <p class="core-note" id="core-note"></p>
         </div>
       </div>
 
-      <div class="card">
-        <h2 class="card-title">Horario de hoy</h2>
-        <div class="schedule" id="schedule"></div>
+      <div class="ring-legend">
+        <span><i class="chip chip-nap"></i>Sueño</span>
+        <span><i class="chip chip-wake"></i>Despierto</span>
+        <span><i class="chip chip-est"></i>Estimado</span>
       </div>
 
-      <div class="card">
-        <h2 class="card-title">Guía para su edad</h2>
-        <div class="age-guide" id="age-guide"></div>
-      </div>
+      <div class="sheet" id="sheet"></div>
+
+      <div class="quickgrid" data-quickgrid></div>
     </section>
 
-    <!-- ── REGISTRO ── -->
+    <!-- ─────────── REGISTRO ─────────── -->
     <section class="view" id="view-registro" hidden>
-      <div class="quick-log">
-        <button class="quick-btn" data-log="toma-pecho"><span>🤱</span>Pecho</button>
-        <button class="quick-btn" data-log="toma-bibe"><span>🍼</span>Biberón</button>
-        <button class="quick-btn" data-log="panal-pis"><span>💧</span>Pis</button>
-        <button class="quick-btn" data-log="panal-caca"><span>💩</span>Caca</button>
+      <div class="daynav">
+        <button class="icon-btn sm" id="day-prev" aria-label="Día anterior">‹</button>
+        <p id="day-title">Hoy</p>
+        <button class="icon-btn sm" id="day-next" aria-label="Día siguiente">›</button>
       </div>
-      <div class="card">
-        <h2 class="card-title">Actividad de hoy</h2>
-        <ul class="log-list" id="log-list"></ul>
+
+      <div class="quickgrid" data-quickgrid></div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Resumen del día</h2></div>
+        <div class="daysum" id="daysum"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Actividad</h2></div>
+        <ul class="feed" id="feed"></ul>
       </div>
     </section>
 
-    <!-- ── SONIDOS ── -->
+    <!-- ─────────── SONIDOS ─────────── -->
     <section class="view" id="view-sonidos" hidden>
-      <p class="view-intro">Sonidos relajantes generados en tiempo real para ayudar a tu bebé a dormir.</p>
-      <div class="sounds-grid">
-        <button class="sound-btn" data-sound="blanco"><span class="sound-icon">🌫️</span><span>Ruido blanco</span></button>
-        <button class="sound-btn" data-sound="lluvia"><span class="sound-icon">🌧️</span><span>Lluvia</span></button>
-        <button class="sound-btn" data-sound="vientre"><span class="sound-icon">🫀</span><span>Vientre materno</span></button>
-        <button class="sound-btn" data-sound="olas"><span class="sound-icon">🌊</span><span>Olas del mar</span></button>
-      </div>
-      <div class="card sound-controls" id="sound-controls" hidden>
-        <p id="sound-playing">Reproduciendo…</p>
-        <label class="volume-label">Volumen
-          <input type="range" id="sound-volume" min="0" max="100" value="50">
-        </label>
-        <label class="volume-label">Apagar en
-          <select id="sound-timer">
+      <p class="view-lead">Sonidos generados en vivo, sin descargas. Bajá el volumen y dejalos correr toda la siesta.</p>
+      <div class="soundgrid" id="soundgrid"></div>
+      <div class="panel sound-panel" id="sound-panel" hidden>
+        <p class="now-playing" id="now-playing"></p>
+        <label class="row-ctl">Volumen<input type="range" id="vol" min="0" max="100" value="45"></label>
+        <label class="row-ctl">Apagar en
+          <select id="offtimer">
             <option value="0">Nunca</option>
             <option value="15">15 min</option>
             <option value="30">30 min</option>
+            <option value="45">45 min</option>
             <option value="60">1 hora</option>
           </select>
         </label>
-        <button class="btn-secondary" id="btn-sound-stop">⏹ Detener</button>
+        <button class="btn btn-ghost btn-block" id="sound-stop">Detener</button>
       </div>
     </section>
 
-    <!-- ── TENDENCIAS ── -->
+    <!-- ─────────── TENDENCIAS ─────────── -->
     <section class="view" id="view-tendencias" hidden>
-      <div class="card">
-        <h2 class="card-title">Sueño de los últimos 7 días</h2>
-        <canvas id="chart-sleep" width="640" height="320"></canvas>
+      <div class="statrow" id="statrow"></div>
+      <div class="panel">
+        <div class="panel-head"><h2>Sueño diario</h2><span class="panel-hint" id="goal-hint"></span></div>
+        <canvas id="chart" width="680" height="320"></canvas>
       </div>
-      <div class="stats-grid" id="stats-grid"></div>
-      <div class="card">
-        <h2 class="card-title">Historial de sueño</h2>
-        <ul class="log-list" id="sleep-history"></ul>
+      <div class="panel">
+        <div class="panel-head"><h2>Tomas por día</h2></div>
+        <canvas id="chart-feeds" width="680" height="220"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>Últimos sueños</h2></div>
+        <ul class="feed" id="sleeplog"></ul>
       </div>
     </section>
 
-    <!-- ── CONSEJOS ── -->
+    <!-- ─────────── CONSEJOS ─────────── -->
     <section class="view" id="view-consejos" hidden>
-      <p class="view-intro">Consejos basados en la ciencia del sueño infantil, adaptados a la edad de tu bebé.</p>
-      <div id="tips-list"></div>
+      <p class="view-lead">Orientación para la etapa de <b id="tips-band"></b>.</p>
+      <div id="tips"></div>
+      <p class="disclaimer">Nappy es una guía orientativa basada en rangos de sueño infantil habituales. No sustituye la consulta con tu pediatra.</p>
     </section>
-
   </main>
 
-  <nav class="tabbar">
-    <button class="tab active" data-view="hoy"><span>🌙</span>Hoy</button>
-    <button class="tab" data-view="registro"><span>📝</span>Registro</button>
-    <button class="tab" data-view="sonidos"><span>🎵</span>Sonidos</button>
-    <button class="tab" data-view="tendencias"><span>📊</span>Tendencias</button>
-    <button class="tab" data-view="consejos"><span>💡</span>Consejos</button>
-  </nav>
+  <button class="fab" id="fab" aria-label="Registrar algo">+</button>
+
+  <nav class="tabs" id="tabs"></nav>
 </div>
 
-<!-- ══════════ AJUSTES ══════════ -->
+<!-- ══════════════ MODAL DE REGISTRO ══════════════ -->
+<dialog id="log-dialog">
+  <form method="dialog" id="log-form">
+    <header class="dlg-head">
+      <h2 id="log-title">Registrar</h2>
+      <button type="button" class="icon-btn sm" id="log-close" aria-label="Cerrar">✕</button>
+    </header>
+
+    <div class="typegrid" id="typegrid"></div>
+
+    <div class="field">
+      <label for="log-time" id="log-time-label">Hora</label>
+      <input type="datetime-local" id="log-time">
+    </div>
+
+    <div id="log-extra"></div>
+
+    <div class="field">
+      <label for="log-note">Nota (opcional)</label>
+      <input type="text" id="log-note" maxlength="120" placeholder="Ej. se durmió en brazos" autocomplete="off">
+    </div>
+
+    <div class="dlg-actions">
+      <button type="button" class="btn btn-ghost" id="log-delete" hidden>Eliminar</button>
+      <button type="button" class="btn btn-primary" id="log-save">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- ══════════════ AJUSTES ══════════════ -->
 <dialog id="settings-dialog">
-  <h2>Ajustes</h2>
-  <label for="set-name">Nombre del bebé</label>
-  <input type="text" id="set-name" maxlength="30">
-  <label for="set-birth">Fecha de nacimiento</label>
-  <input type="date" id="set-birth">
-  <div class="dialog-actions">
-    <button class="btn-secondary" id="set-cancel">Cancelar</button>
-    <button class="btn-primary" id="set-save">Guardar</button>
+  <header class="dlg-head">
+    <h2>Ajustes</h2>
+    <button type="button" class="icon-btn sm" id="settings-close" aria-label="Cerrar">✕</button>
+  </header>
+  <div class="field">
+    <label for="s-name">Nombre</label>
+    <input type="text" id="s-name" maxlength="30">
   </div>
-  <button class="btn-danger" id="set-reset">Borrar todos los datos</button>
+  <div class="field">
+    <label for="s-birth">Fecha de nacimiento</label>
+    <input type="date" id="s-birth">
+  </div>
+  <p class="field-note" id="s-band"></p>
+  <div class="dlg-actions">
+    <button type="button" class="btn btn-primary" id="s-save">Guardar</button>
+  </div>
+  <div class="danger-zone">
+    <button type="button" class="btn btn-ghost" id="s-export">Exportar datos (.json)</button>
+    <button type="button" class="btn btn-danger" id="s-reset">Borrar todo</button>
+  </div>
 </dialog>
 
 <div class="toast" id="toast" hidden></div>
 
-
-
 <script>
-/* ═══════════════════════════════════════════════════════════
-   Nappy — app de sueño para bebés inspirada en Napper
-   Predicción de siestas por ventanas de vigilia, registro,
-   sonidos blancos (Web Audio) y tendencias. Sin dependencias.
-   ═══════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   Nappy — predicción de siestas y registro del bebé
+   Sin dependencias. Los datos viven en el navegador (localStorage).
+   ═══════════════════════════════════════════════════════════════ */
 "use strict";
 
-/* ── Estado y persistencia ── */
-const STORAGE_KEY = "nappy-state-v1";
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const MIN = 60000, HOUR = 3600000, DAY = 86400000;
 
-const state = load() || {
-  baby: null,            // { name, birth: "YYYY-MM-DD" }
-  events: [],            // { id, type, ts, end? }  type: sueño | toma-pecho | toma-bibe | panal-pis | panal-caca
-  sleepingSince: null,   // timestamp ms si hay un sueño en curso
-};
+/* ─────────────── Estado ─────────────── */
+const KEY = "nappy.v2";
 
-function load() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); }
-  catch { return null; }
+const state = Object.assign(
+  { baby: null, events: [], sleepingSince: null },
+  (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } })()
+);
+
+const save = () => localStorage.setItem(KEY, JSON.stringify(state));
+
+/* ─────────────── Tiempo ─────────────── */
+const hhmm = (t) => new Date(t).toLocaleTimeString("es", { hour: "2-digit", minute: "2-digit", hour12: false });
+const dayStart = (t = Date.now()) => { const d = new Date(t); d.setHours(0, 0, 0, 0); return d.getTime(); };
+const dateKey = (t) => new Date(t - new Date(t).getTimezoneOffset() * MIN).toISOString().slice(0, 10);
+
+function dur(ms) {
+  const m = Math.max(0, Math.round(ms / MIN));
+  if (m < 60) return `${m} min`;
+  const h = Math.floor(m / 60), r = m % 60;
+  return r ? `${h} h ${r} min` : `${h} h`;
 }
-function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+function durShort(ms) {
+  const m = Math.max(0, Math.round(ms / MIN));
+  if (m < 60) return `${m} min`;
+  const h = Math.floor(m / 60), r = m % 60;
+  return r ? `${h}h ${String(r).padStart(2, "0")}m` : `${h}h`;
+}
+function localInput(t) {
+  const d = new Date(t - new Date(t).getTimezoneOffset() * MIN);
+  return d.toISOString().slice(0, 16);
 }
 
-const $ = (sel) => document.querySelector(sel);
-const $$ = (sel) => document.querySelectorAll(sel);
-
-/* ══════════════════════════════════════════════
-   Ciencia del sueño: ventanas de vigilia por edad
-   (valores típicos de las guías de sueño infantil)
-   ══════════════════════════════════════════════ */
-const SLEEP_GUIDE = [
-  // maxWeeks, ventana de vigilia (min), siestas/día, sueño total (h), etiqueta
-  { maxWeeks: 4,   wake: 50,  naps: 5, total: 16, label: "Recién nacido" },
-  { maxWeeks: 8,   wake: 60,  naps: 5, total: 15.5, label: "1–2 meses" },
-  { maxWeeks: 13,  wake: 75,  naps: 4, total: 15, label: "2–3 meses" },
-  { maxWeeks: 17,  wake: 95,  naps: 4, total: 14.5, label: "3–4 meses" },
-  { maxWeeks: 26,  wake: 120, naps: 3, total: 14, label: "4–6 meses" },
-  { maxWeeks: 35,  wake: 165, naps: 3, total: 14, label: "6–8 meses" },
-  { maxWeeks: 43,  wake: 195, naps: 2, total: 13.5, label: "8–10 meses" },
-  { maxWeeks: 52,  wake: 225, naps: 2, total: 13.5, label: "10–12 meses" },
-  { maxWeeks: 78,  wake: 285, naps: 1, total: 13, label: "12–18 meses" },
-  { maxWeeks: 104, wake: 330, naps: 1, total: 12.5, label: "18–24 meses" },
-  { maxWeeks: 99999, wake: 360, naps: 1, total: 12, label: "2+ años" },
+/* ═══════════════════════════════════════════════════════════════
+   CIENCIA DEL SUEÑO
+   Cada franja describe la forma del día, no la ventana suelta: cuántas
+   siestas, cuánto sueño diurno y cuántas horas dura la noche. La ventana
+   de vigilia se deduce de ahí, así el día siempre cierra a una hora de
+   dormir realista en lugar de irse acumulando hasta las diez de la noche. */
+const BANDS = [
+  //                                     siestas  sueño diurno  noche   sueño total
+  { maxW: 4,   label: "recién nacido", naps: 5, dayNap: 420, night: 12,    total: 16.0 },
+  { maxW: 8,   label: "1–2 meses",     naps: 5, dayNap: 350, night: 12,    total: 15.5 },
+  { maxW: 13,  label: "2–3 meses",     naps: 4, dayNap: 300, night: 12,    total: 15.0 },
+  { maxW: 17,  label: "3–4 meses",     naps: 4, dayNap: 260, night: 11.75, total: 14.5 },
+  { maxW: 26,  label: "4–6 meses",     naps: 4, dayNap: 220, night: 11.5,  total: 14.0 },
+  { maxW: 35,  label: "6–8 meses",     naps: 3, dayNap: 180, night: 11.5,  total: 13.8 },
+  { maxW: 43,  label: "8–10 meses",    naps: 2, dayNap: 165, night: 11.5,  total: 13.5 },
+  { maxW: 52,  label: "10–12 meses",   naps: 2, dayNap: 150, night: 11.5,  total: 13.5 },
+  { maxW: 78,  label: "12–18 meses",   naps: 1, dayNap: 135, night: 11.5,  total: 13.0 },
+  { maxW: 104, label: "18–24 meses",   naps: 1, dayNap: 120, night: 11.25, total: 12.5 },
+  { maxW: 1e9, label: "2 años o más",  naps: 1, dayNap: 100, night: 11,    total: 12.0 },
 ];
 
-function ageInWeeks() {
-  const birth = new Date(state.baby.birth + "T00:00:00");
-  return Math.max(0, (Date.now() - birth.getTime()) / (7 * 24 * 3600 * 1000));
+const weeksOld = () =>
+  Math.max(0, (Date.now() - new Date(state.baby.birth + "T00:00:00").getTime()) / (7 * DAY));
+
+const band = () => BANDS.find((b) => weeksOld() <= b.maxW);
+
+function ageText() {
+  const w = Math.floor(weeksOld());
+  if (w < 9) return `${w} semana${w === 1 ? "" : "s"}`;
+  const m = Math.floor(weeksOld() / 4.345);
+  if (m < 24) return `${m} mes${m === 1 ? "" : "es"}`;
+  const y = Math.floor(m / 12), r = m % 12;
+  return `${y} año${y === 1 ? "" : "s"}` + (r ? ` y ${r} mes${r === 1 ? "" : "es"}` : "");
 }
 
-function guideForAge() {
-  const w = ageInWeeks();
-  return SLEEP_GUIDE.find((g) => w <= g.maxWeeks);
+/* Reparto del tiempo despierto: la primera ventana es la más corta y la
+   que precede a la noche, la más larga. Suman exactamente las horas que
+   el bebé pasa despierto entre el despertar y la hora de dormir. */
+function wakeWindows(b) {
+  const n = b.naps + 1;
+  const awake = (1440 - b.night * 60) - b.dayNap;
+  if (n === 1) return [Math.round(awake / 5) * 5];
+  const raw = Array.from({ length: n }, (_, i) => 0.82 + 0.46 * (i / (n - 1)));
+  const sum = raw.reduce((a, x) => a + x, 0);
+  return raw.map((x) => Math.round((awake * x) / sum / 5) * 5);
 }
 
-function ageLabel() {
-  const weeks = Math.floor(ageInWeeks());
-  if (weeks < 9) return `${weeks} semana${weeks === 1 ? "" : "s"}`;
-  const months = Math.floor(weeks / 4.345);
-  if (months < 24) return `${months} mes${months === 1 ? "" : "es"}`;
-  const years = Math.floor(months / 12);
-  const rem = months % 12;
-  return `${years} año${years === 1 ? "" : "s"}${rem ? ` y ${rem} mes${rem === 1 ? "" : "es"}` : ""}`;
+/* El sueño diurno se reparte con las siestas de la mañana más largas
+   y la última del día como una siesta corta de recuperación. */
+function napLengths(b) {
+  const n = b.naps;
+  const w = Array.from({ length: n }, (_, i) => 1.35 - 0.75 * (n === 1 ? 0 : i / (n - 1)));
+  const sum = w.reduce((a, x) => a + x, 0);
+  return w.map((x) => Math.max(20, Math.round((b.dayNap * x) / sum / 5) * 5));
 }
 
-/* ── Utilidades de tiempo ── */
-const fmtTime = (ts) =>
-  new Date(ts).toLocaleTimeString("es", { hour: "2-digit", minute: "2-digit" });
+const ORDINAL = ["Primera", "Segunda", "Tercera", "Cuarta", "Quinta", "Sexta", "Séptima"];
+const napName = (i) => `${ORDINAL[i] || `${i + 1}.ª`} siesta`;
 
-function fmtDuration(ms) {
-  const min = Math.round(ms / 60000);
-  const h = Math.floor(min / 60);
-  const m = min % 60;
-  if (h === 0) return `${m} min`;
-  return `${h} h ${String(m).padStart(2, "0")} min`;
-}
+/* ═══════════════════════════════════════════════════════════════
+   MOTOR DE PREDICCIÓN
+   Ancla en el último despertar y encadena ventana de vigilia →
+   siesta → ventana → siesta … hasta la hora de dormir.
+   ═══════════════════════════════════════════════════════════════ */
+function plan(now = Date.now()) {
+  const b = band();
+  const windows = wakeWindows(b);
+  const lengths = napLengths(b);
+  const t0 = dayStart(now);
 
-function startOfDay(ts = Date.now()) {
-  const d = new Date(ts);
-  d.setHours(0, 0, 0, 0);
-  return d.getTime();
-}
-
-/* ══════════════════════════════════════════════
-   Predicción de la próxima siesta / hora de dormir
-   ══════════════════════════════════════════════ */
-function lastWakeTime() {
-  // Fin del último sueño registrado hoy o ayer
   const sleeps = state.events
-    .filter((e) => e.type === "sueño" && e.end)
-    .sort((a, b) => b.end - a.end);
-  return sleeps.length ? sleeps[0].end : null;
-}
+    .filter((e) => e.type === "sueno" && e.end)
+    .sort((a, b2) => a.ts - b2.ts);
 
-function napsToday() {
-  const t0 = startOfDay();
-  return state.events.filter((e) => e.type === "sueño" && e.ts >= t0);
-}
+  /* El primer sueño que termina hoy pasadas las 4 de la mañana marca
+     el despertar matutino; los siguientes son las siestas del día. */
+  const endedToday = sleeps.filter((e) => e.end >= t0 + 4 * HOUR && e.end <= now);
+  const morningWake = endedToday.length ? endedToday[0].end : null;
+  const naps = endedToday.slice(1);
+  const skipped = state.events.filter((e) => e.type === "omitida" && e.ts >= t0 && e.ts <= now);
 
-function prediction() {
-  const guide = guideForAge();
+  const blocks = naps.map((n, i) => ({ kind: "nap", index: i, start: n.ts, end: n.end, est: false, ev: n }));
+
+  let index = naps.length + skipped.length;
+  let anchor = Math.max(
+    morningWake || t0 + 7 * HOUR,
+    ...naps.map((n) => n.end),
+    ...skipped.map((s) => s.ts)
+  );
+
+  let live = null;
   if (state.sleepingSince) {
-    return { mode: "durmiendo" };
+    const expected = lengths[Math.min(index, lengths.length - 1)] * MIN;
+    live = { kind: "nap", index, start: state.sleepingSince, end: state.sleepingSince + expected, est: true, live: true };
+    blocks.push(live);
+    anchor = live.end;
+    index++;
   }
-  const wake = lastWakeTime();
-  if (!wake || Date.now() - wake > 16 * 3600 * 1000) {
-    return { mode: "sin-datos", guide };
+
+  const upcoming = [];
+  for (let i = index; i < b.naps; i++) {
+    const start = anchor + windows[Math.min(i, windows.length - 1)] * MIN;
+    if (new Date(start).getHours() >= 18) break;      // tan tarde ya no es siesta: es la noche
+    const block = { kind: "nap", index: i, start, end: start + lengths[i] * MIN, est: true };
+    upcoming.push(block);
+    blocks.push(block);
+    anchor = block.end;
   }
-  const naps = napsToday().length;
-  const isBedtime = naps >= guide.naps || new Date().getHours() >= 18;
-  const target = wake + guide.wake * 60000;
+
+  /* La noche cierra el día: última ventana desde el final del último
+     sueño, acotada a un rango razonable. */
+  let bedtime = anchor + windows[windows.length - 1] * MIN;
+  bedtime = Math.min(Math.max(bedtime, t0 + 18 * HOUR), t0 + 21 * HOUR);
+  const night = { kind: "night", start: bedtime, end: bedtime + b.night * HOUR, est: true };
+  blocks.push(night);
+  if (!live) upcoming.push(night);
+
+  const next = live || upcoming.find((x) => x.end > now) || night;
+
   return {
-    mode: isBedtime ? "noche" : "siesta",
-    target,
-    overdue: Date.now() > target,
-    guide,
+    b, windows, lengths, morningWake, naps, blocks,
+    next, live, bedtime,
+    firstAt: morningWake || t0 + 7 * HOUR,
+    lastAt: night.start,
+    hasData: !!morningWake,
   };
 }
 
-function renderPrediction() {
-  const p = prediction();
-  const label = $("#prediction-label");
-  const time = $("#prediction-time");
-  const sub = $("#prediction-sub");
+const blockTitle = (x) => (x.kind === "night" ? "Hora de dormir" : napName(x.index));
 
-  if (p.mode === "durmiendo") {
-    label.textContent = "Ahora mismo";
-    time.textContent = "😴 Durmiendo";
-    sub.textContent = "Dulces sueños…";
-    return;
-  }
-  if (p.mode === "sin-datos") {
-    label.textContent = "Próxima siesta";
-    time.textContent = "—";
-    sub.textContent = `Tocá «Se despertó» cuando ${state.baby.name} se despierte para empezar a predecir.`;
-    return;
-  }
-  const what = p.mode === "noche" ? "Hora de dormir" : "Próxima siesta";
-  if (p.overdue) {
-    label.textContent = what;
-    time.textContent = "¡Ahora!";
-    sub.textContent = `La ventana de vigilia de ${fmtDuration(p.guide.wake * 60000)} ya se cumplió (${fmtTime(p.target)}).`;
-  } else {
-    label.textContent = `${what} a las`;
-    time.textContent = fmtTime(p.target);
-    sub.textContent = `En ${fmtDuration(p.target - Date.now())} · ventana de vigilia: ${fmtDuration(p.guide.wake * 60000)}`;
-  }
+/* ═══════════════════════════════════════════════════════════════
+   ICONOGRAFÍA — dibujada a mano, sin emoji en la interfaz principal
+   ═══════════════════════════════════════════════════════════════ */
+const P = {
+  nap: `<circle cx="8.5" cy="8" r="3.3" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <path d="M8.5 1.6v1.5M8.5 12.9v.6M1.9 8h1.5M13.6 8h.6M3.8 3.3l1 1M13.2 3.3l-1 1"/></g>
+        <path d="M9.4 20.8a3.6 3.6 0 0 1 .3-7.2 4.9 4.9 0 0 1 9.3 1.4 2.9 2.9 0 0 1-.5 5.8z" fill="currentColor"/>`,
+  night: `<path d="M20.4 14.9A8.4 8.4 0 0 1 9.6 4.1a8.4 8.4 0 1 0 10.8 10.8z" fill="currentColor"/>
+          <path d="M17.2 3.1l.6 1.7 1.7.6-1.7.6-.6 1.7-.6-1.7-1.7-.6 1.7-.6z" fill="currentColor" opacity=".8"/>`,
+  wake: `<circle cx="12" cy="12" r="4.2" fill="currentColor"/>
+         <g stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+         <path d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/></g>`,
+  breast: `<path d="M12 20.6S4.2 15.7 4.2 10.4A4.4 4.4 0 0 1 12 7.6a4.4 4.4 0 0 1 7.8 2.8c0 5.3-7.8 10.2-7.8 10.2z" fill="currentColor"/>`,
+  bottle: `<path d="M9.3 2h5.4v1.5l-1.3 1.9V7h.4A3 3 0 0 1 16.8 10v8.6a3.4 3.4 0 0 1-3.4 3.4h-2.8a3.4 3.4 0 0 1-3.4-3.4V10a3 3 0 0 1 3-3h.4V5.4L9.3 3.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+           <path d="M7.2 12.6h9.6M7.2 15.8h9.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>`,
+  solid: `<path d="M3.2 11h13.6a6.8 6.8 0 0 1-13.6 0z" fill="currentColor"/>
+          <path d="M2.4 11h15.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M20.6 3.4v17.2M20.6 3.4c1.4 1.6 1.4 4.6 0 6.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>`,
+  pee: `<path d="M12 2.6s6.3 6.9 6.3 10.9a6.3 6.3 0 1 1-12.6 0C5.7 9.5 12 2.6 12 2.6z" fill="currentColor"/>`,
+  poo: `<path d="M7.6 21.4h8.8a3.1 3.1 0 0 0 .5-6.1 2.7 2.7 0 0 0-2-3.7 2.5 2.5 0 0 0-1.6-3.9c.5-1.4-.3-3-1.8-3.5.6 1.6 0 2.7-1.1 3.4-1.4.8-1.7 2.1-1 3.3-1.5.5-2.3 1.9-1.9 3.4a3.1 3.1 0 0 0 .1 7.1z" fill="currentColor"/>`,
+  meds: `<rect x="2.6" y="8.6" width="18.8" height="6.8" rx="3.4" transform="rotate(-40 12 12)" fill="none" stroke="currentColor" stroke-width="1.7"/>
+         <path d="M8.3 15.7l7.4-7.4" stroke="currentColor" stroke-width="1.7"/>`,
+  note: `<path d="M5 3.6h14v16.8H5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+         <path d="M8.4 8.4h7.2M8.4 12h7.2M8.4 15.6h4.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>`,
+  chart: `<path d="M4 20V9.5M10 20V4.6M16 20v-8M22 20H2" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>`,
+  wave: `<path d="M2 9c2.6-3.4 5.2-3.4 7.8 0S15 12.4 17.6 9M2 16c2.6-3.4 5.2-3.4 7.8 0s5.2 3.4 7.8 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>`,
+  bulb: `<path d="M12 2.6a6.5 6.5 0 0 0-3.8 11.8c.7.5 1.1 1.2 1.1 2v.4h5.4v-.4c0-.8.4-1.5 1.1-2A6.5 6.5 0 0 0 12 2.6z" fill="none" stroke="currentColor" stroke-width="1.6"/>
+         <path d="M9.6 19.2h4.8M10.4 21.6h3.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>`,
+  gear: `<circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.7"/>
+         <path d="M12 2.4l1.5 2.4 2.8-.5.5 2.8 2.4 1.5-1.4 2.5 1.4 2.5-2.4 1.5-.5 2.8-2.8-.5L12 21.6l-1.5-2.4-2.8.5-.5-2.8-2.4-1.5L6.2 12 4.8 9.5l2.4-1.5.5-2.8 2.8.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>`,
+  rain: `<path d="M8.6 14.4a4.2 4.2 0 0 1 .4-8.4 5.6 5.6 0 0 1 10.6 1.6 3.3 3.3 0 0 1-.6 6.8z" fill="currentColor"/>
+         <g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 17.4l-1 3M13 17.4l-1 3M18 17.4l-1 3"/></g>`,
+  heart: `<path d="M12 21.2C7 17.6 2.6 14.2 2.6 10.2A4.6 4.6 0 0 1 12 7.5a4.6 4.6 0 0 1 9.4 2.7c0 4-4.4 7.4-9.4 11z" fill="none" stroke="currentColor" stroke-width="1.7"/>
+          <path d="M2.6 12h4.6l1.6-3 2.4 6 2-4.4 1.4 1.4h6.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>`,
+  fog: `<g stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+        <path d="M3 6.6h18M3 11h18M3 15.4h13M3 19.8h18"/></g>`,
+};
+
+const svg = (name, cls = "") =>
+  `<svg viewBox="0 0 24 24" fill="none" class="${cls}" aria-hidden="true">${P[name] || ""}</svg>`;
+
+/* ═══════════════════════════════════════════════════════════════
+   TIPOS DE REGISTRO
+   ═══════════════════════════════════════════════════════════════ */
+const TYPES = {
+  sueno:  { icon: "nap",    label: "Sueño",    color: "var(--luna)" },
+  pecho:  { icon: "breast", label: "Pecho",    color: "var(--dawn)" },
+  bibe:   { icon: "bottle", label: "Biberón",  color: "var(--dawn)" },
+  solido: { icon: "solid",  label: "Sólidos",  color: "var(--dawn)" },
+  pis:    { icon: "pee",    label: "Pis",      color: "var(--amber)" },
+  caca:   { icon: "poo",    label: "Caca",     color: "var(--amber)" },
+  medic:  { icon: "meds",   label: "Medicina", color: "var(--rose)" },
+  nota:   { icon: "note",   label: "Nota",     color: "var(--dim)" },
+};
+const FEEDS = ["pecho", "bibe", "solido"];
+const isNightSleep = (e) => e.end && e.end - e.ts > 5 * HOUR;
+
+const eventTitle = (e) =>
+  e.type === "sueno" ? (isNightSleep(e) ? "Sueño nocturno" : "Siesta") : (TYPES[e.type] || TYPES.nota).label;
+
+const eventIcon = (e) =>
+  e.type === "sueno" && isNightSleep(e) ? "night" : (TYPES[e.type] || TYPES.nota).icon;
+
+function eventSubtitle(e) {
+  const bits = [];
+  if (e.type === "sueno" && e.end) bits.push(`${hhmm(e.ts)} – ${hhmm(e.end)} · ${dur(e.end - e.ts)}`);
+  if (e.type === "pecho") { if (e.side) bits.push({ izq: "Izquierdo", der: "Derecho", ambos: "Ambos" }[e.side]); if (e.mins) bits.push(`${e.mins} min`); }
+  if (e.type === "bibe" && e.ml) bits.push(`${e.ml} ml`);
+  if (e.note) bits.push(e.note);
+  return bits.join(" · ");
 }
 
-/* ── Horario estimado del día ── */
-function renderSchedule() {
-  const el = $("#schedule");
-  const guide = guideForAge();
-  const wake = lastWakeTime();
-  const naps = napsToday();
-  const items = [];
+/* ═══════════════════════════════════════════════════════════════
+   EL ANILLO
+   El día se dibuja como un arco de 250°, desde el despertar de la
+   mañana hasta la hora de dormir. Cada sueño es una cápsula cuya
+   longitud de arco equivale a su duración real.
+   ═══════════════════════════════════════════════════════════════ */
+const CX = 160, CY = 160, R = 118, A0 = 200, A1 = 450;
 
-  // Siestas ya registradas hoy
-  naps.forEach((n, i) => {
-    items.push({
-      icon: "😴",
-      what: `Siesta ${i + 1}`,
-      when: `${fmtTime(n.ts)} – ${n.end ? fmtTime(n.end) : "…"} · ${n.end ? fmtDuration(n.end - n.ts) : "en curso"}`,
-      time: fmtTime(n.ts),
-      done: true,
-    });
+/* Ángulos en grados, medidos en sentido horario desde las 12 en punto. */
+const pt = (r, a) => {
+  const rad = (a * Math.PI) / 180;
+  return [CX + r * Math.sin(rad), CY - r * Math.cos(rad)];
+};
+
+function arc(r, a1, a2) {
+  const [x1, y1] = pt(r, a1), [x2, y2] = pt(r, a2);
+  const large = Math.abs(a2 - a1) > 180 ? 1 : 0;
+  return `M ${x1.toFixed(2)} ${y1.toFixed(2)} A ${r} ${r} 0 ${large} 1 ${x2.toFixed(2)} ${y2.toFixed(2)}`;
+}
+
+function renderRing() {
+  const p = plan();
+  const now = Date.now();
+  const span = Math.max(p.lastAt - p.firstAt, 6 * HOUR);
+  const ang = (t) => A0 + ((Math.min(Math.max(t, p.firstAt), p.lastAt) - p.firstAt) / span) * (A1 - A0);
+
+  const out = [`<path class="ring-track" d="${arc(R, A0, A1)}"/>`];
+
+  if (p.hasData && now > p.firstAt) out.push(`<path class="ring-elapsed" d="${arc(R, A0, ang(now))}"/>`);
+
+  // Cada sueño: una cápsula proporcional a su duración
+  p.blocks.forEach((blk) => {
+    const a1 = ang(blk.start);
+    const a2 = Math.max(ang(blk.end), a1 + 2.4);
+    const cls = blk.live ? "arc-sleep live" : blk.est ? "arc-sleep est" : "arc-sleep";
+    out.push(`<path class="${cls}" d="${arc(R, a1, a2)}"/>`);
+
+    const mid = (a1 + a2) / 2;
+    const [ix, iy] = pt(R, mid);
+    const color = blk.est ? "var(--luna)" : "var(--luna-d)";
+    out.push(`<circle cx="${ix.toFixed(1)}" cy="${iy.toFixed(1)}" r="15" class="node-bg"/>
+      <circle cx="${ix.toFixed(1)}" cy="${iy.toFixed(1)}" r="15" class="node-ring"
+        stroke="${color}" ${blk.est ? 'stroke-dasharray="2 3"' : ""}/>
+      <svg x="${(ix - 9).toFixed(1)}" y="${(iy - 9).toFixed(1)}" width="18" height="18" viewBox="0 0 24 24"
+        fill="none" style="color:${color}">${P[blk.kind === "night" ? "night" : "nap"]}</svg>`);
+
+    // El despertar cierra cada siesta ya registrada
+    if (!blk.est && blk.kind === "nap") {
+      const [wx, wy] = pt(R, a2);
+      out.push(`<circle cx="${wx.toFixed(1)}" cy="${wy.toFixed(1)}" r="9" class="node-bg"/>
+        <circle cx="${wx.toFixed(1)}" cy="${wy.toFixed(1)}" r="9" class="node-ring" stroke="var(--dawn)"/>
+        <svg x="${(wx - 5.5).toFixed(1)}" y="${(wy - 5.5).toFixed(1)}" width="11" height="11" viewBox="0 0 24 24"
+          fill="none" style="color:var(--dawn)">${P.wake}</svg>`);
+    }
   });
 
-  // Siestas futuras estimadas
-  if (wake && !state.sleepingSince) {
-    let cursor = Math.max(wake, Date.now() - guide.wake * 60000);
-    const avgNap = 60; // duración media estimada de siesta en min
-    for (let i = naps.length; i < guide.naps; i++) {
-      const start = cursor + guide.wake * 60000;
-      if (new Date(start).getHours() >= 19) break;
-      items.push({
-        icon: "🌤️",
-        what: `Siesta ${i + 1} (estimada)`,
-        when: `duración típica ~${avgNap} min`,
-        time: fmtTime(start),
-        next: items.every((x) => x.done),
-      });
-      cursor = start + avgNap * 60000;
-    }
-    const bedtime = cursor + guide.wake * 60000;
-    items.push({
-      icon: "🌙",
-      what: "Hora de dormir (estimada)",
-      when: "sueño nocturno",
-      time: fmtTime(Math.min(bedtime, startOfDay() + 21 * 3600 * 1000)),
-      next: items.every((x) => x.done),
+  // Tomas y pañales, en una órbita exterior
+  state.events
+    .filter((e) => e.ts >= p.firstAt && e.ts <= p.lastAt && e.type !== "sueno" && e.type !== "omitida")
+    .forEach((e) => {
+      const [x, y] = pt(R + 22, ang(e.ts));
+      const c = FEEDS.includes(e.type) ? "var(--dawn)" : "var(--amber)";
+      out.push(`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.4" fill="${c}" opacity=".85"/>`);
     });
+
+  /* Sin rótulos de hora sobre el anillo: la ventana completa ya se lee
+     en la hoja de abajo y aquí solo se pisarían entre sí. */
+
+  // Aguja de la hora actual
+  if (p.hasData && now >= p.firstAt && now <= p.lastAt) {
+    const a = ang(now);
+    const [x1, y1] = pt(R - 17, a), [x2, y2] = pt(R + 13, a);
+    out.push(`<path class="now-hand" d="M ${x1.toFixed(1)} ${y1.toFixed(1)} L ${x2.toFixed(1)} ${y2.toFixed(1)}"/>`);
   }
 
-  if (!items.length) {
-    el.innerHTML = `<p class="log-empty">Registrá el primer despertar del día para ver el horario estimado. 🌅</p>`;
+  $("#ring").innerHTML = out.join("");
+  renderCore(p, now);
+}
+
+function renderCore(p, now) {
+  const label = $("#core-label"), value = $("#core-value"), note = $("#core-note");
+
+  if (p.live) {
+    label.textContent = "Durmiendo hace";
+    value.textContent = durShort(now - p.live.start);
+    note.textContent = `Podría despertarse ~${hhmm(p.live.end)}`;
     return;
   }
-  el.innerHTML = items
-    .map(
-      (i) => `
-    <div class="schedule-item ${i.done ? "done" : ""} ${i.next ? "next" : ""}">
-      <span class="schedule-icon">${i.icon}</span>
-      <div class="schedule-info">
-        <div class="schedule-what">${i.what}</div>
-        <div class="schedule-when">${i.when}</div>
-      </div>
-      <span class="schedule-time">${i.time}</span>
-    </div>`
-    )
-    .join("");
+  if (!p.hasData) {
+    label.textContent = "Buenos días";
+    value.textContent = "—";
+    note.textContent = "Registrá el despertar para empezar";
+    return;
+  }
+  const left = p.next.start - now;
+  label.textContent = `${blockTitle(p.next)} en`;
+  value.textContent = left <= 0 ? "Ahora" : durShort(left);
+  note.textContent = left <= 0 ? `Prevista ${hhmm(p.next.start)}` : `Aprox. ${hhmm(p.next.start)}`;
 }
 
-function renderAgeGuide() {
-  const g = guideForAge();
-  $("#age-guide").innerHTML = `
-    <div class="guide-item"><div class="guide-value">${fmtDuration(g.wake * 60000)}</div><div class="guide-label">Ventana de vigilia</div></div>
-    <div class="guide-item"><div class="guide-value">${g.naps}</div><div class="guide-label">Siestas por día</div></div>
-    <div class="guide-item"><div class="guide-value">${g.total} h</div><div class="guide-label">Sueño total en 24 h</div></div>
-    <div class="guide-item"><div class="guide-value">${g.label}</div><div class="guide-label">Etapa</div></div>`;
+/* ═══════════════════════════════════════════════════════════════
+   HOJA INFERIOR — qué hacer ahora mismo
+   ═══════════════════════════════════════════════════════════════ */
+function renderSheet() {
+  const p = plan();
+  const now = Date.now();
+  const sheet = $("#sheet");
+
+  if (p.live) {
+    sheet.innerHTML = `
+      <div class="sheet-badge live">${svg("nap")}</div>
+      <p class="sheet-kicker">Durmiendo desde las ${hhmm(p.live.start)}</p>
+      <p class="sheet-window">${durShort(now - p.live.start)}</p>
+      <p class="sheet-len">Duración prevista ${dur(p.live.end - p.live.start)}</p>
+      <p class="sheet-tip">Si sigue durmiendo pasadas las ${hhmm(p.live.end)}, dejala descansar salvo que se acerque la hora de dormir.</p>
+      <div class="sheet-actions">
+        <button class="btn btn-primary" data-act="wake">Se despertó</button>
+      </div>`;
+    return;
+  }
+
+  if (!p.hasData) {
+    sheet.innerHTML = `
+      <div class="sheet-badge">${svg("wake")}</div>
+      <p class="sheet-kicker">Todavía no hay datos de hoy</p>
+      <p class="sheet-window">¿Ya se despertó?</p>
+      <p class="sheet-tip">Con la hora del despertar de la mañana, Nappy calcula todas las siestas del día y la hora de dormir.</p>
+      <div class="sheet-actions">
+        <button class="btn btn-ghost" data-act="sleep">Se durmió</button>
+        <button class="btn btn-primary" data-act="woke">Se despertó</button>
+      </div>`;
+    return;
+  }
+
+  const n = p.next;
+  const isNight = n.kind === "night";
+  const lead = Math.min(30, Math.round(p.windows[Math.min(n.index || 0, p.windows.length - 1)] * 0.25));
+  const signsAt = n.start - lead * MIN;
+  const late = now > n.start;
+
+  sheet.innerHTML = `
+    <div class="sheet-badge">${svg(isNight ? "night" : "nap")}</div>
+    <p class="sheet-kicker">${isNight ? "Hora estimada de dormir" : "Hora estimada de siesta"}</p>
+    <p class="sheet-window">${hhmm(n.start)}${isNight ? "" : ` – ${hhmm(n.end)}`}</p>
+    <p class="sheet-len">${isNight ? "Sueño nocturno" : `${dur(n.end - n.start)} de duración`}</p>
+    <p class="sheet-tip">${
+      late
+        ? `La ventana de vigilia ya se cumplió. Bajá los estímulos y probá acostarla ahora: pasarse de la ventana suele costar más llanto.`
+        : isNight
+        ? `Empezá la rutina de la noche a partir de las ${hhmm(signsAt)}: luz baja, ambiente tranquilo y siempre el mismo orden.`
+        : `Evitá las actividades emocionantes y buscá señales de sueño a partir de las ${hhmm(signsAt)}.`
+    }</p>
+    <div class="sheet-actions">
+      <button class="btn btn-ghost" data-act="skip">Omitir</button>
+      <button class="btn btn-primary" data-act="sleep">Registrar</button>
+    </div>`;
 }
 
-/* ══════════════════════════════════════════════
-   Cronómetro de sueño
-   ══════════════════════════════════════════════ */
-let timerInterval = null;
+$("#sheet").addEventListener("click", (e) => {
+  const act = e.target.closest("[data-act]")?.dataset.act;
+  if (!act) return;
+  if (act === "sleep") startSleep();
+  if (act === "wake") stopSleep();
+  if (act === "woke") markWoke();
+  if (act === "skip") skipNap();
+});
 
+/* ─────────────── Acciones de sueño ─────────────── */
 function startSleep() {
   state.sleepingSince = Date.now();
-  save();
-  renderTimer();
-  renderPrediction();
-  toast(`${state.baby.name} se durmió 😴`);
+  save(); refreshToday();
+  toast(`${state.baby.name} se durmió`);
 }
-
 function stopSleep() {
   if (!state.sleepingSince) return;
   const start = state.sleepingSince;
   state.sleepingSince = null;
-  addEvent({ type: "sueño", ts: start, end: Date.now() });
-  renderTimer();
-  renderAll();
-  toast(`Sueño registrado: ${fmtDuration(Date.now() - start)} ☀️`);
+  addEvent({ type: "sueno", ts: start, end: Date.now() });
+  refreshToday();
+  toast(`Sueño de ${dur(Date.now() - start)} registrado`);
+}
+function markWoke() {
+  addEvent({ type: "sueno", ts: Date.now() - MIN, end: Date.now() });
+  refreshToday();
+  toast("Despertar registrado. Ya podés ver el plan del día");
+}
+function skipNap() {
+  addEvent({ type: "omitida", ts: Date.now() });
+  refreshToday();
+  toast("Siesta omitida. Recalculando el día");
 }
 
-function markWokeUp() {
-  // Despertar sin sueño cronometrado: registra un despertar puntual
-  addEvent({ type: "sueño", ts: Date.now() - 60000, end: Date.now() });
-  renderAll();
-  toast("¡Buen día! Ventana de vigilia iniciada ☀️");
-}
-
-function renderTimer() {
-  const running = !!state.sleepingSince;
-  $("#timer-idle").hidden = running;
-  $("#timer-running").hidden = !running;
-
-  clearInterval(timerInterval);
-  if (running) {
-    const tick = () => {
-      const ms = Date.now() - state.sleepingSince;
-      const h = Math.floor(ms / 3600000);
-      const m = Math.floor((ms % 3600000) / 60000);
-      const s = Math.floor((ms % 60000) / 1000);
-      $("#timer-display").textContent =
-        h > 0
-          ? `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`
-          : `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-    };
-    tick();
-    timerInterval = setInterval(tick, 1000);
-  } else {
-    const wake = lastWakeTime();
-    $("#awake-since").textContent =
-      wake && Date.now() - wake < 16 * 3600 * 1000
-        ? `Despierto desde las ${fmtTime(wake)} (hace ${fmtDuration(Date.now() - wake)})`
-        : "Registrá cuándo se despertó para calcular la próxima siesta.";
-  }
-}
-
-/* ══════════════════════════════════════════════
-   Registro de actividad
-   ══════════════════════════════════════════════ */
-const LOG_META = {
-  "sueño": { icon: "😴", label: "Sueño" },
-  "toma-pecho": { icon: "🤱", label: "Toma de pecho" },
-  "toma-bibe": { icon: "🍼", label: "Biberón" },
-  "panal-pis": { icon: "💧", label: "Pañal (pis)" },
-  "panal-caca": { icon: "💩", label: "Pañal (caca)" },
-};
+/* ═══════════════════════════════════════════════════════════════
+   REGISTRO
+   ═══════════════════════════════════════════════════════════════ */
+let viewDay = dayStart();
+let editing = null;
+let logType = "pecho";
 
 function addEvent(ev) {
-  ev.id = Date.now() + Math.random().toString(36).slice(2, 7);
-  if (!ev.ts) ev.ts = Date.now();
+  ev.id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  ev.ts = ev.ts || Date.now();
   state.events.push(ev);
   state.events.sort((a, b) => a.ts - b.ts);
   save();
 }
 
-function deleteEvent(id) {
-  state.events = state.events.filter((e) => e.id !== id);
-  save();
-  renderAll();
+function eventsOn(day) {
+  return state.events
+    .filter((e) => e.type !== "omitida" && e.ts >= day && e.ts < day + DAY)
+    .sort((a, b) => b.ts - a.ts);
 }
 
-function renderLog() {
-  const t0 = startOfDay();
-  const today = state.events.filter((e) => e.ts >= t0).sort((a, b) => b.ts - a.ts);
-  const el = $("#log-list");
-  if (!today.length) {
-    el.innerHTML = `<li class="log-empty">Todavía no hay registros hoy.</li>`;
-    return;
+function renderQuick() {
+  const html = ["pecho", "bibe", "pis", "caca"]
+    .map((t) => `<button class="quick" data-quick="${t}">
+        <span style="color:${TYPES[t].color}">${svg(TYPES[t].icon)}</span>${TYPES[t].label}</button>`)
+    .join("");
+  $$("[data-quickgrid]").forEach((el) => (el.innerHTML = html));
+}
+
+function renderDay() {
+  const isToday = viewDay === dayStart();
+  $("#day-title").textContent = isToday
+    ? "Hoy"
+    : new Date(viewDay).toLocaleDateString("es", { weekday: "long", day: "numeric", month: "long" });
+  $("#day-next").disabled = isToday;
+
+  const evs = eventsOn(viewDay);
+
+  // Resumen
+  let sleepMs = 0, nightMs = 0;
+  state.events.forEach((e) => {
+    if (e.type !== "sueno" || !e.end) return;
+    const s = Math.max(e.ts, viewDay), en = Math.min(e.end, viewDay + DAY);
+    if (en > s) sleepMs += en - s;
+  });
+  if (state.sleepingSince) {
+    const s = Math.max(state.sleepingSince, viewDay), en = Math.min(Date.now(), viewDay + DAY);
+    if (en > s) sleepMs += en - s;
   }
-  el.innerHTML = today
-    .map((e) => {
-      const meta = LOG_META[e.type];
-      const extra = e.type === "sueño" && e.end ? ` · ${fmtDuration(e.end - e.ts)}` : "";
-      return `<li class="log-item">
-        <span>${meta.icon}</span>
-        <span>${meta.label}${extra}</span>
-        <span class="log-time">${fmtTime(e.ts)}</span>
-        <button class="log-del" data-del="${e.id}" title="Eliminar" aria-label="Eliminar registro">✕</button>
-      </li>`;
-    })
+  const feeds = evs.filter((e) => FEEDS.includes(e.type)).length;
+  const ml = evs.filter((e) => e.type === "bibe").reduce((a, e) => a + (Number(e.ml) || 0), 0);
+  const diapers = evs.filter((e) => e.type === "pis" || e.type === "caca").length;
+  const napCount = evs.filter((e) => e.type === "sueno" && e.end && e.end - e.ts < 5 * HOUR).length;
+
+  $("#daysum").innerHTML = [
+    [durShort(sleepMs), "Sueño total"],
+    [napCount, "Sueños"],
+    [feeds, "Tomas"],
+    [ml ? `${ml} ml` : "—", "Biberón"],
+    [diapers, "Pañales"],
+  ].map(([v, l]) => `<div class="sum-cell"><div class="sum-val">${v}</div><div class="sum-lbl">${l}</div></div>`).join("");
+
+  // Actividad
+  $("#feed").innerHTML = evs.length
+    ? evs.map((e) => {
+        const t = TYPES[e.type] || TYPES.nota;
+        const sub = eventSubtitle(e);
+        return `<li><button class="feed-item" data-edit="${e.id}">
+          <span class="feed-icon" style="color:${t.color}">${svg(eventIcon(e))}</span>
+          <span class="feed-body">
+            <span class="feed-title">${eventTitle(e)}</span>
+            ${sub ? `<span class="feed-sub">${escapeHtml(sub)}</span>` : ""}
+          </span>
+          <span class="feed-time">${hhmm(e.ts)}</span>
+        </button></li>`;
+      }).join("")
+    : `<li class="empty">Sin registros este día.</li>`;
+}
+
+const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+/* ─────────────── Modal de registro ─────────────── */
+function openLog(type = "pecho", ev = null) {
+  editing = ev;
+  logType = ev ? ev.type : type;
+  $("#log-title").textContent = ev ? "Editar registro" : "Registrar";
+  $("#log-delete").hidden = !ev;
+  $("#log-time").value = localInput(ev ? ev.ts : Date.now());
+  $("#log-note").value = ev?.note || "";
+  renderTypeGrid();
+  $("#log-dialog").showModal();
+}
+
+function renderTypeGrid() {
+  $("#typegrid").innerHTML = Object.entries(TYPES)
+    .map(([k, t]) => `<button type="button" class="type ${k === logType ? "on" : ""}" data-type="${k}">
+        <span style="color:${k === logType ? t.color : "inherit"}">${svg(t.icon)}</span>${t.label}</button>`)
+    .join("");
+  $("#log-time-label").textContent = logType === "sueno" ? "Se durmió" : "Hora";
+  renderExtra();
+}
+
+function renderExtra() {
+  const box = $("#log-extra");
+  const e = editing;
+  if (logType === "sueno") {
+    const end = e?.end ?? (e ? null : Date.now());
+    box.innerHTML = `<div class="field"><label for="x-end">Se despertó</label>
+      <input type="datetime-local" id="x-end" value="${end ? localInput(end) : ""}"></div>
+      <p class="field-note" id="x-dur"></p>`;
+    const paint = () => {
+      const a = new Date($("#log-time").value).getTime();
+      const b = new Date($("#x-end").value).getTime();
+      $("#x-dur").textContent =
+        Number.isFinite(a) && Number.isFinite(b) && b > a ? `Duración: ${dur(b - a)}` : "";
+    };
+    $("#x-end").addEventListener("input", paint);
+    $("#log-time").addEventListener("input", paint);
+    paint();
+  } else if (logType === "pecho") {
+    const side = e?.side || "izq";
+    box.innerHTML = `<div class="field"><label>Lado</label><div class="seg" id="side-seg">
+        ${[["izq", "Izquierdo"], ["der", "Derecho"], ["ambos", "Ambos"]]
+          .map(([v, l]) => `<button type="button" data-side="${v}" class="${v === side ? "on" : ""}">${l}</button>`).join("")}
+      </div></div>
+      <div class="field"><label for="x-mins">Duración (min)</label>
+        <input type="number" id="x-mins" min="0" max="180" inputmode="numeric" value="${e?.mins ?? ""}" placeholder="15"></div>`;
+    $("#side-seg").addEventListener("click", (ev2) => {
+      const b = ev2.target.closest("[data-side]");
+      if (!b) return;
+      $$("#side-seg button").forEach((x) => x.classList.toggle("on", x === b));
+    });
+  } else if (logType === "bibe") {
+    box.innerHTML = `<div class="field"><label for="x-ml">Cantidad (ml)</label>
+      <input type="number" id="x-ml" min="0" max="500" inputmode="numeric" value="${e?.ml ?? ""}" placeholder="120"></div>`;
+  } else {
+    box.innerHTML = "";
+  }
+}
+
+$("#typegrid").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-type]");
+  if (!b) return;
+  logType = b.dataset.type;
+  renderTypeGrid();
+});
+
+$("#log-save").addEventListener("click", () => {
+  const ts = new Date($("#log-time").value).getTime();
+  if (!Number.isFinite(ts)) return toast("Elegí una hora válida");
+
+  const data = { type: logType, ts, note: $("#log-note").value.trim() || undefined };
+  if (logType === "sueno") {
+    const end = new Date($("#x-end").value).getTime();
+    if (!Number.isFinite(end)) return toast("Indicá a qué hora se despertó");
+    if (end <= ts) return toast("El despertar tiene que ser posterior al inicio");
+    data.end = end;
+  }
+  if (logType === "pecho") {
+    data.side = $("#side-seg .on")?.dataset.side;
+    data.mins = Number($("#x-mins").value) || undefined;
+  }
+  if (logType === "bibe") data.ml = Number($("#x-ml").value) || undefined;
+  if (logType !== "sueno") data.end = undefined;   // al cambiar de tipo no queda un fin huérfano
+
+  if (editing) {
+    Object.assign(editing, data);
+    state.events.sort((a, b) => a.ts - b.ts);
+    save();
+  } else {
+    addEvent(data);
+  }
+  $("#log-dialog").close();
+  refreshAll();
+  toast(`${TYPES[logType].label} ${editing ? "actualizado" : "registrado"}`);
+});
+
+$("#log-delete").addEventListener("click", () => {
+  if (!editing) return;
+  state.events = state.events.filter((x) => x.id !== editing.id);
+  save();
+  $("#log-dialog").close();
+  refreshAll();
+  toast("Registro eliminado");
+});
+
+$("#log-close").addEventListener("click", () => $("#log-dialog").close());
+$("#fab").addEventListener("click", () => openLog("pecho"));
+
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("[data-quickgrid] [data-quick]")?.dataset.quick;
+  if (!t) return;
+  addEvent({ type: t });
+  refreshAll();
+  toast(`${TYPES[t].label} registrado a las ${hhmm(Date.now())}`);
+});
+
+$("#feed").addEventListener("click", (e) => {
+  const id = e.target.closest("[data-edit]")?.dataset.edit;
+  const ev = state.events.find((x) => x.id === id);
+  if (ev) openLog(ev.type, ev);
+});
+
+$("#day-prev").addEventListener("click", () => { viewDay -= DAY; renderDay(); });
+$("#day-next").addEventListener("click", () => { viewDay = Math.min(viewDay + DAY, dayStart()); renderDay(); });
+
+/* ═══════════════════════════════════════════════════════════════
+   SONIDOS — sintetizados en vivo con Web Audio
+   ═══════════════════════════════════════════════════════════════ */
+const SOUNDS = {
+  blanco:  { icon: "fog",   name: "Ruido blanco", desc: "Constante y neutro" },
+  lluvia:  { icon: "rain",  name: "Lluvia",       desc: "Suave, sobre el techo" },
+  vientre: { icon: "heart", name: "Vientre",      desc: "Con latido materno" },
+  olas:    { icon: "wave",  name: "Olas",         desc: "Van y vienen" },
+};
+
+let audio = { ctx: null, master: null, nodes: [], current: null, off: null };
+
+function renderSounds() {
+  $("#soundgrid").innerHTML = Object.entries(SOUNDS)
+    .map(([k, s]) => `<button class="sound" data-sound="${k}">${svg(s.icon)}
+      <span>${s.name}<small>${s.desc}</small></span></button>`)
     .join("");
 }
 
-/* ══════════════════════════════════════════════
-   Sonidos para dormir (Web Audio, generados en vivo)
-   ══════════════════════════════════════════════ */
-const SOUND_NAMES = {
-  blanco: "Ruido blanco",
-  lluvia: "Lluvia",
-  vientre: "Vientre materno",
-  olas: "Olas del mar",
-};
-
-let audio = { ctx: null, master: null, nodes: [], current: null, offTimer: null };
-
-function noiseBuffer(ctx, seconds = 2) {
-  const buf = ctx.createBuffer(1, ctx.sampleRate * seconds, ctx.sampleRate);
-  const data = buf.getChannelData(0);
-  for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
-  return buf;
+function noise(ctx) {
+  const buf = ctx.createBuffer(1, ctx.sampleRate * 3, ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  const src = ctx.createBufferSource();
+  src.buffer = buf; src.loop = true;
+  return src;
 }
 
 function playSound(kind) {
   stopSound(false);
   const ctx = audio.ctx || new (window.AudioContext || window.webkitAudioContext)();
-  audio.ctx = ctx;
-  ctx.resume();
+  audio.ctx = ctx; ctx.resume();
 
   const master = ctx.createGain();
-  master.gain.value = ($("#sound-volume").value / 100) * 0.6;
+  master.gain.value = ($("#vol").value / 100) * 0.6;
   master.connect(ctx.destination);
   audio.master = master;
   audio.current = kind;
 
-  const noiseSrc = () => {
-    const src = ctx.createBufferSource();
-    src.buffer = noiseBuffer(ctx);
-    src.loop = true;
-    return src;
-  };
-
   if (kind === "blanco") {
-    const src = noiseSrc();
-    const lp = ctx.createBiquadFilter();
-    lp.type = "lowpass";
-    lp.frequency.value = 6000;
-    src.connect(lp).connect(master);
-    src.start();
-    audio.nodes = [src];
+    const s = noise(ctx), lp = ctx.createBiquadFilter();
+    lp.type = "lowpass"; lp.frequency.value = 6200;
+    s.connect(lp).connect(master); s.start();
+    audio.nodes = [s];
   }
-
   if (kind === "lluvia") {
-    const src = noiseSrc();
-    const bp = ctx.createBiquadFilter();
-    bp.type = "bandpass";
-    bp.frequency.value = 2400;
-    bp.Q.value = 0.4;
-    const hp = ctx.createBiquadFilter();
-    hp.type = "highpass";
-    hp.frequency.value = 500;
-    src.connect(bp).connect(hp).connect(master);
-    src.start();
-    audio.nodes = [src];
+    const s = noise(ctx), bp = ctx.createBiquadFilter(), hp = ctx.createBiquadFilter();
+    bp.type = "bandpass"; bp.frequency.value = 2400; bp.Q.value = 0.4;
+    hp.type = "highpass"; hp.frequency.value = 480;
+    s.connect(bp).connect(hp).connect(master); s.start();
+    audio.nodes = [s];
   }
-
   if (kind === "vientre") {
-    // Ruido grave y amortiguado + latido rítmico
-    const src = noiseSrc();
-    const lp = ctx.createBiquadFilter();
-    lp.type = "lowpass";
-    lp.frequency.value = 320;
-    const g = ctx.createGain();
-    g.gain.value = 0.8;
-    src.connect(lp).connect(g).connect(master);
-    src.start();
+    const s = noise(ctx), lp = ctx.createBiquadFilter(), g = ctx.createGain();
+    lp.type = "lowpass"; lp.frequency.value = 300; g.gain.value = 0.85;
+    s.connect(lp).connect(g).connect(master); s.start();
 
-    const beat = ctx.createOscillator();
-    beat.type = "sine";
-    beat.frequency.value = 62;
-    const beatGain = ctx.createGain();
-    beatGain.gain.value = 0;
-    beat.connect(beatGain).connect(master);
-    beat.start();
-    // ~140 lpm como el corazón materno escuchado desde dentro
-    const bpm = 140;
-    const interval = setInterval(() => {
-      if (!audio.ctx) return;
+    const beat = ctx.createOscillator(), bg = ctx.createGain();
+    beat.type = "sine"; beat.frequency.value = 58; bg.gain.value = 0.0001;
+    beat.connect(bg).connect(master); beat.start();
+    const iv = setInterval(() => {
+      if (!audio.ctx || audio.current !== "vientre") return;
       const t = ctx.currentTime;
-      beatGain.gain.cancelScheduledValues(t);
-      beatGain.gain.setValueAtTime(0.0001, t);
-      beatGain.gain.exponentialRampToValueAtTime(0.5, t + 0.04);
-      beatGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.28);
-    }, 60000 / bpm);
-    audio.nodes = [src, beat, { stop: () => clearInterval(interval) }];
+      bg.gain.cancelScheduledValues(t);
+      bg.gain.setValueAtTime(0.0001, t);
+      bg.gain.exponentialRampToValueAtTime(0.45, t + 0.04);
+      bg.gain.exponentialRampToValueAtTime(0.0001, t + 0.26);
+    }, 60000 / 140);                                    // ~140 lpm, como se oye desde dentro
+    audio.nodes = [s, beat, { stop: () => clearInterval(iv) }];
   }
-
   if (kind === "olas") {
-    const src = noiseSrc();
-    const lp = ctx.createBiquadFilter();
-    lp.type = "lowpass";
-    lp.frequency.value = 900;
-    const swell = ctx.createGain();
-    src.connect(lp).connect(swell).connect(master);
-    src.start();
-    // LFO lento que sube y baja el volumen como olas
-    const lfo = ctx.createOscillator();
-    lfo.frequency.value = 0.09;
-    const lfoGain = ctx.createGain();
-    lfoGain.gain.value = 0.45;
-    swell.gain.value = 0.55;
-    lfo.connect(lfoGain).connect(swell.gain);
-    lfo.start();
-    audio.nodes = [src, lfo];
+    const s = noise(ctx), lp = ctx.createBiquadFilter(), swell = ctx.createGain();
+    lp.type = "lowpass"; lp.frequency.value = 850; swell.gain.value = 0.55;
+    s.connect(lp).connect(swell).connect(master); s.start();
+    const lfo = ctx.createOscillator(), lg = ctx.createGain();
+    lfo.frequency.value = 0.09; lg.gain.value = 0.45;
+    lfo.connect(lg).connect(swell.gain); lfo.start();
+    audio.nodes = [s, lfo];
   }
 
-  // UI
-  $$(".sound-btn").forEach((b) => b.classList.toggle("playing", b.dataset.sound === kind));
-  $("#sound-controls").hidden = false;
-  $("#sound-playing").textContent = `🎵 Reproduciendo: ${SOUND_NAMES[kind]}`;
-  applySoundTimer();
+  $$(".sound").forEach((b) => b.classList.toggle("on", b.dataset.sound === kind));
+  $("#sound-panel").hidden = false;
+  $("#now-playing").textContent = `Sonando: ${SOUNDS[kind].name}`;
+  armOffTimer();
 }
 
-function stopSound(updateUI = true) {
+function stopSound(ui = true) {
   audio.nodes.forEach((n) => { try { n.stop(); } catch {} });
-  audio.nodes = [];
-  audio.current = null;
-  clearTimeout(audio.offTimer);
-  if (updateUI) {
-    $$(".sound-btn").forEach((b) => b.classList.remove("playing"));
-    $("#sound-controls").hidden = true;
-  }
+  audio.nodes = []; audio.current = null;
+  clearTimeout(audio.off);
+  if (ui) { $$(".sound").forEach((b) => b.classList.remove("on")); $("#sound-panel").hidden = true; }
 }
 
-function applySoundTimer() {
-  clearTimeout(audio.offTimer);
-  const min = Number($("#sound-timer").value);
-  if (min > 0 && audio.current) {
-    audio.offTimer = setTimeout(() => {
-      stopSound();
-      toast("Sonido apagado ⏰");
-    }, min * 60000);
-  }
+function armOffTimer() {
+  clearTimeout(audio.off);
+  const m = Number($("#offtimer").value);
+  if (m > 0 && audio.current) audio.off = setTimeout(() => { stopSound(); toast("Sonido apagado"); }, m * MIN);
 }
 
-/* ══════════════════════════════════════════════
-   Tendencias y estadísticas
-   ══════════════════════════════════════════════ */
-function sleepByDay(days = 7) {
+$("#soundgrid").addEventListener("click", (e) => {
+  const k = e.target.closest("[data-sound]")?.dataset.sound;
+  if (!k) return;
+  audio.current === k ? stopSound() : playSound(k);
+});
+$("#sound-stop").addEventListener("click", () => stopSound());
+$("#vol").addEventListener("input", (e) => { if (audio.master) audio.master.gain.value = (e.target.value / 100) * 0.6; });
+$("#offtimer").addEventListener("change", armOffTimer);
+
+/* ═══════════════════════════════════════════════════════════════
+   TENDENCIAS
+   ═══════════════════════════════════════════════════════════════ */
+function series(days = 7) {
   const out = [];
   for (let i = days - 1; i >= 0; i--) {
-    const d0 = startOfDay() - i * 86400000;
-    const d1 = d0 + 86400000;
+    const d0 = dayStart() - i * DAY, d1 = d0 + DAY;
     let ms = 0;
     state.events.forEach((e) => {
-      if (e.type !== "sueño" || !e.end) return;
-      const s = Math.max(e.ts, d0);
-      const en = Math.min(e.end, d1);
+      if (e.type !== "sueno" || !e.end) return;
+      const s = Math.max(e.ts, d0), en = Math.min(e.end, d1);
       if (en > s) ms += en - s;
     });
-    // Sueño en curso también cuenta
     if (state.sleepingSince) {
-      const s = Math.max(state.sleepingSince, d0);
-      const en = Math.min(Date.now(), d1);
+      const s = Math.max(state.sleepingSince, d0), en = Math.min(Date.now(), d1);
       if (en > s) ms += en - s;
     }
-    out.push({ day: d0, hours: ms / 3600000 });
+    const feeds = state.events.filter((e) => FEEDS.includes(e.type) && e.ts >= d0 && e.ts < d1).length;
+    out.push({ day: d0, hours: ms / HOUR, feeds });
   }
   return out;
 }
 
-function renderChart() {
-  const canvas = $("#chart-sleep");
-  const ctx = canvas.getContext("2d");
-  const data = sleepByDay(7);
+function roundRect(c, x, y, w, h, r) {
+  r = Math.max(0, Math.min(r, w / 2, h / 2));
+  c.beginPath();
+  c.moveTo(x + r, y);
+  c.arcTo(x + w, y, x + w, y + h, r);
+  c.arcTo(x + w, y + h, x, y + h, r);
+  c.arcTo(x, y + h, x, y, r);
+  c.arcTo(x, y, x + w, y, r);
+  c.closePath();
+}
+
+function drawBars(canvas, data, valueOf, fmt, goal) {
+  const c = canvas.getContext("2d");
   const W = canvas.width, H = canvas.height;
-  const pad = { top: 26, right: 14, bottom: 42, left: 40 };
-  const goal = guideForAge().total;
-  const maxH = Math.max(goal + 2, ...data.map((d) => d.hours), 8);
+  const pad = { t: 26, r: 10, b: 34, l: 34 };
+  const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+  const max = Math.max(goal ? goal + 2 : 0, ...data.map(valueOf), 4);
+  const y = (v) => pad.t + ph * (1 - v / max);
 
-  ctx.clearRect(0, 0, W, H);
-  ctx.font = "13px sans-serif";
+  c.clearRect(0, 0, W, H);
+  c.font = '600 12px ui-rounded, "Nunito", system-ui, sans-serif';
 
-  const plotW = W - pad.left - pad.right;
-  const plotH = H - pad.top - pad.bottom;
-  const y = (h) => pad.top + plotH * (1 - h / maxH);
-
-  // Rejilla horizontal
-  ctx.strokeStyle = "rgba(255,255,255,0.12)";
-  ctx.fillStyle = "rgba(240,239,255,0.55)";
-  ctx.textAlign = "right";
-  for (let h = 0; h <= maxH; h += 4) {
-    ctx.beginPath();
-    ctx.moveTo(pad.left, y(h));
-    ctx.lineTo(W - pad.right, y(h));
-    ctx.stroke();
-    ctx.fillText(`${h}h`, pad.left - 6, y(h) + 4);
+  const step = max > 12 ? 4 : max > 6 ? 2 : 1;
+  c.textAlign = "right";
+  for (let v = 0; v <= max; v += step) {
+    c.strokeStyle = "rgba(255,255,255,.07)";
+    c.beginPath(); c.moveTo(pad.l, y(v)); c.lineTo(W - pad.r, y(v)); c.stroke();
+    c.fillStyle = "#6d6b99";
+    c.fillText(String(v), pad.l - 7, y(v) + 4);
   }
 
-  // Línea de objetivo
-  ctx.strokeStyle = "rgba(127,224,176,0.7)";
-  ctx.setLineDash([6, 5]);
-  ctx.beginPath();
-  ctx.moveTo(pad.left, y(goal));
-  ctx.lineTo(W - pad.right, y(goal));
-  ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.fillStyle = "rgba(127,224,176,0.9)";
-  ctx.textAlign = "left";
-  ctx.fillText(`objetivo ${goal}h`, pad.left + 4, y(goal) - 6);
+  if (goal) {
+    c.strokeStyle = "rgba(116,214,164,.65)"; c.setLineDash([5, 5]);
+    c.beginPath(); c.moveTo(pad.l, y(goal)); c.lineTo(W - pad.r, y(goal)); c.stroke();
+    c.setLineDash([]);
+  }
 
-  // Barras
-  const bw = (plotW / data.length) * 0.55;
+  const slot = pw / data.length, bw = Math.min(34, slot * 0.5);
   data.forEach((d, i) => {
-    const cx = pad.left + (plotW / data.length) * (i + 0.5);
-    const grad = ctx.createLinearGradient(0, y(d.hours), 0, y(0));
-    grad.addColorStop(0, "#b79cff");
-    grad.addColorStop(1, "#5d4ba8");
-    ctx.fillStyle = grad;
-    const barH = Math.max(2, y(0) - y(d.hours));
-    roundRect(ctx, cx - bw / 2, y(0) - barH, bw, barH, 6);
-    ctx.fill();
-
-    ctx.fillStyle = "rgba(240,239,255,0.75)";
-    ctx.textAlign = "center";
-    const name = new Date(d.day).toLocaleDateString("es", { weekday: "short" });
-    ctx.fillText(name, cx, H - pad.bottom + 20);
-    if (d.hours > 0) {
-      ctx.fillStyle = "#f7c873";
-      ctx.fillText(d.hours.toFixed(1), cx, y(d.hours) - 8);
+    const v = valueOf(d);
+    const cx = pad.l + slot * (i + 0.5);
+    const last = i === data.length - 1;
+    if (v > 0) {
+      const g = c.createLinearGradient(0, y(v), 0, y(0));
+      g.addColorStop(0, last ? "#e0d6ff" : "#c2b4ff");
+      g.addColorStop(1, last ? "#7b6bd6" : "#4b4291");
+      c.fillStyle = g;
+      roundRect(c, cx - bw / 2, y(v), bw, y(0) - y(v), 7);
+      c.fill();
+      c.fillStyle = last ? "#f6c98b" : "#9491c4";
+      c.textAlign = "center";
+      c.fillText(fmt(v), cx, y(v) - 8);
     }
+    c.fillStyle = last ? "#eeecff" : "#6d6b99";
+    c.textAlign = "center";
+    c.fillText(new Date(d.day).toLocaleDateString("es", { weekday: "short" }).replace(".", ""), cx, H - pad.b + 20);
   });
 }
 
-function roundRect(ctx, x, y, w, h, r) {
-  r = Math.min(r, w / 2, h / 2);
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.arcTo(x + w, y, x + w, y + h, r);
-  ctx.arcTo(x + w, y + h, x, y + h, r);
-  ctx.arcTo(x, y + h, x, y, r);
-  ctx.arcTo(x, y, x + w, y, r);
-  ctx.closePath();
+function renderTrends() {
+  const data = series(7);
+  const b = band();
+  const done = data.filter((d) => d.hours > 0);
+  const avg = done.length ? done.reduce((a, d) => a + d.hours, 0) / done.length : 0;
+  const todayFeeds = data[data.length - 1].feeds;
+
+  $("#statrow").innerHTML = [
+    [durShort(data[data.length - 1].hours * HOUR), "Sueño hoy"],
+    [avg ? `${avg.toFixed(1)} h` : "—", "Media 7 días"],
+    [todayFeeds, "Tomas hoy"],
+  ].map(([v, l]) => `<div class="stat"><div class="stat-val">${v}</div><div class="stat-lbl">${l}</div></div>`).join("");
+
+  $("#goal-hint").textContent = `objetivo ${b.total} h`;
+  drawBars($("#chart"), data, (d) => d.hours, (v) => v.toFixed(1), b.total);
+  drawBars($("#chart-feeds"), data, (d) => d.feeds, (v) => String(v), 0);
+
+  const sleeps = state.events.filter((e) => e.type === "sueno" && e.end).sort((a, b2) => b2.ts - a.ts).slice(0, 15);
+  $("#sleeplog").innerHTML = sleeps.length
+    ? sleeps.map((e) => `<li class="feed-item" style="cursor:default">
+        <span class="feed-icon" style="color:var(--luna)">${svg(e.end - e.ts > 5 * HOUR ? "night" : "nap")}</span>
+        <span class="feed-body">
+          <span class="feed-title">${hhmm(e.ts)} – ${hhmm(e.end)}</span>
+          <span class="feed-sub">${new Date(e.ts).toLocaleDateString("es", { weekday: "long", day: "numeric", month: "short" })}</span>
+        </span>
+        <span class="feed-time">${dur(e.end - e.ts)}</span></li>`).join("")
+    : `<li class="empty">Todavía no hay sueños registrados.</li>`;
 }
 
-function renderStats() {
-  const data = sleepByDay(7);
-  const today = data[data.length - 1].hours;
-  const withData = data.filter((d) => d.hours > 0);
-  const avg = withData.length ? withData.reduce((a, d) => a + d.hours, 0) / withData.length : 0;
-  const napsCount = napsToday().length;
-  $("#stats-grid").innerHTML = `
-    <div class="stat-card"><div class="stat-value">${today.toFixed(1)} h</div><div class="stat-label">Sueño hoy</div></div>
-    <div class="stat-card"><div class="stat-value">${napsCount}</div><div class="stat-label">Siestas hoy</div></div>
-    <div class="stat-card"><div class="stat-value">${avg.toFixed(1)} h</div><div class="stat-label">Media 7 días</div></div>`;
-}
-
-function renderSleepHistory() {
-  const sleeps = state.events
-    .filter((e) => e.type === "sueño" && e.end)
-    .sort((a, b) => b.ts - a.ts)
-    .slice(0, 20);
-  const el = $("#sleep-history");
-  if (!sleeps.length) {
-    el.innerHTML = `<li class="log-empty">Todavía no hay sueños registrados.</li>`;
-    return;
-  }
-  el.innerHTML = sleeps
-    .map((e) => {
-      const day = new Date(e.ts).toLocaleDateString("es", { weekday: "short", day: "numeric", month: "short" });
-      return `<li class="log-item">
-        <span>😴</span>
-        <span>${day} · ${fmtTime(e.ts)} – ${fmtTime(e.end)}</span>
-        <span class="log-time">${fmtDuration(e.end - e.ts)}</span>
-      </li>`;
-    })
-    .join("");
-}
-
-/* ══════════════════════════════════════════════
-   Consejos por edad
-   ══════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   CONSEJOS
+   ═══════════════════════════════════════════════════════════════ */
 const TIPS = [
-  {
-    maxWeeks: 13,
-    tips: [
-      ["El día y la noche se aprenden", "Los recién nacidos no distinguen el día de la noche. Exponé a tu bebé a luz natural de día y mantené las noches oscuras y tranquilas para ayudar a madurar su reloj interno."],
-      ["Las ventanas de vigilia son cortas", "A esta edad tu bebé solo aguanta despierto entre 45 y 75 minutos. Pasarse de la ventana suele producir llanto y más dificultad para dormirse, no más cansancio «útil»."],
-      ["El contacto calma", "El porteo, el contacto piel con piel y el movimiento suave imitan el vientre materno y son la forma más eficaz de calmar a un bebé pequeño."],
-    ],
-  },
-  {
-    maxWeeks: 26,
-    tips: [
-      ["Rutina corta antes de dormir", "Una mini-rutina predecible (baño, pijama, canción, oscuridad) le indica al cerebro del bebé que llega la hora de dormir. Con 10–15 minutos alcanza."],
-      ["La regresión de los 4 meses", "Alrededor de los 4 meses el sueño del bebé madura y se vuelve más liviano. Es normal que se despierte más: no es un retroceso, es desarrollo."],
-      ["Somnoliento pero despierto", "Intentá acostarlo somnoliento pero aún despierto de vez en cuando: practicar dormirse en la cuna le ayuda a conectar ciclos de sueño solito."],
-    ],
-  },
-  {
-    maxWeeks: 52,
-    tips: [
-      ["Cuidá la última siesta", "Si la última siesta termina muy tarde, la hora de dormir se atrasa. Intentá que el último tramo despierto del día sea el más largo."],
-      ["Ansiedad por separación", "Entre los 8 y 10 meses muchos bebés protestan al quedarse solos en la cuna. Es una etapa normal del apego: respondé con calma y consistencia."],
-      ["El ambiente importa", "Habitación oscura (¡de verdad oscura!), temperatura fresca de 19–21 °C y ruido blanco constante ayudan a dormir más y mejor."],
-    ],
-  },
-  {
-    maxWeeks: 99999,
-    tips: [
-      ["Transición a una siesta", "Entre los 12 y 18 meses la mayoría pasa de dos siestas a una. Hacelo gradualmente: atrasá la siesta de la mañana poco a poco hasta el mediodía."],
-      ["Límites con cariño", "A esta edad aparecen las protestas a la hora de dormir. Una rutina firme, predecible y cariñosa es más eficaz que alargar la negociación."],
-      ["Actividad física de día", "El movimiento y el juego al aire libre durante el día mejoran la calidad del sueño nocturno de los niños pequeños."],
-    ],
-  },
+  { maxW: 13, list: [
+    ["El día y la noche se aprenden", "Un recién nacido no distingue el día de la noche. Luz natural y ruido normal durante el día, penumbra y calma en las tomas nocturnas: así madura su reloj interno en pocas semanas."],
+    ["Las ventanas son cortísimas", "A esta edad aguanta despierta entre 45 y 75 minutos. Pasarse de esa ventana no produce más cansancio útil: produce cortisol, llanto y una siesta peor."],
+    ["El contacto es la herramienta", "Porteo, piel con piel y movimiento suave reproducen las condiciones del vientre. A esta edad no se crean malos hábitos: se cubre una necesidad."],
+  ]},
+  { maxW: 26, list: [
+    ["Una rutina corta y siempre igual", "Diez minutos bastan: cambio de pañal, pijama, luz baja, la misma canción. La previsibilidad es lo que hace de señal, no la duración."],
+    ["Lo de los 4 meses no es un retroceso", "Alrededor de los 4 meses el sueño madura y aparecen ciclos con fases ligeras. Que se despierte más es una señal de desarrollo, no un problema que arreglar."],
+    ["Adormilada, pero despierta", "De vez en cuando acostala somnolienta antes de que se duerma del todo. Practicar el último tramo sola es lo que le permitirá enlazar ciclos de madrugada."],
+  ]},
+  { maxW: 52, list: [
+    ["Cuidá la última siesta del día", "Si termina muy tarde, la hora de dormir se corre. El último tramo despierto debe ser el más largo del día; si hace falta, acortá esa siesta."],
+    ["La ansiedad por separación es una etapa", "Entre los 8 y los 10 meses muchos bebés protestan al quedarse solos. Respuesta tranquila y constante: se atraviesa, no se corrige."],
+    ["El ambiente hace la mitad del trabajo", "Oscuridad real, 19–21 °C y un ruido constante de fondo. Son tres condiciones baratas que alargan las siestas más que cualquier técnica."],
+  ]},
+  { maxW: 1e9, list: [
+    ["El paso a una sola siesta", "Entre los 12 y los 18 meses se pasa de dos siestas a una. Hacelo gradual: atrasá la de la mañana de a 15 minutos por semana hasta el mediodía."],
+    ["Límites con cariño", "Aparecen las negociaciones a la hora de dormir. Una rutina firme y afectuosa funciona mejor que alargar la conversación: el límite tranquiliza."],
+    ["Movimiento durante el día", "El juego activo y el aire libre mejoran la profundidad del sueño nocturno más que cualquier ajuste de horario."],
+  ]},
 ];
 
 function renderTips() {
-  const w = ageInWeeks();
-  const group = TIPS.find((t) => w <= t.maxWeeks);
-  $("#tips-list").innerHTML = group.tips
-    .map(([h, p]) => `<div class="tip-card"><h3>${h}</h3><p>${p}</p></div>`)
-    .join("");
+  $("#tips-band").textContent = band().label;
+  $("#tips").innerHTML = TIPS.find((t) => weeksOld() <= t.maxW).list
+    .map(([h, p]) => `<article class="tip"><h3>${h}</h3><p>${p}</p></article>`).join("");
 }
 
-/* ══════════════════════════════════════════════
-   Navegación, ajustes y arranque
-   ══════════════════════════════════════════════ */
-function showView(name) {
-  $$(".view").forEach((v) => (v.hidden = v.id !== `view-${name}`));
-  $$(".tab").forEach((t) => t.classList.toggle("active", t.dataset.view === name));
-  if (name === "tendencias") { renderChart(); renderStats(); renderSleepHistory(); }
-  if (name === "consejos") renderTips();
-  if (name === "registro") renderLog();
+/* ═══════════════════════════════════════════════════════════════
+   NAVEGACIÓN Y CICLO DE VIDA
+   ═══════════════════════════════════════════════════════════════ */
+const TABS = [
+  ["hoy", "Hoy", "nap"],
+  ["registro", "Registro", "note"],
+  ["sonidos", "Sonidos", "wave"],
+  ["tendencias", "Datos", "chart"],
+  ["consejos", "Consejos", "bulb"],
+];
+
+function renderTabs() {
+  $("#tabs").innerHTML = TABS.map(([id, label, icon]) =>
+    `<button class="tab" data-view="${id}">${svg(icon)}${label}</button>`).join("");
 }
 
-function renderHeader() {
+function show(view) {
+  $$(".view").forEach((v) => (v.hidden = v.id !== `view-${view}`));
+  $$(".tab").forEach((t) => t.classList.toggle("on", t.dataset.view === view));
+  // El botón flotante solo en Registro: en Hoy chocaría con las acciones de la hoja.
+  $("#fab").hidden = view !== "registro";
+  if (view === "hoy") { renderQuick(); refreshToday(); }
+  if (view === "registro") { renderQuick(); renderDay(); }
+  if (view === "tendencias") renderTrends();
+  if (view === "consejos") renderTips();
+}
+
+$("#tabs").addEventListener("click", (e) => {
+  const v = e.target.closest("[data-view]")?.dataset.view;
+  if (v) show(v);
+});
+
+function refreshToday() { renderRing(); renderSheet(); }
+function refreshAll() {
   $("#baby-name").textContent = state.baby.name;
-  $("#baby-age").textContent = `${ageLabel()} · ${guideForAge().label}`;
+  $("#baby-age").textContent = `${ageText()} · ${band().label}`;
+  $("#baby-dot").textContent = state.baby.name.trim().charAt(0).toUpperCase() || "·";
+  refreshToday();
+  if (!$("#view-registro").hidden) renderDay();
+  if (!$("#view-tendencias").hidden) renderTrends();
 }
 
-function renderAll() {
-  renderHeader();
-  renderPrediction();
-  renderTimer();
-  renderSchedule();
-  renderAgeGuide();
-  renderLog();
-}
-
-let toastTimeout = null;
+let toastT = null;
 function toast(msg) {
   const el = $("#toast");
-  el.textContent = msg;
-  el.hidden = false;
-  clearTimeout(toastTimeout);
-  toastTimeout = setTimeout(() => (el.hidden = true), 2600);
+  el.textContent = msg; el.hidden = false;
+  clearTimeout(toastT);
+  toastT = setTimeout(() => (el.hidden = true), 2800);
 }
 
-function makeStars() {
-  const wrap = $("#stars");
-  for (let i = 0; i < 90; i++) {
-    const s = document.createElement("div");
-    s.className = "star";
-    const size = Math.random() * 2.2 + 0.6;
-    s.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;width:${size}px;height:${size}px;animation-delay:${Math.random() * 3}s;animation-duration:${2 + Math.random() * 3}s`;
-    wrap.appendChild(s);
+/* ─────────────── Ajustes ─────────────── */
+function bandPreview(birth) {
+  if (!birth) return "";
+  const w = Math.max(0, (Date.now() - new Date(birth + "T00:00:00").getTime()) / (7 * DAY));
+  const b = BANDS.find((x) => w <= x.maxW);
+  const win = wakeWindows(b);
+  return `Etapa ${b.label}: ${b.naps} ${b.naps === 1 ? "siesta" : "siestas"}, ventanas de vigilia de ${dur(win[0] * MIN)} a ${dur(win[win.length - 1] * MIN)}.`;
+}
+
+$("#open-settings").addEventListener("click", () => {
+  $("#s-name").value = state.baby.name;
+  $("#s-birth").value = state.baby.birth;
+  $("#s-birth").max = new Date().toISOString().slice(0, 10);
+  $("#s-band").textContent = bandPreview(state.baby.birth);
+  $("#settings-dialog").showModal();
+});
+$("#settings-close").addEventListener("click", () => $("#settings-dialog").close());
+$("#s-birth").addEventListener("change", (e) => ($("#s-band").textContent = bandPreview(e.target.value)));
+$("#s-save").addEventListener("click", () => {
+  const name = $("#s-name").value.trim(), birth = $("#s-birth").value;
+  if (!name || !birth) return toast("Completá el nombre y la fecha");
+  state.baby = { name, birth };
+  save();
+  $("#settings-dialog").close();
+  refreshAll();
+  toast("Ajustes guardados");
+});
+$("#s-export").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `nappy-${dateKey(Date.now())}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+$("#s-reset").addEventListener("click", () => {
+  if (!confirm("Se borrarán el bebé y todos los registros. Esta acción no se puede deshacer.")) return;
+  localStorage.removeItem(KEY);
+  location.reload();
+});
+
+/* ─────────────── Cielo estrellado ─────────────── */
+function drawSky() {
+  const c = $("#sky"), ctx = c.getContext("2d");
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  c.width = innerWidth * dpr; c.height = innerHeight * dpr;
+  ctx.scale(dpr, dpr);
+  const n = Math.round((innerWidth * innerHeight) / 9000);
+  for (let i = 0; i < n; i++) {
+    const r = Math.random() * 1.1 + 0.25;
+    ctx.globalAlpha = 0.15 + Math.random() * 0.55;
+    ctx.fillStyle = Math.random() > 0.85 ? "#c2b4ff" : "#ffffff";
+    ctx.beginPath();
+    ctx.arc(Math.random() * innerWidth, Math.random() * innerHeight, r, 0, Math.PI * 2);
+    ctx.fill();
   }
 }
 
+/* ─────────────── Arranque ─────────────── */
 function init() {
-  makeStars();
+  drawSky();
+  renderTabs();
+  renderSounds();
 
   if (!state.baby) {
-    $("#onboarding").hidden = false;
-    const birthInput = $("#ob-birth");
-    birthInput.max = new Date().toISOString().slice(0, 10);
-    $("#ob-start").addEventListener("click", () => {
-      const name = $("#ob-name").value.trim();
-      const birth = birthInput.value;
-      if (!name) return toast("Escribí el nombre de tu bebé 🙂");
+    $("#welcome-mark").innerHTML = svg("night");
+    $("#welcome").hidden = false;
+    $("#w-birth").max = new Date().toISOString().slice(0, 10);
+    $("#w-birth").addEventListener("change", (e) => ($("#w-band").textContent = bandPreview(e.target.value)));
+    $("#w-start").addEventListener("click", () => {
+      const name = $("#w-name").value.trim(), birth = $("#w-birth").value;
+      if (!name) return toast("Escribí el nombre de tu bebé");
       if (!birth || new Date(birth) > new Date()) return toast("Elegí una fecha de nacimiento válida");
       state.baby = { name, birth };
       save();
-      $("#onboarding").hidden = true;
+      $("#welcome").hidden = true;
       $("#app").hidden = false;
-      renderAll();
-      toast(`¡Bienvenido/a, ${name}! 🌙`);
+      refreshAll(); show("hoy");
+      toast(`Todo listo para ${name}`);
     });
     return;
   }
 
+  $("#open-settings").innerHTML = svg("gear");
   $("#app").hidden = false;
-  renderAll();
+  refreshAll();
+  show("hoy");
 }
 
-/* ── Eventos de UI ── */
-$$(".tab").forEach((t) => t.addEventListener("click", () => showView(t.dataset.view)));
+$("#open-settings").innerHTML = svg("gear");
 
-$("#btn-sleep-start").addEventListener("click", startSleep);
-$("#btn-sleep-stop").addEventListener("click", stopSleep);
-$("#btn-woke-up").addEventListener("click", markWokeUp);
+// El anillo y la cuenta atrás se refrescan cada 20 s
+setInterval(() => { if (state.baby && !$("#view-hoy").hidden) refreshToday(); }, 20000);
+addEventListener("visibilitychange", () => { if (!document.hidden && state.baby) refreshAll(); });
+addEventListener("resize", drawSky);
 
-$$(".quick-btn").forEach((b) =>
-  b.addEventListener("click", () => {
-    addEvent({ type: b.dataset.log });
-    renderLog();
-    toast(`${LOG_META[b.dataset.log].label} registrado ✔️`);
-  })
-);
-
-$("#log-list").addEventListener("click", (e) => {
-  const id = e.target.dataset.del;
-  if (id) deleteEvent(id);
-});
-
-$$(".sound-btn").forEach((b) =>
-  b.addEventListener("click", () => {
-    if (audio.current === b.dataset.sound) stopSound();
-    else playSound(b.dataset.sound);
-  })
-);
-$("#btn-sound-stop").addEventListener("click", () => stopSound());
-$("#sound-volume").addEventListener("input", (e) => {
-  if (audio.master) audio.master.gain.value = (e.target.value / 100) * 0.6;
-});
-$("#sound-timer").addEventListener("change", applySoundTimer);
-
-$("#btn-settings").addEventListener("click", () => {
-  $("#set-name").value = state.baby.name;
-  $("#set-birth").value = state.baby.birth;
-  $("#set-birth").max = new Date().toISOString().slice(0, 10);
-  $("#settings-dialog").showModal();
-});
-$("#set-cancel").addEventListener("click", () => $("#settings-dialog").close());
-$("#set-save").addEventListener("click", () => {
-  const name = $("#set-name").value.trim();
-  const birth = $("#set-birth").value;
-  if (!name || !birth) return toast("Completá nombre y fecha");
-  state.baby = { name, birth };
-  save();
-  $("#settings-dialog").close();
-  renderAll();
-  toast("Ajustes guardados ✔️");
-});
-$("#set-reset").addEventListener("click", () => {
-  if (confirm("¿Borrar TODOS los datos de la app? Esta acción no se puede deshacer.")) {
-    localStorage.removeItem(STORAGE_KEY);
-    location.reload();
-  }
-});
-
-// Refresco periódico de predicciones (cada 30 s)
-setInterval(() => {
-  if (state.baby && !$("#view-hoy").hidden) {
-    renderPrediction();
-    renderSchedule();
-    if (!state.sleepingSince) renderTimer();
-  }
-}, 30000);
 
 init();
 
