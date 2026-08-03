@@ -10,30 +10,56 @@ los datos se guardan en el propio dispositivo (`localStorage`).
 
 ## Cómo predice el sueño
 
-El motor no usa una ventana de vigilia suelta: modela **la forma completa del
-día** para cada franja de edad — cuántas siestas tocan, cuánto sueño diurno
-corresponde y cuántas horas dura la noche. De ahí deduce el tiempo despierto y
-lo reparte en ventanas crecientes, porque un bebé aguanta menos despierto por
-la mañana que antes de acostarse.
+El día se construye encadenando ventanas de vigilia y siestas desde el último
+despertar, hasta que ya no entra otra siesta antes de la noche:
 
 ```
-despertar → ventana 1 → siesta 1 → ventana 2 → siesta 2 → … → hora de dormir
+despertar → ventana → siesta → ventana → siesta → … → hora de dormir
 ```
 
-Las siestas también se estiman: la de la mañana es la más larga y la última del
-día queda como una siesta corta de recuperación. Ese reparto es el que produce,
-para un bebé de 4–6 meses, una cuarta siesta de poco más de media hora.
+**El número de siestas no lo fija la edad**: sale de ese encadenado. Por eso un
+día con siestas largas tiene cuatro y otro con siestas cortas tiene cinco.
 
-Para un bebé de 4 meses y medio que se despertó de su tercera siesta a las
-15:12, Nappy calcula:
+### El ritmo se aprende del propio bebé
 
-> **Cuarta siesta en 52 min · Aprox. 17:12**
-> Hora estimada de siesta **17:12 – 17:47**, 35 min de duración.
-> Buscá señales de sueño a partir de las 16:42.
+La edad solo aporta el punto de partida. En cuanto hay registros, el ritmo se
+mide en ellos: cada sueño registrado aporta una duración y cada hueco entre dos
+siestas del mismo día aporta una ventana de vigilia. Sobre esas medidas se
+aplican tres criterios:
 
-Cada edad cierra el día con una hora de dormir realista (entre las 19:00 y las
-20:00 partiendo de un despertar a las 7:00), en lugar de acumular ventanas
-hasta una hora imposible.
+- **Lo reciente pesa más.** Vida media de 5 días, porque el ritmo se mueve
+  semana a semana. Así la estimación acompaña a un bebé cuyas siestas pasan de
+  45 a 30 minutos en pocos días.
+- **Cada siesta aprende de su posición.** La segunda siesta del día no dura lo
+  mismo que la última, así que cada posición mantiene su propia estimación,
+  apoyada en el ritmo general del bebé cuando aún tiene pocos datos.
+- **Con pocos datos manda la edad; con muchos, el bebé.** El valor de la etapa
+  pesa lo que unos dos registros, de modo que se diluye solo a medida que se
+  acumula historial.
+
+Dos detalles medidos en el comportamiento real: la ventana previa a la última
+siesta del día se alarga (×1.09) y esa última siesta sale más corta (×0.91).
+Las señales de sueño se avisan siempre 30 minutos antes.
+
+El tramo que va de la última siesta a la noche **no** cuenta como ventana
+típica: siempre es más largo y, si se incluyera, desplazaría hacia arriba todas
+las ventanas del día.
+
+### Contraste con la app real
+
+Con un historial que reproduce el ritmo de un bebé real (ventanas de ~107 min,
+siestas de ~45 min), partiendo del mismo despertar:
+
+| | Napper | Nappy |
+|---|---|---|
+| 1.ª siesta | 08:26 – 09:10 | **08:26** – 09:11 |
+| 2.ª siesta | 10:58 – 11:43 | **10:58 – 11:43** |
+| 3.ª siesta | 13:27 – 14:12 | 13:30 – 14:15 |
+| 4.ª siesta | 16:10 – 16:50 | 16:02 – 16:47 |
+
+Y con siestas de ~35 min: Napper propone 14:37 – 15:12 y Nappy 14:38 – 15:13.
+El panel «ritmo» de la pantalla Hoy muestra en todo momento con qué ventana y
+qué duración se está calculando, y sobre cuántos registros.
 
 ## Qué incluye
 

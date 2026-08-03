@@ -264,6 +264,19 @@ input:focus, select:focus { outline: none; border-color: var(--luna-d); }
 .sheet-actions { display: flex; gap: 10px; margin-top: 16px; }
 .sheet-actions .btn { flex: 1; }
 
+/* ═══════════ RITMO APRENDIDO ═══════════ */
+.rhythm {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+}
+.rhythm-pair { display: flex; gap: 12px; }
+.rhythm-pair > div { flex: 1; text-align: center; }
+.rhythm-val { display: block; font-size: 17px; font-weight: 800; color: var(--luna); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.rhythm-lbl { display: block; font-size: 11px; color: var(--faint); margin-top: 1px; }
+.rhythm-src { font-size: 11.5px; color: var(--faint); text-align: center; margin-top: 10px; line-height: 1.4; }
+
 /* ═══════════ REGISTRO ═══════════ */
 .daynav { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .daynav p { font-weight: 700; font-size: 15px; }
@@ -526,6 +539,8 @@ dialog::backdrop { background: rgba(3,4,14,.72); backdrop-filter: blur(4px); }
 
       <div class="sheet" id="sheet"></div>
 
+      <div class="rhythm" id="rhythm"></div>
+
       <div class="quickgrid" data-quickgrid></div>
     </section>
 
@@ -733,25 +748,106 @@ function ageText() {
   return `${y} año${y === 1 ? "" : "s"}` + (r ? ` y ${r} mes${r === 1 ? "" : "es"}` : "");
 }
 
-/* Reparto del tiempo despierto: la primera ventana es la más corta y la
-   que precede a la noche, la más larga. Suman exactamente las horas que
-   el bebé pasa despierto entre el despertar y la hora de dormir. */
-function wakeWindows(b) {
-  const n = b.naps + 1;
-  const awake = (1440 - b.night * 60) - b.dayNap;
-  if (n === 1) return [Math.round(awake / 5) * 5];
-  const raw = Array.from({ length: n }, (_, i) => 0.82 + 0.46 * (i / (n - 1)));
-  const sum = raw.reduce((a, x) => a + x, 0);
-  return raw.map((x) => Math.round((awake * x) / sum / 5) * 5);
+/* Punto de partida por edad: la ventana de vigilia típica y la duración
+   típica de siesta que se esperan a esa edad. Es solo el valor inicial;
+   en cuanto hay registros propios, manda el bebé. */
+const priorWake = (b) => Math.round((1440 - b.night * 60 - b.dayNap) / (b.naps + 1));
+const priorNap  = (b) => Math.round(b.dayNap / b.naps);
+
+/* ═══════════════════════════════════════════════════════════════
+   RITMO APRENDIDO
+   El ritmo no se fija por edad: se mide en el propio historial del
+   bebé. Cada sueño registrado aporta una duración, y cada hueco entre
+   dos sueños del mismo día aporta una ventana de vigilia.
+
+   Dos correcciones sobre la media cruda:
+   · los registros recientes pesan más (vida media de 5 días), porque el
+     ritmo se va moviendo semana a semana;
+   · con pocos datos el valor se apoya en el de la edad y se va soltando
+     a medida que se acumulan registros (peso previo PRIOR_W).
+   ═══════════════════════════════════════════════════════════════ */
+const AGE_W = 1.5;        // cuántos registros "vale" la referencia por edad
+const POS_W = 1.5;        // cuánto tira el ritmo global sobre cada posición
+const HALF_LIFE = 5;      // días
+
+function estimate(samples, prior, priorWeight) {
+  let w = 0, acc = 0;
+  for (const s of samples) {
+    const k = Math.pow(0.5, s.age / HALF_LIFE);
+    w += k; acc += k * s.value;
+  }
+  return (priorWeight * prior + acc) / (priorWeight + w);
 }
 
-/* El sueño diurno se reparte con las siestas de la mañana más largas
-   y la última del día como una siesta corta de recuperación. */
-function napLengths(b) {
-  const n = b.naps;
-  const w = Array.from({ length: n }, (_, i) => 1.35 - 0.75 * (n === 1 ? 0 : i / (n - 1)));
-  const sum = w.reduce((a, x) => a + x, 0);
-  return w.map((x) => Math.max(20, Math.round((b.dayNap * x) / sum / 5) * 5));
+function rhythm(now = Date.now()) {
+  const b = band();
+  const today = dayStart(now);
+
+  const sleeps = state.events
+    .filter((e) => e.type === "sueno" && e.end > e.ts)
+    .sort((a, c) => a.ts - c.ts);
+
+  /* Los sueños se agrupan por el día en el que terminan: el primero
+     marca el despertar de la mañana y los siguientes son las siestas
+     de ese día, en orden. Así cada siesta tiene una posición. */
+  const byDay = new Map();
+  sleeps.forEach((s) => {
+    const d = dayStart(s.end);
+    if (!byDay.has(d)) byDay.set(d, []);
+    byDay.get(d).push(s);
+  });
+
+  const napAll = [], wakeAll = [], napAt = [], wakeAt = [];
+  let daysUsed = 0;
+  byDay.forEach((list, d) => {
+    const age = (today - d) / DAY;
+    if (age < 0 || age > 21) return;
+    daysUsed++;
+
+    let prevEnd = list[0].end;                       // despertar matutino
+    list.slice(1)
+      .filter((s) => s.end - s.ts <= 4 * HOUR && new Date(s.ts).getHours() < 19)
+      .forEach((s, i) => {
+        const len = (s.end - s.ts) / MIN;
+        const gap = (s.ts - prevEnd) / MIN;
+        if (len >= 10 && len <= 240) {
+          napAll.push({ value: len, age });
+          (napAt[i] ||= []).push({ value: len, age });
+        }
+        if (gap >= 20 && gap <= 360) {
+          wakeAll.push({ value: gap, age });
+          (wakeAt[i] ||= []).push({ value: gap, age });
+        }
+        prevEnd = s.end;
+      });
+  });
+
+  /* Dos niveles: el ritmo típico del bebé se apoya en el de su edad, y
+     cada posición del día se apoya en el ritmo típico del bebé. Con
+     pocos datos todo tiende al valor general; con muchos, cada siesta
+     encuentra su propia duración. */
+  const wakeTypical = estimate(wakeAll, priorWake(b), AGE_W);
+  const napTypical  = estimate(napAll,  priorNap(b),  AGE_W);
+
+  return {
+    wake: Math.round(wakeTypical),
+    nap: Math.round(napTypical),
+    /* isLast aplica el sesgo de final de día solo cuando esa posición
+       todavía no tiene registros propios que ya lo reflejen. */
+    wakeFor: (i, isLast) => {
+      const s = wakeAt[i] || [];
+      const base = s.length ? estimate(s, wakeTypical, POS_W) : wakeTypical * (isLast ? LAST_WAKE_F : 1);
+      return Math.round(base);
+    },
+    napFor: (i, isLast) => {
+      const s = napAt[i] || [];
+      const base = s.length ? estimate(s, napTypical, POS_W) : napTypical * (isLast ? LAST_NAP_F : 1);
+      return Math.round(base);
+    },
+    n: napAll.length + wakeAll.length,
+    days: daysUsed,
+    learned: napAll.length >= 4,
+  };
 }
 
 const ORDINAL = ["Primera", "Segunda", "Tercera", "Cuarta", "Quinta", "Sexta", "Séptima"];
@@ -760,13 +856,46 @@ const napName = (i) => `${ORDINAL[i] || `${i + 1}.ª`} siesta`;
 /* ═══════════════════════════════════════════════════════════════
    MOTOR DE PREDICCIÓN
    Ancla en el último despertar y encadena ventana de vigilia →
-   siesta → ventana → siesta … hasta la hora de dormir.
+   siesta → ventana → siesta, hasta que ya no entra otra siesta antes
+   de la noche. El número de siestas no se fija por edad: sale de ahí,
+   y por eso un día tiene cuatro y otro cinco.
+
+   Sobre el ritmo constante se aplican dos sesgos de final de día,
+   medidos en el comportamiento real: la vigilia previa a la última
+   siesta se alarga y esa última siesta se acorta.
    ═══════════════════════════════════════════════════════════════ */
+const LAST_WAKE_F = 1.09;   // la vigilia antes de la última siesta se estira
+const LAST_NAP_F  = 0.91;   // y esa siesta sale más corta
+const CUE_LEAD    = 30;     // minutos de antelación para buscar señales de sueño
+const LATEST_NAP  = 18.25;  // más tarde de esta hora ya no se propone siesta
+
 function plan(now = Date.now()) {
   const b = band();
-  const windows = wakeWindows(b);
-  const lengths = napLengths(b);
+  const r = rhythm(now);
   const t0 = dayStart(now);
+
+  /* Encadena siestas desde un ancla. Primera pasada con el ritmo
+     uniforme para saber cuántas entran; segunda aplicando los sesgos
+     a la que resulte ser la última del día. */
+  const projectFrom = (anchor, from) => {
+    let n = 0, a = anchor;
+    while (n < 8) {
+      const s = a + r.wakeFor(from + n, false) * MIN;
+      if (s > t0 + LATEST_NAP * HOUR) break;
+      a = s + r.napFor(from + n, false) * MIN;
+      n++;
+    }
+    const out = [];
+    a = anchor;
+    for (let k = 0; k < n; k++) {
+      const i = from + k, last = k === n - 1;
+      const start = a + r.wakeFor(i, last) * MIN;
+      const end = start + r.napFor(i, last) * MIN;
+      out.push({ kind: "nap", index: i, start, end, est: true });
+      a = end;
+    }
+    return out;
+  };
 
   const sleeps = state.events
     .filter((e) => e.type === "sueno" && e.end)
@@ -790,26 +919,20 @@ function plan(now = Date.now()) {
 
   let live = null;
   if (state.sleepingSince) {
-    const expected = lengths[Math.min(index, lengths.length - 1)] * MIN;
-    live = { kind: "nap", index, start: state.sleepingSince, end: state.sleepingSince + expected, est: true, live: true };
+    live = { kind: "nap", index, start: state.sleepingSince,
+             end: state.sleepingSince + r.napFor(index, false) * MIN, est: true, live: true };
     blocks.push(live);
     anchor = live.end;
     index++;
   }
 
-  const upcoming = [];
-  for (let i = index; i < b.naps; i++) {
-    const start = anchor + windows[Math.min(i, windows.length - 1)] * MIN;
-    if (new Date(start).getHours() >= 18) break;      // tan tarde ya no es siesta: es la noche
-    const block = { kind: "nap", index: i, start, end: start + lengths[i] * MIN, est: true };
-    upcoming.push(block);
-    blocks.push(block);
-    anchor = block.end;
-  }
+  const upcoming = projectFrom(anchor, index);
+  blocks.push(...upcoming);
+  if (upcoming.length) anchor = upcoming[upcoming.length - 1].end;
 
-  /* La noche cierra el día: última ventana desde el final del último
-     sueño, acotada a un rango razonable. */
-  let bedtime = anchor + windows[windows.length - 1] * MIN;
+  /* La noche cierra el día: una última ventana desde el final del
+     último sueño, acotada a un rango razonable. */
+  let bedtime = anchor + Math.round(r.wake * LAST_WAKE_F) * MIN;
   bedtime = Math.min(Math.max(bedtime, t0 + 18 * HOUR), t0 + 21 * HOUR);
   const night = { kind: "night", start: bedtime, end: bedtime + b.night * HOUR, est: true };
   blocks.push(night);
@@ -818,7 +941,7 @@ function plan(now = Date.now()) {
   const next = live || upcoming.find((x) => x.end > now) || night;
 
   return {
-    b, windows, lengths, morningWake, naps, blocks,
+    b, r, morningWake, naps, blocks,
     next, live, bedtime,
     firstAt: morningWake || t0 + 7 * HOUR,
     lastAt: night.start,
@@ -966,8 +1089,18 @@ function renderRing() {
       out.push(`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.4" fill="${c}" opacity=".85"/>`);
     });
 
-  /* Sin rótulos de hora sobre el anillo: la ventana completa ya se lee
-     en la hoja de abajo y aquí solo se pisarían entre sí. */
+  /* Cada siesta prevista se rotula con su ventana. Las dos horas van a
+     radios distintos: en una siesta de media hora el arco es tan corto
+     que a la misma distancia se solaparían. */
+  p.blocks.filter((x) => x.est && x.kind === "nap" && !x.live).forEach((blk) => {
+    [[blk.start, R + 27], [blk.end, R + 45]].forEach(([t, rad]) => {
+      const a = ang(t);
+      const [lx, ly] = pt(rad, a);
+      out.push(`<text class="tick-label" x="${lx.toFixed(1)}" y="${ly.toFixed(1)}"
+        text-anchor="middle" dominant-baseline="middle"
+        transform="rotate(${(a - 90).toFixed(1)} ${lx.toFixed(1)} ${ly.toFixed(1)})">${hhmm(t)}</text>`);
+    });
+  });
 
   // Aguja de la hora actual
   if (p.hasData && now >= p.firstAt && now <= p.lastAt) {
@@ -1037,8 +1170,7 @@ function renderSheet() {
 
   const n = p.next;
   const isNight = n.kind === "night";
-  const lead = Math.min(30, Math.round(p.windows[Math.min(n.index || 0, p.windows.length - 1)] * 0.25));
-  const signsAt = n.start - lead * MIN;
+  const signsAt = n.start - CUE_LEAD * MIN;
   const late = now > n.start;
 
   sheet.innerHTML = `
@@ -1057,6 +1189,24 @@ function renderSheet() {
       <button class="btn btn-ghost" data-act="skip">Omitir</button>
       <button class="btn btn-primary" data-act="sleep">Registrar</button>
     </div>`;
+}
+
+/* El ritmo con el que se está calculando, a la vista: sin esto la
+   predicción es una caja negra y no se entiende por qué cambia. */
+function renderRhythm() {
+  const r = rhythm();
+  const source = r.learned
+    ? `Aprendido de ${r.n} medidas en ${r.days} día${r.days === 1 ? "" : "s"} de registros`
+    : r.n > 0
+    ? `Ajustándose: ${r.n} medida${r.n === 1 ? "" : "s"} sobre la referencia de ${band().label}`
+    : `Referencia para ${band().label}. Registrá sueños y se ajusta al ritmo real`;
+
+  $("#rhythm").innerHTML = `
+    <div class="rhythm-pair">
+      <div><span class="rhythm-val">${dur(r.wake * MIN)}</span><span class="rhythm-lbl">Ventana de vigilia</span></div>
+      <div><span class="rhythm-val">${dur(r.nap * MIN)}</span><span class="rhythm-lbl">Siesta habitual</span></div>
+    </div>
+    <p class="rhythm-src">${source}</p>`;
 }
 
 $("#sheet").addEventListener("click", (e) => {
@@ -1583,7 +1733,7 @@ $("#tabs").addEventListener("click", (e) => {
   if (v) show(v);
 });
 
-function refreshToday() { renderRing(); renderSheet(); }
+function refreshToday() { renderRing(); renderSheet(); renderRhythm(); }
 function refreshAll() {
   $("#baby-name").textContent = state.baby.name;
   $("#baby-age").textContent = `${ageText()} · ${band().label}`;
@@ -1606,8 +1756,7 @@ function bandPreview(birth) {
   if (!birth) return "";
   const w = Math.max(0, (Date.now() - new Date(birth + "T00:00:00").getTime()) / (7 * DAY));
   const b = BANDS.find((x) => w <= x.maxW);
-  const win = wakeWindows(b);
-  return `Etapa ${b.label}: ${b.naps} ${b.naps === 1 ? "siesta" : "siestas"}, ventanas de vigilia de ${dur(win[0] * MIN)} a ${dur(win[win.length - 1] * MIN)}.`;
+  return `Etapa ${b.label}. Punto de partida: ventana de vigilia de ${dur(priorWake(b) * MIN)} y siestas de ${dur(priorNap(b) * MIN)}. Nappy lo ajusta con los registros del bebé.`;
 }
 
 $("#open-settings").addEventListener("click", () => {

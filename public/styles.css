@@ -255,6 +255,19 @@ input:focus, select:focus { outline: none; border-color: var(--luna-d); }
 .sheet-actions { display: flex; gap: 10px; margin-top: 16px; }
 .sheet-actions .btn { flex: 1; }
 
+/* ═══════════ RITMO APRENDIDO ═══════════ */
+.rhythm {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+}
+.rhythm-pair { display: flex; gap: 12px; }
+.rhythm-pair > div { flex: 1; text-align: center; }
+.rhythm-val { display: block; font-size: 17px; font-weight: 800; color: var(--luna); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.rhythm-lbl { display: block; font-size: 11px; color: var(--faint); margin-top: 1px; }
+.rhythm-src { font-size: 11.5px; color: var(--faint); text-align: center; margin-top: 10px; line-height: 1.4; }
+
 /* ═══════════ REGISTRO ═══════════ */
 .daynav { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .daynav p { font-weight: 700; font-size: 15px; }
