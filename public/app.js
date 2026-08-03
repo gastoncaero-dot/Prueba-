@@ -437,6 +437,17 @@ function renderRing() {
     }
   });
 
+  /* El despertar de la mañana abre el anillo: sin él, el día parecía
+     empezar en la primera siesta y no se veía desde cuándo cuenta la
+     primera ventana de vigilia. */
+  if (p.hasData) {
+    const [mx, my] = pt(R, A0);
+    out.push(`<circle cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="9" class="node-bg"/>
+      <circle cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="9" class="node-ring" stroke="var(--dawn)"/>
+      <svg x="${(mx - 5.5).toFixed(1)}" y="${(my - 5.5).toFixed(1)}" width="11" height="11" viewBox="0 0 24 24"
+        fill="none" style="color:var(--dawn)">${P.wake}</svg>`);
+  }
+
   // Tomas y pañales, en una órbita exterior
   state.events
     .filter((e) => e.ts >= p.firstAt && e.ts <= p.lastAt && e.type !== "sueno" && e.type !== "omitida")
@@ -552,6 +563,7 @@ function renderSheet() {
    predicción es una caja negra y no se entiende por qué cambia. */
 function renderRhythm() {
   const r = rhythm();
+  const woke = plan().morningWake;
   const source = r.learned
     ? `Aprendido de ${r.n} medidas en ${r.days} día${r.days === 1 ? "" : "s"} de registros`
     : r.n > 0
@@ -560,6 +572,7 @@ function renderRhythm() {
 
   $("#rhythm").innerHTML = `
     <div class="rhythm-pair">
+      ${woke ? `<div><span class="rhythm-val">${hhmm(woke)}</span><span class="rhythm-lbl">Se despertó</span></div>` : ""}
       <div><span class="rhythm-val">${dur(r.wake * MIN)}</span><span class="rhythm-lbl">Ventana de vigilia</span></div>
       <div><span class="rhythm-val">${dur(r.nap * MIN)}</span><span class="rhythm-lbl">Siesta habitual</span></div>
     </div>
