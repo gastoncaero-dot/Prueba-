@@ -1,5 +1,6 @@
 import { ChevronDown, Film, Info, Repeat, Timer } from 'lucide-react'
 import { useState } from 'react'
+import { CATALOG_DEMOS } from '../data/demos'
 import { getExercise } from '../data/exercises'
 import { BLOCK_KIND_LABEL, FORMAT_HELP } from '../data/taxonomy'
 import { blockSummary } from '../lib/blocks'
@@ -10,7 +11,8 @@ import { ExercisePanel } from './ExercisePanel'
 function BlockItemRow({ item, index }: { item: BlockItem; index: number }) {
   const [open, setOpen] = useState(false)
   const exercise = getExercise(item.exerciseId)
-  const hasVideo = useStore((s) => Boolean(s.videos[item.exerciseId] ?? exercise?.videoUrl))
+  const hasOwnVideo = useStore((s) => Boolean(s.videos[item.exerciseId] ?? exercise?.videoUrl))
+  const hasDemo = hasOwnVideo || Boolean(CATALOG_DEMOS[item.exerciseId])
 
   return (
     <li>
@@ -27,7 +29,7 @@ function BlockItemRow({ item, index }: { item: BlockItem; index: number }) {
             <span className="truncate text-sm font-semibold">
               {exercise?.name ?? item.exerciseId}
             </span>
-            {hasVideo && <Film size={12} className="shrink-0 text-accent" />}
+            {hasDemo && <Film size={12} className="shrink-0 text-accent" />}
           </span>
           <span className="block text-[12px] text-muted">
             {item.prescription}

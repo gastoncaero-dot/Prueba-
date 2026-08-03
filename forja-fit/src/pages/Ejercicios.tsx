@@ -2,6 +2,7 @@ import { ChevronRight, Film, Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Chip, EmptyState, TextInput } from '../components/ui'
+import { CATALOG_DEMOS } from '../data/demos'
 import { EXERCISES } from '../data/exercises'
 import {
   EQUIPMENT_LABEL,
@@ -53,7 +54,7 @@ export function Ejercicios() {
       if (modalityFilter !== 'todas' && !e.modalities.includes(modalityFilter)) return false
       if (patterns && !patterns.includes(e.pattern)) return false
       if (equipmentFilter !== 'todos' && !e.equipment.includes(equipmentFilter)) return false
-      if (onlyWithVideo && !videos[e.id] && !e.videoUrl) return false
+      if (onlyWithVideo && !videos[e.id] && !e.videoUrl && !CATALOG_DEMOS[e.id]) return false
       if (!q) return true
       return [e.name, ...(e.aka ?? []), PATTERN_LABEL[e.pattern], ...e.primary]
         .join(' ')
@@ -62,7 +63,8 @@ export function Ejercicios() {
     })
   }, [query, modalityFilter, group, equipmentFilter, onlyWithVideo, videos])
 
-  const withVideo = EXERCISES.filter((e) => videos[e.id] || e.videoUrl).length
+  const withDemo = EXERCISES.filter((e) => videos[e.id] || e.videoUrl || CATALOG_DEMOS[e.id])
+    .length
 
   return (
     <div className="space-y-5">
@@ -70,7 +72,7 @@ export function Ejercicios() {
         <div>
           <h1 className="display text-2xl">Ejercicios</h1>
           <p className="text-[13px] text-muted">
-            {EXERCISES.length} movimientos con ficha técnica · {withVideo} con video cargado
+            {EXERCISES.length} movimientos · {withDemo} con demostración
           </p>
         </div>
         <Link to="/videos" className="shrink-0">
@@ -118,7 +120,7 @@ export function Ejercicios() {
         </div>
         <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4">
           <Chip active={onlyWithVideo} onClick={() => setOnlyWithVideo(!onlyWithVideo)}>
-            Con video
+            Con demostración
           </Chip>
           {EQUIPMENT_FILTERS.map((eq) => (
             <Chip
@@ -140,7 +142,7 @@ export function Ejercicios() {
       ) : (
         <ul className="card divide-y divide-line-soft overflow-hidden">
           {filtered.map((e) => {
-            const hasVideo = Boolean(videos[e.id] ?? e.videoUrl)
+            const hasVideo = Boolean(videos[e.id] ?? e.videoUrl ?? CATALOG_DEMOS[e.id])
             return (
               <li key={e.id}>
                 <Link

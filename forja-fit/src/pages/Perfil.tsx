@@ -11,6 +11,7 @@ import {
   Switch,
   TextInput,
 } from '../components/ui'
+import { DEMO_COUNT } from '../data/demos'
 import { EXERCISES, exerciseName } from '../data/exercises'
 import { EQUIPMENT_CHOICES, EQUIPMENT_LABEL, LEVEL_LABEL } from '../data/taxonomy'
 import { exportSnapshot, useStore } from '../lib/store'
@@ -191,8 +192,9 @@ export function Perfil() {
         />
         <div className="card space-y-3 px-4 py-4">
           <p className="text-[13px] leading-relaxed text-muted">
-            El catálogo trae la ficha técnica de cada movimiento, pero los videos los cargás vos:
-            entrá a un ejercicio y pegá el link, o importá un archivo JSON con todos juntos.
+            {DEMO_COUNT} movimientos ya traen fotos de posición inicial y final. A ese y a
+            cualquier otro podés sumarle un video: entrá al ejercicio y pegá el link, o importá un
+            archivo JSON con todos juntos.
           </p>
           <Link to="/videos">
             <Button full>
@@ -310,8 +312,20 @@ export function Perfil() {
           </p>
           <p>
             El catálogo de {EXERCISES.length} movimientos, las rutinas y los planes son contenido
-            original escrito para esta app. Los videos de demostración los cargás vos, con links
-            propios o de la plataforma que prefieras.
+            original escrito para esta app.
+          </p>
+          <p>
+            Las fotos de demostración de {DEMO_COUNT} movimientos vienen de{' '}
+            <a
+              href="https://github.com/yuhonas/free-exercise-db"
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-accent"
+            >
+              free-exercise-db
+            </a>
+            , un dataset de dominio público (licencia Unlicense). A los que faltan, y a cualquier
+            otro, les podés sumar el video que quieras.
           </p>
         </div>
       </section>

@@ -20,9 +20,14 @@ contenido propio:
   ejecución, errores comunes, respiración, progresiones y regresiones).
 - **37 entrenamientos** completos repartidos en 9 modalidades.
 - **6 planes** de 4 a 8 semanas.
-- **Los videos los cargás vos.** Cada ejercicio tiene un espacio para su video de
-  demostración: pegás un link de YouTube o Vimeo, o apuntás a un archivo tuyo.
-  Ver [Cómo cargar los videos](#cómo-cargar-los-videos).
+- **58 demostraciones incluidas**: fotos de posición inicial y final que la app
+  alterna para que se lea el recorrido del movimiento. Vienen de
+  [free-exercise-db](https://github.com/yuhonas/free-exercise-db), un dataset de
+  **dominio público** (licencia Unlicense), y están servidas con la app, así que
+  funcionan sin conexión.
+- **Los videos los sumás vos.** A cualquier movimiento le podés pegar un link de
+  YouTube o Vimeo, o apuntar a un archivo tuyo.
+  Ver [Demostraciones y videos](#demostraciones-y-videos).
 
 ---
 
@@ -132,7 +137,22 @@ Vercel, en GitHub Pages o servida desde una subcarpeta.
 
 ---
 
-## Cómo cargar los videos
+## Demostraciones y videos
+
+### Lo que ya viene
+
+58 de los 93 movimientos traen un par de fotos (posición inicial y final) que la
+app alterna con un fundido, así se ve el recorrido. Son de dominio público, pesan
+2 MB en total y quedan cacheadas para funcionar sin señal.
+
+Los 35 que faltan son sobre todo pilates, movilidad y trabajo de acondicionamiento
+(burpees, saltos, hollow hold), que ese dataset no cubre. Para esos, y para
+cualquier otro que quieras ver en movimiento, sumá un video.
+
+Si querés ampliar la cobertura, `scripts/build-demos.mjs` regenera todo: agregás
+el movimiento al mapa con el nombre que tiene en el dataset y lo volvés a correr.
+
+### Cómo sumar videos
 
 Hay cuatro maneras, se pueden combinar:
 
@@ -141,7 +161,7 @@ Hay cuatro maneras, se pueden combinar:
 se usa cada movimiento en las rutinas**, así con los primeros veinte ya cubrís
 casi todas. Al lado de cada uno tenés un botón *Buscar*, que abre una búsqueda
 con el nombre del ejercicio: copiás la dirección del video que te guste y la
-pegás en el campo. Se guarda solo.
+pegás en el campo (o tocás el botón de pegar). Se guarda solo.
 
 **2. Uno por uno, mientras mirás un ejercicio**
 En *Ejercicios* → elegí el movimiento → **Agregar video**, o directamente desde
@@ -169,17 +189,23 @@ Copiá los videos en `forja-fit/public/videos/` y referencialos como
 Desde *Perfil* también podés **exportar** el mapa de videos para no volver a
 cargarlos si cambiás de dispositivo.
 
+En el diálogo para agregar un video hay dos buscadores: uno de YouTube y otro de
+**Wikimedia Commons**, donde todo el material es de licencia libre.
+
 ### Dónde aparecen
 
-Una vez cargados, los videos se abren en tres lugares:
+Las demostraciones —las fotos del catálogo o el video que hayas cargado— se abren
+en tres lugares:
 
 - **En la rutina** (*Rutinas → un entrenamiento*): tocás cualquier ejercicio de
-  un bloque y se despliega el video con las claves y los errores comunes.
-- **En la sesión**, mientras entrenás: el botón **Técnica** de cada ejercicio
-  abre el video justo debajo de las series, sin perder el cronómetro ni lo que
-  ya registraste. Es la forma de corregirte en el momento.
+  un bloque y se despliega con las claves y los errores comunes.
+- **En la sesión**, mientras entrenás: el botón **Técnica** de cada ejercicio la
+  abre justo debajo de las series, sin perder el cronómetro ni lo que ya
+  registraste. Es la forma de corregirte en el momento.
 - **En la ficha del movimiento** (*Ejercicios → uno cualquiera*), con el detalle
   completo.
+
+Si cargás un video propio, reemplaza a las fotos del catálogo en los tres lados.
 
 ---
 
@@ -204,6 +230,7 @@ Todo el contenido es texto plano en `src/data/`:
 | `src/data/workouts.ts` | Los entrenamientos, bloque por bloque. |
 | `src/data/plans.ts` | Los planes de varias semanas. |
 | `src/data/taxonomy.ts` | Modalidades, colores, lugares y etiquetas. |
+| `src/data/demos.ts` | Qué movimientos traen fotos de demostración (lo genera `scripts/build-demos.mjs`). |
 | `src/lib/programming.ts` | Cómo se arma la programación diaria y los horarios. |
 
 Por ejemplo, para agregar un entrenamiento propio alcanza con sumar un objeto
@@ -220,9 +247,12 @@ mismo día siempre muestra lo mismo, sin necesidad de backend.
 
 ```
 forja-fit/
-├── public/            iconos del PWA y (opcional) tus videos
+├── public/
+│   ├── demos/         fotos de demostración (dominio público)
+│   └── videos/        (opcional) tus propios videos
 ├── scripts/
-│   └── gen-icons.mjs  genera los iconos PNG sin dependencias
+│   ├── gen-icons.mjs   genera los iconos PNG sin dependencias
+│   └── build-demos.mjs baja y comprime las fotos de demostración
 └── src/
     ├── components/    UI, tarjetas, cronómetros, gráficos y reproductor de video
     ├── data/          catálogo: ejercicios, rutinas, planes y taxonomía
@@ -233,6 +263,15 @@ forja-fit/
 
 Stack: React 19 + TypeScript + Vite + Tailwind 4 + Zustand, con `vite-plugin-pwa`
 para el modo offline. Sin backend, sin base de datos y sin analítica.
+
+---
+
+## Créditos
+
+Las fotos de demostración salen de
+[free-exercise-db](https://github.com/yuhonas/free-exercise-db) (Unlicense,
+dominio público). El resto —fichas técnicas, rutinas, planes, diseño y código—
+es original de este proyecto.
 
 ---
 

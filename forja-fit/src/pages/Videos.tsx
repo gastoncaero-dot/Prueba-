@@ -2,6 +2,7 @@ import { ArrowLeft, Check, ClipboardPaste, Search, Trash2, Upload } from 'lucide
 import { useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Chip, Progress, SectionHeader, TextInput } from '../components/ui'
+import { CATALOG_DEMOS, DEMO_COUNT } from '../data/demos'
 import { EXERCISES } from '../data/exercises'
 import { WORKOUTS } from '../data/workouts'
 import { useStore } from '../lib/store'
@@ -18,6 +19,7 @@ for (const workout of WORKOUTS) {
 }
 
 function VideoRow({ id, name }: { id: string; name: string }) {
+  const hasDemo = Boolean(CATALOG_DEMOS[id])
   const stored = useStore((s) => s.videos[id])
   const setVideo = useStore((s) => s.setVideo)
   const clearVideo = useStore((s) => s.clearVideo)
@@ -59,7 +61,14 @@ function VideoRow({ id, name }: { id: string; name: string }) {
   return (
     <li className="px-4 py-3">
       <div className="flex items-center justify-between gap-2">
-        <span className="min-w-0 flex-1 truncate text-[13px] font-semibold">{name}</span>
+        <span className="flex min-w-0 flex-1 items-center gap-1.5">
+          <span className="truncate text-[13px] font-semibold">{name}</span>
+          {hasDemo && (
+            <span className="shrink-0 rounded border border-line bg-surface-2 px-1 py-0.5 text-[9px] font-bold tracking-wide text-faint uppercase">
+              fotos
+            </span>
+          )}
+        </span>
         <span className="flex shrink-0 items-center gap-1">
           {stored && (
             <button
@@ -122,19 +131,27 @@ export function Videos() {
   const navigate = useNavigate()
   const videos = useStore((s) => s.videos)
   const importVideos = useStore((s) => s.importVideos)
-  const [filter, setFilter] = useState<'faltantes' | 'cargados' | 'todos'>('faltantes')
+  const [filter, setFilter] = useState<'sin-nada' | 'solo-fotos' | 'con-video' | 'todos'>(
+    'sin-nada',
+  )
   const [query, setQuery] = useState('')
   const [message, setMessage] = useState('')
   const fileInput = useRef<HTMLInputElement>(null)
 
-  const withVideo = EXERCISES.filter((e) => videos[e.id] ?? e.videoUrl).length
+  const ownVideo = EXERCISES.filter((e) => videos[e.id] ?? e.videoUrl).length
+  const onlyPhotos = EXERCISES.filter((e) => CATALOG_DEMOS[e.id] && !(videos[e.id] ?? e.videoUrl))
+    .length
+  const nothing = EXERCISES.length - ownVideo - onlyPhotos
+  const covered = ownVideo + onlyPhotos
 
   const list = useMemo(() => {
     const q = query.trim().toLowerCase()
     return EXERCISES.filter((e) => {
-      const has = Boolean(videos[e.id] ?? e.videoUrl)
-      if (filter === 'faltantes' && has) return false
-      if (filter === 'cargados' && !has) return false
+      const own = Boolean(videos[e.id] ?? e.videoUrl)
+      const demo = Boolean(CATALOG_DEMOS[e.id])
+      if (filter === 'sin-nada' && (own || demo)) return false
+      if (filter === 'solo-fotos' && !(demo && !own)) return false
+      if (filter === 'con-video' && !own) return false
       if (!q) return true
       return [e.name, ...(e.aka ?? [])].join(' ').toLowerCase().includes(q)
     }).sort((a, b) => (USAGE.get(b.id) ?? 0) - (USAGE.get(a.id) ?? 0))
@@ -170,17 +187,18 @@ export function Videos() {
       <div className="card px-4 py-4">
         <div className="mb-2 flex items-baseline justify-between">
           <p className="text-[13px] font-semibold">
-            {withVideo} de {EXERCISES.length} movimientos
+            {covered} de {EXERCISES.length} movimientos con demostración
           </p>
           <p className="tnum text-[12px] text-muted">
-            {Math.round((withVideo / EXERCISES.length) * 100)}%
+            {Math.round((covered / EXERCISES.length) * 100)}%
           </p>
         </div>
-        <Progress value={withVideo} max={EXERCISES.length} />
+        <Progress value={covered} max={EXERCISES.length} />
         <p className="mt-3 text-[12px] leading-relaxed text-muted">
-          La lista arranca por los movimientos que más aparecen en las rutinas, así con los
-          primeros veinte ya cubrís casi todas. Tocá <strong>Buscar</strong>, copiá la dirección del
-          video que te guste y pegala en el campo.
+          <strong>{DEMO_COUNT}</strong> movimientos ya vienen con fotos de
+          posición inicial y final (dominio público, funcionan sin conexión). A cualquiera podés
+          sumarle un video: tocá <strong>Buscar</strong>, copiá la dirección del que te guste y
+          pegala en el campo.
         </p>
       </div>
 
@@ -191,11 +209,14 @@ export function Videos() {
       )}
 
       <div className="flex flex-wrap gap-2">
-        <Chip active={filter === 'faltantes'} onClick={() => setFilter('faltantes')}>
-          Faltantes ({EXERCISES.length - withVideo})
+        <Chip active={filter === 'sin-nada'} onClick={() => setFilter('sin-nada')}>
+          Sin nada ({nothing})
         </Chip>
-        <Chip active={filter === 'cargados'} onClick={() => setFilter('cargados')}>
-          Cargados ({withVideo})
+        <Chip active={filter === 'solo-fotos'} onClick={() => setFilter('solo-fotos')}>
+          Solo fotos ({onlyPhotos})
+        </Chip>
+        <Chip active={filter === 'con-video'} onClick={() => setFilter('con-video')}>
+          Con video ({ownVideo})
         </Chip>
         <Chip active={filter === 'todos'} onClick={() => setFilter('todos')}>
           Todos
@@ -226,11 +247,11 @@ export function Videos() {
       {list.length === 0 ? (
         <div className="card px-4 py-8 text-center">
           <p className="display text-base">
-            {filter === 'faltantes' ? '¡Están todos cargados!' : 'Nada por acá'}
+            {filter === 'sin-nada' ? '¡No falta ninguno!' : 'Nada por acá'}
           </p>
           <p className="mt-1 text-[13px] text-muted">
-            {filter === 'faltantes'
-              ? 'Todos los movimientos del catálogo tienen su video.'
+            {filter === 'sin-nada'
+              ? 'Todos los movimientos tienen fotos o video.'
               : 'Probá con otro filtro o buscando otro nombre.'}
           </p>
         </div>

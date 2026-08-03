@@ -9,16 +9,17 @@ import {
   Trash2,
 } from 'lucide-react'
 import { useState } from 'react'
+import { catalogDemo } from '../data/demos'
 import { useStore } from '../lib/store'
-import { demoSearchUrl, isProbablyVideoUrl, parseVideo } from '../lib/video'
+import { commonsSearchUrl, demoSearchUrl, isProbablyVideoUrl, parseVideo } from '../lib/video'
+import { DemoFrames } from './DemoFrames'
 import { Button, Field, Sheet, TextInput } from './ui'
 
 /**
- * Reproductor de la demostración del movimiento.
+ * Demostración del movimiento.
  *
- * El catálogo viene sin videos cargados: podés pegar el link de un video de
- * YouTube o Vimeo, o apuntar a un archivo propio (por ejemplo
- * ./videos/sentadilla.mp4 dentro de la carpeta public).
+ * Muestra, en este orden: el video que hayas cargado, la demostración de fotos
+ * que trae el catálogo, o el estado vacío con los accesos para sumar un video.
  */
 export function VideoPlayer({
   exerciseId,
@@ -38,6 +39,8 @@ export function VideoPlayer({
 
   const url = stored ?? catalogUrl
   const video = url ? parseVideo(url) : null
+  const hasVideo = Boolean(video && video.kind !== 'otro')
+  const demo = catalogDemo(exerciseId)
 
   function open() {
     setValue(stored ?? catalogUrl ?? '')
@@ -75,16 +78,10 @@ export function VideoPlayer({
   return (
     <>
       <div className="card overflow-hidden">
-        {video && video.kind !== 'otro' ? (
+        {hasVideo && video ? (
           <div className="relative aspect-video w-full bg-black">
             {video.kind === 'archivo' ? (
-              <video
-                src={video.src}
-                controls
-                playsInline
-                preload="metadata"
-                className="h-full w-full"
-              />
+              <video src={video.src} controls playsInline preload="metadata" className="h-full w-full" />
             ) : (
               <iframe
                 src={video.src}
@@ -97,6 +94,8 @@ export function VideoPlayer({
               />
             )}
           </div>
+        ) : demo ? (
+          <DemoFrames exerciseId={exerciseId} alt={exerciseName} />
         ) : (
           <div className="relative flex aspect-video w-full flex-col items-center justify-center gap-3 bg-surface-2 px-6 text-center">
             <span className="hatch absolute inset-0" />
@@ -104,7 +103,7 @@ export function VideoPlayer({
               <Film size={20} className="text-faint" />
             </span>
             <p className="relative text-[13px] text-muted">
-              Todavía no cargaste el video de este movimiento.
+              Este movimiento no tiene demostración en el catálogo.
             </p>
             <div className="relative flex flex-wrap items-center justify-center gap-2">
               <Button size="sm" onClick={open}>
@@ -112,14 +111,15 @@ export function VideoPlayer({
               </Button>
               <a href={demoSearchUrl(exerciseName)} target="_blank" rel="noreferrer">
                 <Button size="sm" variant="secondary">
-                  <Search size={14} /> Buscar demostración
+                  <Search size={14} /> Buscar
                 </Button>
               </a>
             </div>
           </div>
         )}
 
-        {video && video.kind !== 'otro' && (
+        {/* --------------------------------------------------------- pie */}
+        {hasVideo && video ? (
           <div className="flex items-center justify-between gap-2 border-t border-line px-3 py-2">
             <span className="inline-flex min-w-0 items-center gap-1.5 text-[11px] text-faint">
               <Play size={11} />
@@ -127,7 +127,6 @@ export function VideoPlayer({
                 {video.kind === 'archivo'
                   ? 'Archivo propio'
                   : `Video de ${video.kind === 'youtube' ? 'YouTube' : 'Vimeo'}`}
-                {stored ? '' : ' (del catálogo)'}
               </span>
             </span>
             <span className="flex shrink-0 items-center gap-1">
@@ -158,7 +157,23 @@ export function VideoPlayer({
               )}
             </span>
           </div>
-        )}
+        ) : demo ? (
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line px-3 py-2">
+            <span className="text-[11px] text-faint">
+              Fotos del catálogo · dominio público
+            </span>
+            <span className="flex shrink-0 items-center gap-1.5">
+              <a href={demoSearchUrl(exerciseName)} target="_blank" rel="noreferrer">
+                <Button size="sm" variant="ghost">
+                  <Search size={13} /> Buscar video
+                </Button>
+              </a>
+              <Button size="sm" variant="secondary" onClick={open}>
+                <Link2 size={13} /> Agregar
+              </Button>
+            </span>
+          </div>
+        ) : null}
       </div>
 
       <Sheet open={editing} onClose={() => setEditing(false)} title={`Video: ${exerciseName}`}>
@@ -195,14 +210,24 @@ export function VideoPlayer({
               Cancelar
             </Button>
           </div>
-          <a
-            href={demoSearchUrl(exerciseName)}
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center justify-center gap-1.5 text-[12px] font-semibold text-accent"
-          >
-            <Search size={13} /> Buscar una demostración de {exerciseName}
-          </a>
+          <div className="flex flex-col gap-1.5 border-t border-line-soft pt-3 text-center">
+            <a
+              href={demoSearchUrl(exerciseName)}
+              target="_blank"
+              rel="noreferrer"
+              className="text-[12px] font-semibold text-accent"
+            >
+              Buscar “{exerciseName}” en YouTube
+            </a>
+            <a
+              href={commonsSearchUrl(exerciseName)}
+              target="_blank"
+              rel="noreferrer"
+              className="text-[12px] font-semibold text-muted hover:text-ink"
+            >
+              Buscar en Wikimedia Commons (videos de licencia libre)
+            </a>
+          </div>
         </div>
       </Sheet>
     </>

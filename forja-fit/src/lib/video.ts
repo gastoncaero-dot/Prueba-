@@ -62,6 +62,15 @@ export function demoSearchUrl(exerciseName: string): string {
   return `https://www.youtube.com/results?search_query=${query}`
 }
 
+/**
+ * Búsqueda en Wikimedia Commons, donde todo el material es de licencia libre
+ * (dominio público o Creative Commons).
+ */
+export function commonsSearchUrl(exerciseName: string): string {
+  const query = encodeURIComponent(`${exerciseName} exercise`)
+  return `https://commons.wikimedia.org/wiki/Special:MediaSearch?search=${query}&type=video`
+}
+
 export function isProbablyVideoUrl(url: string): boolean {
   const parsed = parseVideo(url)
   if (!parsed) return false
