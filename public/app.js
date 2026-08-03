@@ -395,6 +395,16 @@ const pt = (r, a) => {
   return [CX + r * Math.sin(rad), CY - r * Math.cos(rad)];
 };
 
+/* Hora escrita junto a un punto del anillo, por fuera del trazo. El
+   anclaje sigue al lado en el que cae, para que no se salga del lienzo. */
+function ringLabel(a, text, color) {
+  const [x, y] = pt(R + 28, a);
+  const off = x - CX;
+  const anchor = Math.abs(off) < 60 ? "middle" : off > 0 ? "end" : "start";
+  return `<text class="ring-time" x="${x.toFixed(1)}" y="${y.toFixed(1)}"
+    text-anchor="${anchor}" dominant-baseline="middle" fill="${color}">${text}</text>`;
+}
+
 function arc(r, a1, a2) {
   const [x1, y1] = pt(r, a1), [x2, y2] = pt(r, a2);
   const large = Math.abs(a2 - a1) > 180 ? 1 : 0;
@@ -420,7 +430,10 @@ function renderRing() {
 
     const mid = (a1 + a2) / 2;
     const [ix, iy] = pt(R, mid);
-    const color = blk.est ? "var(--luna)" : "var(--luna-d)";
+    /* La noche cierra el día: se marca en ámbar, como el despertar que
+       lo abre, para que los dos extremos se lean como un par. */
+    const color = blk.kind === "night" ? "var(--amber)" : blk.est ? "var(--luna)" : "var(--luna-d)";
+    if (blk.kind === "night") out.push(ringLabel(mid, hhmm(blk.start), "var(--amber)"));
     out.push(`<circle cx="${ix.toFixed(1)}" cy="${iy.toFixed(1)}" r="15" class="node-bg"/>
       <circle cx="${ix.toFixed(1)}" cy="${iy.toFixed(1)}" r="15" class="node-ring"
         stroke="${color}" ${blk.est ? 'stroke-dasharray="2 3"' : ""}/>
@@ -446,6 +459,7 @@ function renderRing() {
       <circle cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="9" class="node-ring" stroke="var(--dawn)"/>
       <svg x="${(mx - 5.5).toFixed(1)}" y="${(my - 5.5).toFixed(1)}" width="11" height="11" viewBox="0 0 24 24"
         fill="none" style="color:var(--dawn)">${P.wake}</svg>`);
+    out.push(ringLabel(A0, hhmm(p.morningWake), "var(--dawn)"));
   }
 
   // Tomas y pañales, en una órbita exterior
