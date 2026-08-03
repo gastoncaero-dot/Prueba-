@@ -1,4 +1,13 @@
-import { ExternalLink, Film, Link2, Pencil, Play, Search, Trash2 } from 'lucide-react'
+import {
+  ClipboardPaste,
+  ExternalLink,
+  Film,
+  Link2,
+  Pencil,
+  Play,
+  Search,
+  Trash2,
+} from 'lucide-react'
 import { useState } from 'react'
 import { useStore } from '../lib/store'
 import { demoSearchUrl, isProbablyVideoUrl, parseVideo } from '../lib/video'
@@ -34,6 +43,18 @@ export function VideoPlayer({
     setValue(stored ?? catalogUrl ?? '')
     setError('')
     setEditing(true)
+  }
+
+  async function pasteFromClipboard() {
+    try {
+      const text = await navigator.clipboard.readText()
+      if (text?.trim()) {
+        setValue(text.trim())
+        setError('')
+      }
+    } catch {
+      setError('Tu navegador no deja leer el portapapeles: pegá el link a mano.')
+    }
   }
 
   function save() {
@@ -146,15 +167,24 @@ export function VideoPlayer({
             label="Link del video"
             hint="Acepta YouTube, Vimeo o un archivo .mp4 / .webm. Para usar tus propios videos, copialos en la carpeta public/videos y escribí ./videos/nombre.mp4"
           >
-            <TextInput
-              value={value}
-              onChange={(e) => {
-                setValue(e.target.value)
-                setError('')
-              }}
-              placeholder="https://www.youtube.com/watch?v=..."
-              autoFocus
-            />
+            <div className="flex items-center gap-2">
+              <TextInput
+                value={value}
+                onChange={(e) => {
+                  setValue(e.target.value)
+                  setError('')
+                }}
+                placeholder="https://www.youtube.com/watch?v=..."
+                autoFocus
+              />
+              <button
+                onClick={pasteFromClipboard}
+                className="shrink-0 rounded-xl border border-line bg-surface-2 p-2.5 text-muted hover:text-ink"
+                aria-label="Pegar el link copiado"
+              >
+                <ClipboardPaste size={16} />
+              </button>
+            </div>
           </Field>
           {error && <p className="text-[12px] text-danger">{error}</p>}
           <div className="flex gap-2">

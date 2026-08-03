@@ -1,8 +1,8 @@
-import { CalendarCheck, ChevronRight, Flame, MapPin, Play, Repeat2, Sparkles } from 'lucide-react'
+import { ChevronRight, Flame, MapPin, Play, Repeat2, Sparkles } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button, EmptyState, Ring, SectionHeader, Stat } from '../components/ui'
 import { WorkoutCard } from '../components/WorkoutCard'
-import { modality as modalityMeta, PLACE_LABEL } from '../data/taxonomy'
+import { PLACE_LABEL } from '../data/taxonomy'
 import { getWorkout } from '../data/workouts'
 import { formatDuration, startOfWeek, timeAgo, today } from '../lib/dates'
 import { planPosition } from '../lib/planning'
@@ -22,7 +22,6 @@ export function Hoy() {
   const navigate = useNavigate()
   const profile = useStore((s) => s.profile)
   const history = useStore((s) => s.history)
-  const bookings = useStore((s) => s.bookings)
   const activePlan = useStore((s) => s.activePlan)
   const startSession = useStore((s) => s.startSession)
   const draft = useStore((s) => s.draft)
@@ -37,14 +36,6 @@ export function Hoy() {
 
   const position = planPosition(activePlan, iso)
   const planWorkout = position?.day.workoutId ? getWorkout(position.day.workoutId) : undefined
-
-  const todaysBookings = bookings
-    .filter((b) => b.date === iso)
-    .sort((a, b) => a.time.localeCompare(b.time))
-  const upcoming = bookings
-    .filter((b) => b.date > iso)
-    .sort((a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time))
-    .slice(0, 2)
 
   const programming = programmingForDate(iso)
   const lastSession = history[0]
@@ -156,56 +147,17 @@ export function Hoy() {
         </section>
       )}
 
-      {/* --------------------------------------------------------- reservas */}
-      {(todaysBookings.length > 0 || upcoming.length > 0) && (
-        <section>
-          <SectionHeader
-            title="Tus reservas"
-            action={
-              <Link to="/clases" className="text-[12px] font-semibold text-accent">
-                Reservar
-              </Link>
-            }
-          />
-          <div className="space-y-2">
-            {[...todaysBookings, ...upcoming].map((b) => {
-              const workout = getWorkout(b.workoutId)
-              const color = workout ? modalityMeta(workout.modality).color : 'var(--c-accent)'
-              return (
-                <div key={b.slotId} className="card flex items-center gap-3 px-4 py-3">
-                  <span
-                    className="flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-xl text-[11px] font-bold"
-                    style={{ background: `${color}1f`, color }}
-                  >
-                    <CalendarCheck size={16} />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold">
-                      {workout?.name ?? 'Entrenamiento'}
-                    </p>
-                    <p className="text-[12px] text-muted">
-                      {b.date === iso ? 'Hoy' : b.date} · {b.time !== 'libre' ? b.time : 'a tu horario'} ·{' '}
-                      {b.venue}
-                    </p>
-                  </div>
-                  <Button size="sm" onClick={() => launch(b.workoutId)}>
-                    Entrenar
-                  </Button>
-                </div>
-              )
-            })}
-          </div>
-        </section>
-      )}
-
       {/* ---------------------------------------------------- programación */}
       <section>
         <SectionHeader
           title="Programación de hoy"
-          hint="Un entrenamiento por modalidad, como en el box"
+          hint="Un entrenamiento por modalidad"
           action={
-            <Link to="/clases" className="inline-flex items-center text-[12px] font-semibold text-accent">
-              Horarios <ChevronRight size={14} />
+            <Link
+              to="/programacion"
+              className="inline-flex items-center text-[12px] font-semibold text-accent"
+            >
+              Ver más <ChevronRight size={14} />
             </Link>
           }
         />
@@ -214,7 +166,7 @@ export function Hoy() {
             <WorkoutCard key={modality} workout={workout} compact />
           ))}
         </div>
-        <Link to="/clases">
+        <Link to="/programacion">
           <Button variant="secondary" full className="mt-3">
             Ver las {programming.length} modalidades del día
           </Button>

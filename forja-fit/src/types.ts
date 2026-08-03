@@ -11,7 +11,7 @@ export type Modality =
   | 'core'
   | 'movilidad'
 
-export type Place = 'sede' | 'casa' | 'outdoor' | 'online'
+export type Place = 'sede' | 'casa' | 'outdoor'
 
 export type Equipment =
   | 'ninguno'
@@ -163,35 +163,6 @@ export interface Workout {
   tags?: string[]
   /** Estímulo esperado, en una línea. */
   stimulus?: string
-}
-
-// ------------------------------------------------------------ programación
-
-export interface ClassSlot {
-  id: string
-  /** Fecha ISO (YYYY-MM-DD). */
-  date: string
-  /** HH:MM, 24 h. */
-  time: string
-  durationMin: number
-  workoutId: string
-  modality: Modality
-  place: Place
-  venue: string
-  coach: string
-  capacity: number
-  taken: number
-}
-
-export interface Booking {
-  slotId: string
-  date: string
-  time: string
-  workoutId: string
-  venue: string
-  createdAt: string
-  /** Se marca al terminar la sesión desde el reproductor. */
-  attended?: boolean
 }
 
 // -------------------------------------------------------------- historial

@@ -3,8 +3,8 @@
 ## Forja Fit
 
 App de entrenamiento funcional para uso personal (PWA): programación diaria,
-reserva de clases, biblioteca de movimientos con video, planes de varias semanas
-y seguimiento de progreso.
+biblioteca de movimientos con video, planes de varias semanas y seguimiento de
+progreso.
 
 📁 El proyecto está en **[`forja-fit/`](./forja-fit)** — ahí está el
 [README completo](./forja-fit/README.md) con todo el detalle.

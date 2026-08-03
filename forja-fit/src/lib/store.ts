@@ -2,7 +2,6 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type {
   ActivePlan,
-  Booking,
   Goal,
   LoggedSet,
   Measurement,
@@ -17,7 +16,6 @@ export interface SessionDraft {
   date: string
   startedAt: string
   place: Place
-  slotId?: string
   blockIndex: number
   sets: LoggedSet[]
   score?: string
@@ -48,7 +46,6 @@ export interface ForjaState {
   profile: Profile
   /** exerciseId → URL del video que cargaste. */
   videos: Record<string, string>
-  bookings: Booking[]
   history: SessionLog[]
   goals: Goal[]
   measurements: Measurement[]
@@ -63,10 +60,6 @@ export interface ForjaState {
   setVideo: (exerciseId: string, url: string) => void
   clearVideo: (exerciseId: string) => void
   importVideos: (map: Record<string, string>) => number
-
-  book: (booking: Booking) => void
-  cancelBooking: (slotId: string) => void
-  isBooked: (slotId: string) => boolean
 
   startSession: (draft: SessionDraft) => void
   updateDraft: (patch: Partial<SessionDraft>) => void
@@ -95,10 +88,9 @@ const STORAGE_KEY = 'forja-fit-v1'
 
 export const useStore = create<ForjaState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       profile: DEFAULT_PROFILE,
       videos: {},
-      bookings: [],
       history: [],
       goals: [],
       measurements: [],
@@ -124,14 +116,6 @@ export const useStore = create<ForjaState>()(
         return entries.length
       },
 
-      book: (booking) =>
-        set((s) => ({
-          bookings: [...s.bookings.filter((b) => b.slotId !== booking.slotId), booking],
-        })),
-      cancelBooking: (slotId) =>
-        set((s) => ({ bookings: s.bookings.filter((b) => b.slotId !== slotId) })),
-      isBooked: (slotId) => get().bookings.some((b) => b.slotId === slotId),
-
       startSession: (draft) => set({ draft }),
       updateDraft: (patch) =>
         set((s) => (s.draft ? { draft: { ...s.draft, ...patch } } : {})),
@@ -145,13 +129,7 @@ export const useStore = create<ForjaState>()(
         }),
       discardDraft: () => set({ draft: undefined }),
       finishSession: (log) =>
-        set((s) => ({
-          history: [log, ...s.history],
-          draft: undefined,
-          bookings: s.bookings.map((b) =>
-            b.date === log.date && b.workoutId === log.workoutId ? { ...b, attended: true } : b,
-          ),
-        })),
+        set((s) => ({ history: [log, ...s.history], draft: undefined })),
       deleteSession: (id) => set((s) => ({ history: s.history.filter((h) => h.id !== id) })),
 
       addGoal: (goal) => set((s) => ({ goals: [goal, ...s.goals] })),
@@ -185,7 +163,6 @@ export const useStore = create<ForjaState>()(
         set((s) => ({
           profile: { ...s.profile, ...(data.profile ?? {}) },
           videos: data.videos ?? s.videos,
-          bookings: data.bookings ?? s.bookings,
           history: data.history ?? s.history,
           goals: data.goals ?? s.goals,
           measurements: data.measurements ?? s.measurements,
@@ -198,7 +175,6 @@ export const useStore = create<ForjaState>()(
         set({
           profile: { ...DEFAULT_PROFILE, createdAt: new Date().toISOString() },
           videos: {},
-          bookings: [],
           history: [],
           goals: [],
           measurements: [],
@@ -210,7 +186,13 @@ export const useStore = create<ForjaState>()(
     }),
     {
       name: STORAGE_KEY,
-      version: 1,
+      version: 2,
+      // La versión 1 guardaba reservas de clases; ya no existen.
+      migrate: (persisted) => {
+        const state = { ...(persisted as Record<string, unknown>) }
+        delete state.bookings
+        return state as unknown as ForjaState
+      },
     },
   ),
 )
@@ -223,7 +205,6 @@ export function exportSnapshot(state: ForjaState) {
     exportedAt: new Date().toISOString(),
     profile: state.profile,
     videos: state.videos,
-    bookings: state.bookings,
     history: state.history,
     goals: state.goals,
     measurements: state.measurements,
@@ -237,13 +218,12 @@ export function newId(prefix = 'id'): string {
   return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`
 }
 
-export function emptyDraft(workoutId: string, place: Place, slotId?: string): SessionDraft {
+export function emptyDraft(workoutId: string, place: Place): SessionDraft {
   return {
     workoutId,
     date: today(),
     startedAt: new Date().toISOString(),
     place,
-    slotId,
     blockIndex: 0,
     sets: [],
     elapsedSec: 0,

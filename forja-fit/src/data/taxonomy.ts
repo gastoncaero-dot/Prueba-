@@ -80,10 +80,9 @@ export function modality(id: Modality): ModalityMeta {
 }
 
 export const PLACE_LABEL: Record<Place, string> = {
-  sede: 'En la sede',
+  sede: 'En el gimnasio',
   casa: 'En casa',
-  outdoor: 'Outdoor',
-  online: 'Online',
+  outdoor: 'Al aire libre',
 }
 
 export const LEVEL_LABEL: Record<Level, string> = {
@@ -201,24 +200,3 @@ export const FORMAT_HELP: Record<BlockFormat, string> = {
   libre: 'Sin cronómetro: seguí las indicaciones del bloque.',
 }
 
-export const VENUES: { name: string; place: Place }[] = [
-  { name: 'Sede Centro', place: 'sede' },
-  { name: 'Sede Norte', place: 'sede' },
-  { name: 'Sede Sur', place: 'sede' },
-  { name: 'Online (videollamada)', place: 'online' },
-  { name: 'En casa', place: 'casa' },
-  { name: 'Parque', place: 'outdoor' },
-]
-
-export const COACHES = [
-  'Nico',
-  'Vale',
-  'Juli',
-  'Mati',
-  'Flor',
-  'Santi',
-  'Caro',
-  'Lu',
-  'Fede',
-  'Aye',
-]

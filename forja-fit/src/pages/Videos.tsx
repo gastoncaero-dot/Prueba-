@@ -1,4 +1,4 @@
-import { ArrowLeft, Check, Search, Trash2, Upload } from 'lucide-react'
+import { ArrowLeft, Check, ClipboardPaste, Search, Trash2, Upload } from 'lucide-react'
 import { useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Chip, Progress, SectionHeader, TextInput } from '../components/ui'
@@ -25,8 +25,8 @@ function VideoRow({ id, name }: { id: string; name: string }) {
   const [error, setError] = useState(false)
   const [saved, setSaved] = useState(false)
 
-  function commit() {
-    const clean = value.trim()
+  function commit(raw?: string) {
+    const clean = (raw ?? value).trim()
     if (!clean) {
       if (stored) clearVideo(id)
       setError(false)
@@ -38,8 +38,22 @@ function VideoRow({ id, name }: { id: string; name: string }) {
     }
     setError(false)
     setVideo(id, clean)
+    setValue(clean)
     setSaved(true)
     setTimeout(() => setSaved(false), 1500)
+  }
+
+  /** Pega directo del portapapeles: en el celular ahorra el toque largo. */
+  async function pasteFromClipboard() {
+    try {
+      const text = await navigator.clipboard.readText()
+      if (!text?.trim()) return
+      setValue(text.trim())
+      commit(text)
+    } catch {
+      // Algunos navegadores no dan acceso al portapapeles: se pega a mano.
+      setError(false)
+    }
   }
 
   return (
@@ -77,13 +91,20 @@ function VideoRow({ id, name }: { id: string; name: string }) {
             setValue(e.target.value)
             setError(false)
           }}
-          onBlur={commit}
+          onBlur={() => commit()}
           onKeyDown={(e) => {
             if (e.key === 'Enter') e.currentTarget.blur()
           }}
           placeholder="Pegá acá el link del video"
           className={`text-[12px] ${error ? 'border-danger' : ''}`}
         />
+        <button
+          onClick={pasteFromClipboard}
+          className="shrink-0 rounded-lg border border-line bg-surface-2 p-2 text-muted hover:text-ink"
+          aria-label={`Pegar el link copiado para ${name}`}
+        >
+          <ClipboardPaste size={15} />
+        </button>
         {(saved || (stored && value === stored)) && (
           <Check size={16} className="shrink-0 text-accent" />
         )}

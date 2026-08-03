@@ -10,7 +10,7 @@ import { planPosition, planTotalSessions } from '../lib/planning'
 import { useStore } from '../lib/store'
 import type { Level, Modality, Place } from '../types'
 
-const PLACES: Place[] = ['sede', 'casa', 'online', 'outdoor']
+const PLACES: Place[] = ['sede', 'casa', 'outdoor']
 const LEVELS: Level[] = ['principiante', 'intermedio', 'avanzado']
 
 export function Rutinas() {

@@ -2,12 +2,12 @@ import { useEffect } from 'react'
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { useStore } from './lib/store'
-import { Clases } from './pages/Clases'
 import { EjercicioDetalle } from './pages/EjercicioDetalle'
 import { Ejercicios } from './pages/Ejercicios'
 import { Hoy } from './pages/Hoy'
 import { Onboarding } from './pages/Onboarding'
 import { Perfil } from './pages/Perfil'
+import { Programacion } from './pages/Programacion'
 import { PlanDetalle } from './pages/PlanDetalle'
 import { Progreso } from './pages/Progreso'
 import { RutinaDetalle } from './pages/RutinaDetalle'
@@ -33,7 +33,7 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Hoy />} />
-          <Route path="/clases" element={<Clases />} />
+          <Route path="/programacion" element={<Programacion />} />
           <Route path="/rutinas" element={<Rutinas />} />
           <Route path="/rutinas/:id" element={<RutinaDetalle />} />
           <Route path="/planes/:id" element={<PlanDetalle />} />

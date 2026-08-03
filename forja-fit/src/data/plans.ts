@@ -159,7 +159,7 @@ export const PLANS: Plan[] = [
     goal: 'Entrenar sin gimnasio ni equipamiento',
     level: 'principiante',
     daysPerWeek: 4,
-    places: ['casa', 'online'],
+    places: ['casa'],
     equipment: ['ninguno', 'colchoneta', 'banda'],
     description:
       'Cuatro semanas sin salir de casa: circuitos de peso corporal, banda elástica y trabajo de core y movilidad.',
@@ -183,7 +183,7 @@ export const PLANS: Plan[] = [
     goal: 'Menos molestias de espalda y mejor postura',
     level: 'principiante',
     daysPerWeek: 3,
-    places: ['casa', 'sede', 'online'],
+    places: ['casa', 'sede'],
     equipment: ['colchoneta', 'banda'],
     description:
       'Plan de bajo impacto para días de mucha silla: movilidad de columna, activación de glúteo y fortalecimiento de espalda alta.',

@@ -6,7 +6,7 @@ import { useStore } from '../lib/store'
 
 const TABS = [
   { to: '/', label: 'Hoy', icon: Home },
-  { to: '/clases', label: 'Clases', icon: CalendarDays },
+  { to: '/programacion', label: 'Programa', icon: CalendarDays },
   { to: '/rutinas', label: 'Rutinas', icon: Dumbbell },
   { to: '/ejercicios', label: 'Ejercicios', icon: Activity },
   { to: '/progreso', label: 'Progreso', icon: TrendingUp },

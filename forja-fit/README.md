@@ -1,9 +1,8 @@
 # Forja Fit
 
 App de entrenamiento funcional para uso personal, inspirada en el formato de las
-apps de gimnasios boutique tipo BIGG: **programación diaria, reserva de clases,
-biblioteca de movimientos con video, planes de varias semanas y seguimiento de
-progreso**.
+apps de gimnasios boutique tipo BIGG: **programación diaria, biblioteca de
+movimientos con video, planes de varias semanas y seguimiento de progreso**.
 
 Funciona **sin servidor y sin cuenta**: es una PWA que guarda todo en tu
 dispositivo y se puede instalar como aplicación desde el navegador (Android, iOS
@@ -31,8 +30,8 @@ contenido propio:
 
 | Sección | Qué hace |
 |---|---|
-| **Hoy** | Resumen de la semana, racha, el día del plan activo, tus reservas y la programación del día. |
-| **Clases** | 14 días de programación con horarios, sedes, coach y cupos. Reservás y cancelás. Vista por horario o por modalidad. |
+| **Hoy** | Resumen de la semana, racha, el día del plan activo y la programación de hoy. |
+| **Programa** | Tres semanas de programación (una atrás, dos adelante): qué toca cada día en cada modalidad, con filtros por modalidad y lugar, y una marca en los días que ya entrenaste. |
 | **Rutinas** | Catálogo filtrable por modalidad, lugar, nivel y duración, más los planes y tus favoritas. |
 | **Ejercicios** | Biblioteca de movimientos con búsqueda, filtros por patrón y equipamiento, video y marcas personales. |
 | **Sesión** | Reproductor bloque por bloque con cronómetros (AMRAP, EMOM, tabata, intervalos, for time), registro de series con kilos y repeticiones, RPE y notas. Cada ejercicio abre su **video y sus claves de ejecución ahí mismo**, sin salir de la sesión. |
@@ -186,7 +185,7 @@ Una vez cargados, los videos se abren en tres lugares:
 
 ## Tus datos
 
-Todo (historial, marcas, medidas, objetivos, reservas, videos y preferencias) se
+Todo (historial, marcas, medidas, objetivos, videos y preferencias) se
 guarda en el `localStorage` del navegador. **Nada se envía a ningún servidor.**
 
 Como contrapartida: si borrás los datos del navegador, se pierde. Desde
@@ -204,14 +203,14 @@ Todo el contenido es texto plano en `src/data/`:
 | `src/data/exercises.ts` | Los movimientos y sus fichas técnicas. |
 | `src/data/workouts.ts` | Los entrenamientos, bloque por bloque. |
 | `src/data/plans.ts` | Los planes de varias semanas. |
-| `src/data/taxonomy.ts` | Modalidades, colores, sedes, coaches y etiquetas. |
+| `src/data/taxonomy.ts` | Modalidades, colores, lugares y etiquetas. |
 | `src/lib/programming.ts` | Cómo se arma la programación diaria y los horarios. |
 
 Por ejemplo, para agregar un entrenamiento propio alcanza con sumar un objeto
 `wk({ ... })` en `workouts.ts` apuntando a ejercicios que existan; la app lo toma
 sin tocar nada más.
 
-Para cambiar sedes y horarios, editá `VENUES` en `taxonomy.ts` y `TIMES` en
+Para cambiar qué modalidades caen cada día, editá `WEEK_EMPHASIS` en
 `programming.ts`. La programación es determinística a partir de la fecha: el
 mismo día siempre muestra lo mismo, sin necesidad de backend.
 
