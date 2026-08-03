@@ -13,6 +13,7 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="stylesheet" href="styles.css">
+<script src="firebase-config.js"></script>
 </head>
 <body>
 <canvas id="sky" aria-hidden="true"></canvas>
@@ -51,7 +52,10 @@
         <p id="baby-age"></p>
       </div>
     </div>
-    <button class="icon-btn" id="open-settings" aria-label="Ajustes"></button>
+    <div style="display: flex; gap: 0.5rem;">
+      <button class="icon-btn" id="login-btn" aria-label="Iniciar sesión" hidden>👤</button>
+      <button class="icon-btn" id="open-settings" aria-label="Ajustes"></button>
+    </div>
   </header>
 
   <main>
@@ -185,6 +189,10 @@
     <h2>Ajustes</h2>
     <button type="button" class="icon-btn sm" id="settings-close" aria-label="Cerrar">✕</button>
   </header>
+  <div id="firebase-section" hidden>
+    <p id="user-info" style="margin-bottom: 1rem; font-size: 0.9em; color: #888;">—</p>
+    <button type="button" class="btn btn-ghost btn-block" id="logout-btn">Cerrar sesión</button>
+  </div>
   <div class="field">
     <label for="s-name">Nombre</label>
     <input type="text" id="s-name" maxlength="30">
@@ -208,5 +216,6 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="app.js"></script>
+<script src="firebase-module.js"></script>
 </body>
 </html>

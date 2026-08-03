@@ -16,7 +16,12 @@ const state = Object.assign(
   (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } })()
 );
 
-const save = () => localStorage.setItem(KEY, JSON.stringify(state));
+const save = () => {
+  localStorage.setItem(KEY, JSON.stringify(state));
+  if (typeof syncToFirestore === "function" && typeof currentUser !== "undefined" && currentUser) {
+    syncToFirestore();
+  }
+};
 
 function importData(jsonData) {
   try {
@@ -1167,6 +1172,12 @@ $("#s-reset").addEventListener("click", () => {
   localStorage.removeItem(KEY);
   location.reload();
 });
+
+if ($("#login-btn")) {
+  $("#login-btn").addEventListener("click", () => {
+    if (typeof loginWithGoogle === "function") loginWithGoogle();
+  });
+}
 
 /* ─────────────── Cielo estrellado ─────────────── */
 function drawSky() {
