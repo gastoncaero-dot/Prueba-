@@ -64,18 +64,72 @@ npm run build      # genera dist/
 npm run preview    # sirve dist/ en http://localhost:4173
 ```
 
-### Instalarla en el celular
+---
 
-1. Serví la carpeta `dist/` desde cualquier hosting estático (Vercel, Netlify,
-   GitHub Pages, o tu propia PC en la red de casa).
-2. Abrí la URL en el celular.
-3. **Android/Chrome:** menú → *Instalar aplicación*.
-   **iPhone/Safari:** compartir → *Agregar a pantalla de inicio*.
+## Publicarla en Netlify
 
-Queda como una app más, funciona sin internet y arranca a pantalla completa.
+El repositorio ya trae un `netlify.toml` en la raíz con todo configurado
+(carpeta base, comando de build, headers de caché y fallback de rutas).
 
-> La app usa rutas con `#` y rutas relativas, así que anda igual servida desde la
-> raíz de un dominio o desde una subcarpeta.
+### Opción A — conectando el repositorio (recomendada)
+
+Se republica sola cada vez que hacés un push.
+
+1. Entrá a [app.netlify.com](https://app.netlify.com) → **Add new site** →
+   *Import an existing project* → **GitHub** → elegí este repositorio.
+2. **No toques ninguno de los campos de build.** Netlify lee el `netlify.toml`
+   y ya sabe que tiene que entrar a `forja-fit/`, correr `npm run build` y
+   publicar `dist`. (Si el panel te muestra un *Base directory* vacío, dejalo
+   así: ponerlo a mano puede pisar la configuración del archivo.)
+3. **Deploy site**. Tarda un minuto.
+4. En *Site configuration → Change site name* le ponés el nombre que quieras:
+   queda como `https://el-nombre-que-elijas.netlify.app`.
+
+### Opción B — arrastrando la carpeta
+
+Sin repositorio ni cuenta conectada, para probarla rápido:
+
+```bash
+cd forja-fit
+npm install
+npm run build
+```
+
+Después arrastrá la carpeta `forja-fit/dist` a
+[app.netlify.com/drop](https://app.netlify.com/drop). Cada vez que quieras
+actualizarla, volvés a hacer el build y arrastrás de nuevo.
+
+### Opción C — desde la terminal
+
+```bash
+npm install -g netlify-cli
+cd forja-fit
+npm run build
+netlify deploy --prod --dir=dist
+```
+
+### Después de publicar
+
+Abrí la URL en el celular e instalala como app:
+
+- **Android / Chrome:** menú (⋮) → *Instalar aplicación*
+- **iPhone / Safari:** compartir → *Agregar a pantalla de inicio*
+
+Queda como una app más: ícono propio, pantalla completa y funciona sin
+internet. Netlify sirve por HTTPS, que es justamente lo que necesita una PWA
+para poder instalarse.
+
+> **Ojo con los datos:** el historial vive en el navegador de cada dispositivo.
+> Si entrás desde la compu y desde el celular, son dos historiales distintos.
+> Para pasarlos, usá *Perfil → Exportar todo* en uno e *Importar copia* en el
+> otro.
+
+> **Actualizaciones:** cuando publicás una versión nueva, la app la detecta y se
+> actualiza sola la próxima vez que la abrís (los headers del `netlify.toml`
+> están puestos para que el service worker no se quede pegado a la vieja).
+
+La app usa rutas con `#` y rutas relativas, así que anda igual en Netlify, en
+Vercel, en GitHub Pages o servida desde una subcarpeta.
 
 ---
 

@@ -1,0 +1,67 @@
+# Configuración de Netlify para Forja Fit.
+#
+# La app vive en la subcarpeta forja-fit/, así que el "base" apunta ahí y el
+# "publish" es relativo a esa carpeta. Con este archivo NO hace falta tocar
+# nada en el panel de Netlify: al conectar el repositorio ya toma todo de acá.
+
+[build]
+  base = "forja-fit"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# La app navega con rutas tipo /#/rutinas, así que en la práctica todo entra
+# por index.html. Dejamos igual el fallback de SPA por si algún día se cambia
+# a rutas sin #. Los archivos que existen se sirven antes que esta regla.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# --------------------------------------------------------------- caché
+
+# Los assets llevan hash en el nombre: se pueden cachear para siempre.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# El HTML, el service worker y el manifiesto no se cachean: así, cuando
+# publicás una versión nueva, el celular la toma en la siguiente apertura.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/registerSW.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    Content-Type = "application/manifest+json"
+
+# Tus videos propios (public/videos) cambian poco y pesan: caché largo.
+[[headers]]
+  for = "/videos/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# -------------------------------------------------------------- seguridad
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
