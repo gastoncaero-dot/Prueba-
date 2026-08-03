@@ -13,12 +13,12 @@ async function initFirebase() {
     );
     const { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } =
       await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js");
-    const { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs } =
+    const { getFirestore, doc, setDoc, getDoc } =
       await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
 
     window.firebase_modules = {
       initializeApp, getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged,
-      getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs
+      getFirestore, doc, setDoc, getDoc
     };
 
     const app = initializeApp(firebaseConfig);
@@ -27,8 +27,8 @@ async function initFirebase() {
 
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
-      updateAuthUI();
-      if (user) await syncFromFirestore();
+      updateAppUI();
+      if (user) await loadUserData();
     });
   } catch (e) {
     console.error("Firebase init error:", e);
@@ -52,30 +52,51 @@ async function logoutUser() {
   try {
     const { signOut } = window.firebase_modules;
     await signOut(auth);
-    toast("Sesión cerrada");
+    localStorage.removeItem(KEY);
+    location.reload();
   } catch (e) {
     console.error("Logout error:", e);
   }
 }
 
-function updateAuthUI() {
+function updateAppUI() {
+  const loginScreen = $("#login-screen");
+  const welcome = $("#welcome");
+  const app = $("#app");
+
+  if (!currentUser) {
+    loginScreen.hidden = false;
+    welcome.hidden = true;
+    app.hidden = true;
+  } else {
+    loginScreen.hidden = true;
+    if (state.baby) {
+      welcome.hidden = true;
+      app.hidden = false;
+    } else {
+      welcome.hidden = false;
+      app.hidden = true;
+    }
+  }
+
+  updateSettingsUI();
+}
+
+function updateSettingsUI() {
   const section = $("#firebase-section");
   const userInfo = $("#user-info");
-  const loginBtn = $("#login-btn");
   if (!section) return;
 
   if (currentUser) {
     section.hidden = false;
     userInfo.textContent = `Registrado como: ${currentUser.email}`;
     if ($("#logout-btn")) $("#logout-btn").onclick = logoutUser;
-    if (loginBtn) loginBtn.hidden = true;
   } else {
     section.hidden = true;
-    if (loginBtn) loginBtn.hidden = false;
   }
 }
 
-async function syncFromFirestore() {
+async function loadUserData() {
   if (!db || !currentUser) return;
   try {
     const { doc, getDoc } = window.firebase_modules;
@@ -85,11 +106,13 @@ async function syncFromFirestore() {
     if (docSnap.exists()) {
       const data = docSnap.data();
       Object.assign(state, data);
+      localStorage.setItem(KEY, JSON.stringify(state));
       refreshAll();
-      console.log("Datos sincronizados desde Firestore");
+      console.log("Datos cargados desde Firestore");
     }
+    updateAppUI();
   } catch (e) {
-    console.error("Sync from Firestore error:", e);
+    console.error("Load error:", e);
   }
 }
 
@@ -99,21 +122,16 @@ async function syncToFirestore() {
     const { doc, setDoc } = window.firebase_modules;
     const docRef = doc(db, "users", currentUser.uid);
     await setDoc(docRef, state, { merge: true });
-    console.log("Datos sincronizados a Firestore");
   } catch (e) {
-    console.error("Sync to Firestore error:", e);
+    console.error("Sync error:", e);
   }
 }
 
-function getSaveHandler() {
-  return () => {
-    localStorage.setItem(KEY, JSON.stringify(state));
-    if (currentUser) syncToFirestore();
-  };
-}
-
-// Reemplazar la función save original cuando Firebase esté listo
-let originalSave = save;
 window.addEventListener("load", async () => {
   await initFirebase();
+  // Mostrar login screen por defecto
+  if (!FIREBASE_ENABLED) {
+    $("#login-screen").hidden = true;
+    $("#welcome").hidden = false;
+  }
 });

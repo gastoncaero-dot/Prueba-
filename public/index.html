@@ -18,7 +18,23 @@
 <body>
 <canvas id="sky" aria-hidden="true"></canvas>
 
-<noscript><p class="noscript">Nappy necesita JavaScript para calcular los horarios de sueño.</p></noscript>
+<noscript><p class="noscript">Suenito Lindo necesita JavaScript para calcular los horarios de sueño.</p></noscript>
+
+<!-- ══════════════ LOGIN ══════════════ -->
+<div class="welcome" id="login-screen" hidden>
+  <div class="welcome-inner">
+    <div class="welcome-mark" id="login-mark"></div>
+    <h1 class="welcome-title">Suenito Lindo</h1>
+    <p class="welcome-sub">Sabé cuándo y cuánto va a dormir tu bebé.</p>
+
+    <button class="btn btn-primary btn-block" id="google-login-btn">
+      Iniciar sesión con Google
+    </button>
+    <p style="text-align: center; margin-top: 1rem; font-size: 0.85em; color: #888;">
+      Los datos se guardan en tu cuenta y se sincronizan en todos tus dispositivos.
+    </p>
+  </div>
+</div>
 
 <!-- ══════════════ ALTA DEL BEBÉ ══════════════ -->
 <div class="welcome" id="welcome" hidden>

@@ -1179,6 +1179,12 @@ if ($("#login-btn")) {
   });
 }
 
+if ($("#google-login-btn")) {
+  $("#google-login-btn").addEventListener("click", () => {
+    if (typeof loginWithGoogle === "function") loginWithGoogle();
+  });
+}
+
 /* ─────────────── Cielo estrellado ─────────────── */
 function drawSky() {
   const c = $("#sky"), ctx = c.getContext("2d");
@@ -1213,8 +1219,11 @@ function init() {
       if (!birth || new Date(birth) > new Date()) return toast("Elegí una fecha de nacimiento válida");
       state.baby = { name, birth };
       save();
-      $("#welcome").hidden = true;
-      $("#app").hidden = false;
+      if (typeof updateAppUI === "function") updateAppUI();
+      else {
+        $("#welcome").hidden = true;
+        $("#app").hidden = false;
+      }
       refreshAll(); show("hoy");
       toast(`Todo listo para ${name}`);
     });
