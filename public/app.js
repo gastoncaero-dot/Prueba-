@@ -1173,16 +1173,33 @@ $("#s-reset").addEventListener("click", () => {
   location.reload();
 });
 
-if ($("#login-btn")) {
-  $("#login-btn").addEventListener("click", () => {
-    if (typeof loginWithGoogle === "function") loginWithGoogle();
-  });
+/* ── Login: entrar o crear cuenta con correo y contraseña ── */
+let authMode = "in";                                  // "in" | "up"
+
+function renderAuthMode() {
+  $("#auth-primary").textContent = authMode === "in" ? "Entrar" : "Crear cuenta";
+  $("#auth-toggle").textContent  = authMode === "in"
+    ? "Todavía no tengo cuenta"
+    : "Ya tengo cuenta, quiero entrar";
+  $("#auth-pass").autocomplete = authMode === "in" ? "current-password" : "new-password";
 }
 
-if ($("#google-login-btn")) {
-  $("#google-login-btn").addEventListener("click", () => {
-    if (typeof loginWithGoogle === "function") loginWithGoogle();
+function submitAuth() {
+  const email = $("#auth-email").value.trim();
+  const pass  = $("#auth-pass").value;
+  if (!email) return toast("Escribí tu correo");
+  if (pass.length < 6) return toast("La contraseña necesita al menos 6 caracteres");
+  authMode === "in" ? signInWithEmail(email, pass) : signUpWithEmail(email, pass);
+}
+
+if ($("#auth-primary")) {
+  renderAuthMode();
+  $("#auth-primary").addEventListener("click", submitAuth);
+  $("#auth-toggle").addEventListener("click", () => {
+    authMode = authMode === "in" ? "up" : "in";
+    renderAuthMode();
   });
+  $("#auth-pass").addEventListener("keydown", (e) => { if (e.key === "Enter") submitAuth(); });
 }
 
 /* ─────────────── Cielo estrellado ─────────────── */

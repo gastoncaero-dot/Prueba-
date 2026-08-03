@@ -27,10 +27,21 @@
     <h1 class="welcome-title">Suenito Lindo</h1>
     <p class="welcome-sub">Sabé cuándo y cuánto va a dormir tu bebé.</p>
 
-    <button class="btn btn-primary btn-block" id="google-login-btn">
-      Iniciar sesión con Google
+    <div class="field">
+      <label for="auth-email">Correo electrónico</label>
+      <input type="email" id="auth-email" placeholder="tu@email.com" autocomplete="email" enterkeyhint="next">
+    </div>
+    <div class="field">
+      <label for="auth-pass">Contraseña</label>
+      <input type="password" id="auth-pass" placeholder="Mínimo 6 caracteres" autocomplete="current-password" enterkeyhint="go">
+    </div>
+
+    <button class="btn btn-primary btn-block" id="auth-primary">Entrar</button>
+    <button class="btn btn-ghost btn-block" id="auth-toggle" style="margin-top:.6rem">
+      Todavía no tengo cuenta
     </button>
-    <p style="text-align: center; margin-top: 1rem; font-size: 0.85em; color: #888;">
+
+    <p class="field-note" id="auth-hint" style="text-align:center;margin-top:1rem">
       Los datos se guardan en tu cuenta y se sincronizan en todos tus dispositivos.
     </p>
   </div>
@@ -68,10 +79,7 @@
         <p id="baby-age"></p>
       </div>
     </div>
-    <div style="display: flex; gap: 0.5rem;">
-      <button class="icon-btn" id="login-btn" aria-label="Iniciar sesión" hidden>👤</button>
-      <button class="icon-btn" id="open-settings" aria-label="Ajustes"></button>
-    </div>
+    <button class="icon-btn" id="open-settings" aria-label="Ajustes"></button>
   </header>
 
   <main>

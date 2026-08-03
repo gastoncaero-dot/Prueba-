@@ -49,17 +49,40 @@ function loadFirebaseSDK() {
   });
 }
 
-async function loginWithGoogle() {
-  if (!auth) {
-    toast("Firebase no está inicializado");
-    return;
-  }
+/* Email + contraseña: no depende de dominios autorizados, así que
+   funciona en cualquier URL donde se publique la app. */
+const AUTH_ERRORS = {
+  "auth/invalid-email": "El correo no es válido",
+  "auth/missing-password": "Escribí una contraseña",
+  "auth/weak-password": "La contraseña necesita al menos 6 caracteres",
+  "auth/email-already-in-use": "Ese correo ya tiene cuenta. Probá entrar",
+  "auth/invalid-credential": "Correo o contraseña incorrectos",
+  "auth/wrong-password": "Correo o contraseña incorrectos",
+  "auth/user-not-found": "No hay cuenta con ese correo. Creá una",
+  "auth/too-many-requests": "Demasiados intentos. Esperá un momento",
+  "auth/network-request-failed": "Sin conexión. Revisá internet",
+};
+
+const authMessage = (e) => AUTH_ERRORS[e.code] || e.message || "Error al iniciar sesión";
+
+async function signUpWithEmail(email, pass) {
+  if (!auth) return toast("Firebase no está inicializado");
   try {
-    const provider = new window.firebase.auth.GoogleAuthProvider();
-    await auth.signInWithPopup(provider);
+    await auth.createUserWithEmailAndPassword(email, pass);
+    toast("Cuenta creada");
+  } catch (e) {
+    console.error("Signup error:", e);
+    toast(authMessage(e));
+  }
+}
+
+async function signInWithEmail(email, pass) {
+  if (!auth) return toast("Firebase no está inicializado");
+  try {
+    await auth.signInWithEmailAndPassword(email, pass);
   } catch (e) {
     console.error("Login error:", e);
-    toast(`Error: ${e.message || "Error al iniciar sesión"}`);
+    toast(authMessage(e));
   }
 }
 
