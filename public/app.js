@@ -18,6 +18,31 @@ const state = Object.assign(
 
 const save = () => localStorage.setItem(KEY, JSON.stringify(state));
 
+function importData(jsonData) {
+  try {
+    const data = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
+
+    if (data.baby && data.baby.birthDate) {
+      state.baby = { name: data.baby.name || 'Bebé', birth: data.baby.birthDate.split('T')[0] };
+    }
+
+    if (data.sleeps && Array.isArray(data.sleeps)) {
+      data.sleeps.forEach(sleep => {
+        const start = new Date(sleep.start).getTime();
+        const end = new Date(sleep.end).getTime();
+        if (start && end && start < end) {
+          addEvent({ type: 'sueno', ts: start, end });
+        }
+      });
+    }
+
+    return true;
+  } catch (e) {
+    console.error('Error importando datos:', e);
+    return false;
+  }
+}
+
 /* ─────────────── Tiempo ─────────────── */
 const hhmm = (t) => new Date(t).toLocaleTimeString("es", { hour: "2-digit", minute: "2-digit", hour12: false });
 const dayStart = (t = Date.now()) => { const d = new Date(t); d.setHours(0, 0, 0, 0); return d.getTime(); };
@@ -1104,6 +1129,31 @@ $("#s-save").addEventListener("click", () => {
   refreshAll();
   toast("Ajustes guardados");
 });
+$("#s-import").addEventListener("click", () => {
+  $("#import-file").click();
+});
+
+$("#import-file").addEventListener("change", (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const jsonData = ev.target?.result;
+      if (importData(jsonData)) {
+        refreshAll();
+        $("#settings-dialog").close();
+        toast("Datos importados correctamente");
+      } else {
+        toast("Error al importar los datos");
+      }
+    } catch (err) {
+      toast("Error al leer el archivo");
+    }
+  };
+  reader.readAsText(file);
+});
+
 $("#s-export").addEventListener("click", () => {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
