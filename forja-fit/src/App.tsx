@@ -13,6 +13,7 @@ import { Progreso } from './pages/Progreso'
 import { RutinaDetalle } from './pages/RutinaDetalle'
 import { Rutinas } from './pages/Rutinas'
 import { Sesion } from './pages/Sesion'
+import { Videos } from './pages/Videos'
 
 export default function App() {
   const theme = useStore((s) => s.profile.theme)
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="/planes/:id" element={<PlanDetalle />} />
           <Route path="/ejercicios" element={<Ejercicios />} />
           <Route path="/ejercicios/:id" element={<EjercicioDetalle />} />
+          <Route path="/videos" element={<Videos />} />
           <Route path="/progreso" element={<Progreso />} />
           <Route path="/perfil" element={<Perfil />} />
         </Route>

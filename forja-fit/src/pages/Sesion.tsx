@@ -1,6 +1,7 @@
-import { Check, ChevronLeft, ChevronRight, Film, Flag, X } from 'lucide-react'
+import { Check, ChevronDown, ChevronLeft, ChevronRight, Film, Flag, X } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { ExercisePanel } from '../components/ExercisePanel'
 import { SessionTimer } from '../components/SessionTimer'
 import { Button, Chip, Field, FieldGroup, Sheet, TextArea, TextInput } from '../components/ui'
 import { getExercise } from '../data/exercises'
@@ -122,6 +123,7 @@ function SetRow({
 
 function ItemLogger({ item, block, blockIndex }: { item: BlockItem; block: Block; blockIndex: number }) {
   const exercise = getExercise(item.exerciseId)
+  const [showTechnique, setShowTechnique] = useState(false)
   // En los formatos por rondas se registra una fila por ronda; en los que se
   // miden por resultado (AMRAP, EMOM, tabata) alcanza con una sola.
   const roundBased = ['series', 'circuito', 'for-time', 'intervalos'].includes(block.format)
@@ -138,13 +140,22 @@ function ItemLogger({ item, block, blockIndex }: { item: BlockItem; block: Block
             {item.restSec ? ` · descanso ${item.restSec} s` : ''}
           </p>
         </div>
-        <Link
-          to={`/ejercicios/${item.exerciseId}`}
-          className="shrink-0 rounded-lg border border-line bg-surface-2 p-2 text-faint hover:text-ink"
-          aria-label="Ver técnica y video"
+        <button
+          onClick={() => setShowTechnique((v) => !v)}
+          aria-expanded={showTechnique}
+          className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg border px-2.5 py-2 text-[11px] font-bold transition-colors ${
+            showTechnique
+              ? 'border-accent/50 bg-accent/12 text-accent'
+              : 'border-line bg-surface-2 text-muted hover:text-ink'
+          }`}
         >
-          <Film size={15} />
-        </Link>
+          <Film size={14} />
+          Técnica
+          <ChevronDown
+            size={13}
+            className={`transition-transform ${showTechnique ? 'rotate-180' : ''}`}
+          />
+        </button>
       </div>
 
       <div className="mt-2.5 space-y-1.5">
@@ -160,6 +171,12 @@ function ItemLogger({ item, block, blockIndex }: { item: BlockItem; block: Block
       </div>
 
       {item.notes && <p className="mt-2 text-[12px] text-faint">{item.notes}</p>}
+
+      {showTechnique && (
+        <div className="mt-3">
+          <ExercisePanel exerciseId={item.exerciseId} />
+        </div>
+      )}
     </section>
   )
 }

@@ -121,7 +121,10 @@ export function RutinaDetalle() {
       </header>
 
       <section>
-        <SectionHeader title="La sesión, bloque por bloque" />
+        <SectionHeader
+          title="La sesión, bloque por bloque"
+          hint="Tocá cualquier ejercicio para ver el video y las claves de ejecución"
+        />
         <BlockList blocks={workout.blocks} />
       </section>
 

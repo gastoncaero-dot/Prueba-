@@ -194,6 +194,11 @@ export function Perfil() {
             El catálogo trae la ficha técnica de cada movimiento, pero los videos los cargás vos:
             entrá a un ejercicio y pegá el link, o importá un archivo JSON con todos juntos.
           </p>
+          <Link to="/videos">
+            <Button full>
+              <Film size={15} /> Cargar videos
+            </Button>
+          </Link>
           <div className="flex flex-wrap gap-2">
             <Button size="sm" variant="secondary" onClick={() => videoInput.current?.click()}>
               <Upload size={14} /> Importar videos
@@ -208,7 +213,7 @@ export function Perfil() {
             </Button>
             <Link to="/ejercicios">
               <Button size="sm" variant="ghost">
-                <Film size={14} /> Ir a la biblioteca
+                Ir a la biblioteca
               </Button>
             </Link>
           </div>

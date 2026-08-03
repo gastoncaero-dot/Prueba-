@@ -1,7 +1,7 @@
 import { ChevronRight, Film, Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Chip, EmptyState, TextInput } from '../components/ui'
+import { Button, Chip, EmptyState, TextInput } from '../components/ui'
 import { EXERCISES } from '../data/exercises'
 import {
   EQUIPMENT_LABEL,
@@ -66,11 +66,18 @@ export function Ejercicios() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="display text-2xl">Ejercicios</h1>
-        <p className="text-[13px] text-muted">
-          {EXERCISES.length} movimientos con ficha técnica · {withVideo} con video cargado
-        </p>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="display text-2xl">Ejercicios</h1>
+          <p className="text-[13px] text-muted">
+            {EXERCISES.length} movimientos con ficha técnica · {withVideo} con video cargado
+          </p>
+        </div>
+        <Link to="/videos" className="shrink-0">
+          <Button size="sm" variant="secondary">
+            <Film size={14} /> Videos
+          </Button>
+        </Link>
       </div>
 
       <div className="relative">

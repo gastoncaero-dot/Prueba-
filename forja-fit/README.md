@@ -35,7 +35,7 @@ contenido propio:
 | **Clases** | 14 días de programación con horarios, sedes, coach y cupos. Reservás y cancelás. Vista por horario o por modalidad. |
 | **Rutinas** | Catálogo filtrable por modalidad, lugar, nivel y duración, más los planes y tus favoritas. |
 | **Ejercicios** | Biblioteca de movimientos con búsqueda, filtros por patrón y equipamiento, video y marcas personales. |
-| **Sesión** | Reproductor bloque por bloque con cronómetros (AMRAP, EMOM, tabata, intervalos, for time), registro de series con kilos y repeticiones, RPE y notas. |
+| **Sesión** | Reproductor bloque por bloque con cronómetros (AMRAP, EMOM, tabata, intervalos, for time), registro de series con kilos y repeticiones, RPE y notas. Cada ejercicio abre su **video y sus claves de ejecución ahí mismo**, sin salir de la sesión. |
 | **Progreso** | Sesiones por semana, mapa de constancia, distribución por modalidad, historial, récords, progresión de carga, medidas corporales y objetivos. |
 | **Perfil** | Datos, equipamiento disponible, preferencias, gestión de videos y copia de seguridad de todo. |
 
@@ -135,16 +135,23 @@ Vercel, en GitHub Pages o servida desde una subcarpeta.
 
 ## Cómo cargar los videos
 
-Hay tres maneras, se pueden combinar:
+Hay cuatro maneras, se pueden combinar:
 
-**1. Uno por uno, desde la app**
-Entrá a *Ejercicios* → elegí el movimiento → **Agregar video** → pegá el link.
+**1. Varios de una, en la pantalla de carga** (la más rápida)
+*Perfil* → **Cargar videos**. Te muestra la lista completa **ordenada por cuánto
+se usa cada movimiento en las rutinas**, así con los primeros veinte ya cubrís
+casi todas. Al lado de cada uno tenés un botón *Buscar*, que abre una búsqueda
+con el nombre del ejercicio: copiás la dirección del video que te guste y la
+pegás en el campo. Se guarda solo.
+
+**2. Uno por uno, mientras mirás un ejercicio**
+En *Ejercicios* → elegí el movimiento → **Agregar video**, o directamente desde
+el panel de técnica que se abre dentro de la rutina o de la sesión.
 Sirven YouTube (`watch`, `youtu.be`, `shorts`), Vimeo y archivos `.mp4` / `.webm`.
-Si todavía no tenés uno, el botón *Buscar demostración* abre una búsqueda con el
-nombre del ejercicio.
 
-**2. Todos juntos, con un JSON**
-*Perfil* → *Videos* → **Importar videos**, con un archivo así:
+**3. Todos juntos, con un JSON**
+*Perfil* → *Videos* → **Importar videos**, o el botón *Importar una lista en
+JSON* de la pantalla de carga, con un archivo así:
 
 ```json
 {
@@ -156,12 +163,24 @@ nombre del ejercicio.
 
 Los identificadores son los `id` de `src/data/exercises.ts`.
 
-**3. Con tus propios archivos, sin internet**
+**4. Con tus propios archivos, sin internet**
 Copiá los videos en `forja-fit/public/videos/` y referencialos como
 `./videos/nombre-del-archivo.mp4`. Quedan dentro de la app y se ven sin conexión.
 
 Desde *Perfil* también podés **exportar** el mapa de videos para no volver a
 cargarlos si cambiás de dispositivo.
+
+### Dónde aparecen
+
+Una vez cargados, los videos se abren en tres lugares:
+
+- **En la rutina** (*Rutinas → un entrenamiento*): tocás cualquier ejercicio de
+  un bloque y se despliega el video con las claves y los errores comunes.
+- **En la sesión**, mientras entrenás: el botón **Técnica** de cada ejercicio
+  abre el video justo debajo de las series, sin perder el cronómetro ni lo que
+  ya registraste. Es la forma de corregirte en el momento.
+- **En la ficha del movimiento** (*Ejercicios → uno cualquiera*), con el detalle
+  completo.
 
 ---
 

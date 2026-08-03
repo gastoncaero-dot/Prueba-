@@ -1,9 +1,54 @@
-import { ChevronRight, Info, Repeat, Timer } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { ChevronDown, Film, Info, Repeat, Timer } from 'lucide-react'
+import { useState } from 'react'
 import { getExercise } from '../data/exercises'
 import { BLOCK_KIND_LABEL, FORMAT_HELP } from '../data/taxonomy'
 import { blockSummary } from '../lib/blocks'
-import type { Block } from '../types'
+import { useStore } from '../lib/store'
+import type { Block, BlockItem } from '../types'
+import { ExercisePanel } from './ExercisePanel'
+
+function BlockItemRow({ item, index }: { item: BlockItem; index: number }) {
+  const [open, setOpen] = useState(false)
+  const exercise = getExercise(item.exerciseId)
+  const hasVideo = useStore((s) => Boolean(s.videos[item.exerciseId] ?? exercise?.videoUrl))
+
+  return (
+    <li>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className={`flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors ${
+          open ? 'bg-surface-2' : 'hover:bg-surface-2'
+        }`}
+      >
+        <span className="tnum w-5 shrink-0 text-[12px] font-bold text-faint">{index + 1}</span>
+        <span className="min-w-0 flex-1">
+          <span className="flex items-center gap-1.5">
+            <span className="truncate text-sm font-semibold">
+              {exercise?.name ?? item.exerciseId}
+            </span>
+            {hasVideo && <Film size={12} className="shrink-0 text-accent" />}
+          </span>
+          <span className="block text-[12px] text-muted">
+            {item.prescription}
+            {item.load && ` · ${item.load}`}
+            {item.restSec ? ` · ${item.restSec} s de descanso` : ''}
+          </span>
+        </span>
+        <ChevronDown
+          size={15}
+          className={`shrink-0 text-faint transition-transform ${open ? 'rotate-180' : ''}`}
+        />
+      </button>
+
+      {open && (
+        <div className="px-4 pb-3">
+          <ExercisePanel exerciseId={item.exerciseId} />
+        </div>
+      )}
+    </li>
+  )
+}
 
 export function BlockList({ blocks }: { blocks: Block[] }) {
   return (
@@ -31,32 +76,9 @@ export function BlockList({ blocks }: { blocks: Block[] }) {
           </header>
 
           <ul className="divide-y divide-line-soft">
-            {block.items.map((item, i) => {
-              const exercise = getExercise(item.exerciseId)
-              return (
-                <li key={`${block.id}-${item.exerciseId}-${i}`}>
-                  <Link
-                    to={`/ejercicios/${item.exerciseId}`}
-                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-2"
-                  >
-                    <span className="tnum w-5 shrink-0 text-[12px] font-bold text-faint">
-                      {i + 1}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-semibold">
-                        {exercise?.name ?? item.exerciseId}
-                      </span>
-                      <span className="block text-[12px] text-muted">
-                        {item.prescription}
-                        {item.load && ` · ${item.load}`}
-                        {item.restSec ? ` · ${item.restSec} s de descanso` : ''}
-                      </span>
-                    </span>
-                    <ChevronRight size={15} className="shrink-0 text-faint" />
-                  </Link>
-                </li>
-              )
-            })}
+            {block.items.map((item, i) => (
+              <BlockItemRow key={`${block.id}-${item.exerciseId}-${i}`} item={item} index={i} />
+            ))}
           </ul>
 
           <footer className="space-y-1.5 border-t border-line-soft px-4 py-2.5">
