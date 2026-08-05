@@ -188,6 +188,8 @@ input:focus, select:focus { outline: none; border-color: var(--luna-d); }
 .arc-sleep { fill: none; stroke: var(--luna-d); stroke-width: 11; stroke-linecap: round; opacity: .9; }
 .arc-sleep.est { stroke: var(--luna); stroke-dasharray: 2 6; stroke-opacity: .75; }
 .arc-sleep.live { stroke: var(--luna); filter: drop-shadow(0 0 8px rgba(194,180,255,.6)); }
+.arc-waking { fill: none; stroke: var(--dawn); stroke-width: 11; stroke-linecap: round; opacity: .95; }
+.arc-waking.live { filter: drop-shadow(0 0 8px rgba(116,214,164,.6)); }
 .node-ring { fill: none; stroke-width: 1.6; }
 .node-bg { fill: #151a41; }
 .ring-time { font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: .2px; }

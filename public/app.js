@@ -172,17 +172,25 @@ function rhythm(now = Date.now()) {
     if (age < 0 || age > 21) return;
     daysUsed++;
 
-    let prevEnd = list[0].end;                       // despertar matutino
-    list.slice(1)
-      .filter((s) => s.end - s.ts <= 4 * HOUR && new Date(s.ts).getHours() < 19)
+    /* El despertar de la mañana es el final de la noche de ese día. Darlo
+       por hecho como el primer sueño de la lista hacía que un día sin
+       noche registrada tomara su primera siesta por despertar y corriera
+       todas las posiciones un lugar.
+
+       Si ese día no tiene noche, las siestas siguen aportando su duración
+       —que no depende del ancla— y solo se pierde la ventana matutina. */
+    const nightIdx = list.findIndex(isNightSleep);
+    let prevEnd = nightIdx >= 0 ? list[nightIdx].end : null;
+    list.slice(nightIdx + 1)
+      .filter((s) => !isNightSleep(s) && new Date(s.ts).getHours() < 19)
       .forEach((s, i) => {
         const len = (s.end - s.ts) / MIN;
-        const gap = (s.ts - prevEnd) / MIN;
+        const gap = prevEnd === null ? null : (s.ts - prevEnd) / MIN;
         if (len >= 10 && len <= 240) {
           napAll.push({ value: len, age });
           (napAt[i] ||= []).push({ value: len, age });
         }
-        if (gap >= 20 && gap <= 360) {
+        if (gap !== null && gap >= 20 && gap <= 360) {
           wakeAll.push({ value: gap, age });
           (wakeAt[i] ||= []).push({ value: gap, age });
         }
@@ -273,8 +281,9 @@ function plan(now = Date.now()) {
   /* El primer sueño que termina hoy pasadas las 4 de la mañana marca
      el despertar matutino; los siguientes son las siestas del día. */
   const endedToday = sleeps.filter((e) => e.end >= t0 + 4 * HOUR && e.end <= now);
-  const morningWake = endedToday.length ? endedToday[0].end : null;
-  const naps = endedToday.slice(1);
+  const nightIdx = endedToday.findIndex(isNightSleep);
+  const morningWake = nightIdx >= 0 ? endedToday[nightIdx].end : null;
+  const naps = endedToday.slice(nightIdx + 1).filter((e) => !isNightSleep(e));
   const skipped = state.events.filter((e) => e.type === "omitida" && e.ts >= t0 && e.ts <= now);
 
   const blocks = naps.map((n, i) => ({ kind: "nap", index: i, start: n.ts, end: n.end, est: false, ev: n }));
@@ -332,6 +341,73 @@ function plan(now = Date.now()) {
     firstAt: morningWake || t0 + 7 * HOUR,
     lastAt: night.start,
     hasData: !!morningWake,
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LOS DOS CICLOS
+   El día y la noche no son la misma cosa medida a distintas horas: el
+   día se cuenta en siestas y ventanas de vigilia, la noche en un único
+   sueño largo interrumpido por despertares. Por eso hay dos relojes, y
+   levantarla a la mañana es lo que cierra uno y abre el otro.
+
+   Un sueño guardado sabe a qué ciclo pertenece por su marca `night`.
+   Los registros viejos —y los importados— no la traen, así que se
+   deduce por duración: nada que dure cinco horas seguidas es siesta.
+   ═══════════════════════════════════════════════════════════════ */
+const NIGHT_MIN = 5 * HOUR;
+const isNightSleep = (e) => !!e.end && (e.night === true || e.end - e.ts >= NIGHT_MIN);
+
+const inNight = () => !!state.night;
+const wakingsMs = (list) => (list || []).reduce((a, w) => a + (w.end - w.ts), 0);
+
+/* Sueño real de una noche: el rato en la cuna menos lo que estuvo
+   despierta. Sin esto el total del día se infla con los despertares. */
+function nightAsleepMs(e) {
+  return e.end - e.ts - wakingsMs(e.wakings);
+}
+
+/* Cuánto suele dormir de noche, aprendido igual que el resto del ritmo:
+   la referencia por edad se diluye a medida que hay noches propias. */
+function nightRhythm(now = Date.now()) {
+  const b = band();
+  const today = dayStart(now);
+  const samples = [];
+  state.events.forEach((e) => {
+    if (e.type !== "sueno" || !e.end || !isNightSleep(e)) return;
+    const age = (today - dayStart(e.end)) / DAY;
+    if (age < 0 || age > 21) return;
+    const asleep = nightAsleepMs(e);
+    if (asleep < 4 * HOUR) return;         // sellos de despertar, no noches
+    samples.push({ value: asleep / MIN, age });
+  });
+  const typical = estimate(samples, b.night * 60, AGE_W);
+  return { asleep: Math.round(typical), n: samples.length };
+}
+
+/* Plan de la noche en curso: desde que se durmió hasta el despertar
+   previsto, con los despertares ya registrados en su sitio. */
+function nightPlan(now = Date.now()) {
+  const n = state.night;
+  if (!n) return null;
+  const nr = nightRhythm(now);
+  const wakings = n.wakings || [];
+  const closed = wakingsMs(wakings);
+  const live = n.awakeSince ? now - n.awakeSince : 0;
+
+  /* El despertar previsto se corre con cada despertar: si estuvo una
+     hora despierta a las tres, la mañana llega una hora más tarde. */
+  const expectedWake = n.start + nr.asleep * MIN + closed + live;
+
+  return {
+    start: n.start,
+    expectedWake,
+    wakings,
+    awakeSince: n.awakeSince || null,
+    asleepMs: now - n.start - closed - live,
+    typical: nr.asleep,
+    learnedFrom: nr.n,
+    lastAt: Math.max(expectedWake, now),
   };
 }
 
@@ -393,7 +469,6 @@ const TYPES = {
   nota:   { icon: "note",   label: "Nota",     color: "var(--dim)" },
 };
 const FEEDS = ["pecho", "bibe", "solido"];
-const isNightSleep = (e) => e.end && e.end - e.ts > 5 * HOUR;
 
 const eventTitle = (e) =>
   e.type === "sueno" ? (isNightSleep(e) ? "Sueño nocturno" : "Siesta") : (TYPES[e.type] || TYPES.nota).label;
@@ -524,6 +599,109 @@ function renderRing() {
   renderCore(p, now);
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   RELOJ DE LA NOCHE
+   El mismo anillo, otra unidad: en lugar de encadenar siestas y
+   ventanas, dibuja un único sueño largo desde que se acostó hasta el
+   despertar previsto, con los despertares abiertos como huecos.
+   ═══════════════════════════════════════════════════════════════ */
+function renderNightRing() {
+  const p = nightPlan();
+  const now = Date.now();
+  const span = Math.max(p.lastAt - p.start, 4 * HOUR);
+  const ang = (t) => A0 + ((Math.min(Math.max(t, p.start), p.lastAt) - p.start) / span) * (A1 - A0);
+
+  const out = [`<path class="ring-track" d="${arc(R, A0, A1)}"/>`];
+
+  // Todo el tramo previsto es sueño; los despertares lo interrumpen
+  out.push(`<path class="arc-sleep est" d="${arc(R, A0, ang(p.expectedWake))}"/>`);
+  out.push(`<path class="arc-sleep" d="${arc(R, A0, ang(now))}"/>`);
+
+  const marks = [...p.wakings];
+  if (p.awakeSince) marks.push({ ts: p.awakeSince, end: now, live: true });
+
+  marks.forEach((w) => {
+    const a1 = ang(w.ts), a2 = Math.max(ang(w.end), a1 + 1.6);
+    out.push(`<path class="arc-waking${w.live ? " live" : ""}" d="${arc(R, a1, a2)}"/>`);
+    const [wx, wy] = pt(R, (a1 + a2) / 2);
+    out.push(`<circle cx="${wx.toFixed(1)}" cy="${wy.toFixed(1)}" r="8" class="node-bg"/>
+      <circle cx="${wx.toFixed(1)}" cy="${wy.toFixed(1)}" r="8" class="node-ring" stroke="var(--dawn)"/>`);
+  });
+
+  // Los dos extremos: se acostó y despertar previsto
+  const cap = (a, icon, color, time, dashed) => {
+    const [x, y] = pt(R, a);
+    out.push(`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="15" class="node-bg"/>
+      <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="15" class="node-ring"
+        stroke="${color}" ${dashed ? 'stroke-dasharray="2 3"' : ""}/>
+      <svg x="${(x - 9).toFixed(1)}" y="${(y - 9).toFixed(1)}" width="18" height="18" viewBox="0 0 24 24"
+        fill="none" style="color:${color}">${icon}</svg>`);
+    out.push(ringLabel(a, time, color));
+  };
+  cap(A0, P.night, "var(--amber)", hhmm(p.start), false);
+  cap(A1, P.wake, "var(--dawn)", hhmm(p.expectedWake), true);
+
+  $("#ring").innerHTML = out.join("");
+  renderNightCore(p, now);
+}
+
+function renderNightCore(p, now) {
+  const label = $("#core-label"), value = $("#core-value"), note = $("#core-note");
+  if (p.awakeSince) {
+    label.textContent = "Despierta hace";
+    value.textContent = durShort(now - p.awakeSince);
+    note.textContent = `Se despertó a las ${hhmm(p.awakeSince)}`;
+    return;
+  }
+  label.textContent = "Durmiendo hace";
+  value.textContent = durShort(p.asleepMs);
+  note.textContent = `Podría despertarse ~${hhmm(p.expectedWake)}`;
+}
+
+function renderNightSheet() {
+  const p = nightPlan();
+  const now = Date.now();
+  const count = p.wakings.length;
+  const lost = wakingsMs(p.wakings) + (p.awakeSince ? now - p.awakeSince : 0);
+
+  $("#sheet").innerHTML = `
+    <div class="sheet-badge${p.awakeSince ? "" : " live"}">${svg(p.awakeSince ? "wake" : "night")}</div>
+    <p class="sheet-kicker">Noche desde las ${hhmm(p.start)}</p>
+    <p class="sheet-window">${durShort(p.asleepMs)}</p>
+    <p class="sheet-len">${
+      count === 0 ? "Sin despertares" : `${count} despertar${count === 1 ? "" : "es"} · ${dur(lost)} despierta`
+    }</p>
+    <p class="sheet-tip">${
+      p.awakeSince
+        ? "Mantené la luz baja y el ambiente igual que al acostarla: cuanto menos cambie, más fácil vuelve a engancharse."
+        : `Suele dormir ${dur(p.typical * MIN)} de noche. Cada despertar que registres corre la hora prevista de la mañana.`
+    }</p>
+    <div class="sheet-actions">
+      ${
+        p.awakeSince
+          ? `<button class="btn btn-primary" data-act="night-resleep">Se volvió a dormir</button>`
+          : `<button class="btn btn-ghost" data-act="night-waking">Se despertó</button>`
+      }
+      <button class="btn btn-primary" data-act="night-end">Empezar el día</button>
+    </div>`;
+}
+
+function renderNightRhythm() {
+  const p = nightPlan();
+  const count = p.wakings.length;
+  $("#rhythm").innerHTML = `
+    <div class="rhythm-pair">
+      <div><span class="rhythm-val">${hhmm(p.start)}</span><span class="rhythm-lbl">Se acostó</span></div>
+      <div><span class="rhythm-val">${dur(p.typical * MIN)}</span><span class="rhythm-lbl">Noche habitual</span></div>
+      <div><span class="rhythm-val">${count}</span><span class="rhythm-lbl">Despertares</span></div>
+    </div>
+    <p class="rhythm-src">${
+      p.learnedFrom
+        ? `Aprendido de ${p.learnedFrom} noche${p.learnedFrom === 1 ? "" : "s"} registrada${p.learnedFrom === 1 ? "" : "s"}`
+        : `Referencia para ${band().label}. Registrá noches y se ajusta al ritmo real`
+    }</p>`;
+}
+
 function renderCore(p, now) {
   const label = $("#core-label"), value = $("#core-value"), note = $("#core-note");
 
@@ -603,8 +781,10 @@ function renderSheet() {
         : ""
     }
     <div class="sheet-actions">
-      <button class="btn btn-ghost" data-act="skip">Omitir</button>
-      <button class="btn btn-primary" data-act="sleep">Registrar</button>
+      ${isNight ? "" : `<button class="btn btn-ghost" data-act="skip">Omitir</button>`}
+      <button class="btn btn-primary" data-act="${isNight ? "night-start" : "sleep"}">
+        ${isNight ? "Empezar la noche" : "Registrar"}
+      </button>
     </div>`;
 }
 
@@ -635,6 +815,10 @@ $("#sheet").addEventListener("click", (e) => {
   if (act === "wake") stopSleep();
   if (act === "woke") markWoke();
   if (act === "skip") skipNap();
+  if (act === "night-start") startNight();
+  if (act === "night-waking") nightWaking();
+  if (act === "night-resleep") nightBackToSleep();
+  if (act === "night-end") endNight();
 });
 
 /* ─────────────── Acciones de sueño ─────────────── */
@@ -651,10 +835,54 @@ function stopSleep() {
   refreshToday();
   toast(`Sueño de ${dur(Date.now() - start)} registrado`);
 }
+/* Marca el final de la noche sin haberla registrado entera. Lleva la
+   marca `night` porque lo que ancla el día es el cierre del ciclo
+   nocturno, no la duración de este sello de un minuto. */
 function markWoke() {
-  addEvent({ type: "sueno", ts: Date.now() - MIN, end: Date.now() });
+  addEvent({ type: "sueno", ts: Date.now() - MIN, end: Date.now(), night: true });
   refreshToday();
   toast("Despertar registrado. Ya podés ver el plan del día");
+}
+
+/* ─────────────── Ciclo de la noche ───────────────
+   Acostarla cierra el día y abre la noche; levantarla hace lo contrario.
+   En el medio, cada despertar se abre y se cierra por separado, que es
+   lo que permite descontarlos del sueño de la noche. */
+function startNight() {
+  if (state.sleepingSince) state.sleepingSince = null;
+  state.night = { start: Date.now(), wakings: [], awakeSince: null };
+  save(); refreshToday();
+  toast("Buenas noches. Empieza el ciclo nocturno");
+}
+
+function nightWaking() {
+  if (!state.night || state.night.awakeSince) return;
+  state.night.awakeSince = Date.now();
+  save(); refreshToday();
+  toast("Despertar nocturno en curso");
+}
+
+function nightBackToSleep() {
+  const n = state.night;
+  if (!n || !n.awakeSince) return;
+  const ts = n.awakeSince;
+  n.wakings.push({ ts, end: Date.now() });
+  n.awakeSince = null;
+  save(); refreshToday();
+  toast(`Se volvió a dormir tras ${dur(Date.now() - ts)}`);
+}
+
+function endNight() {
+  const n = state.night;
+  if (!n) return;
+  const now = Date.now();
+  // Un despertar abierto es, justamente, el de la mañana: no cuenta.
+  const wakings = n.wakings.slice();
+  state.night = null;
+  addEvent({ type: "sueno", ts: n.start, end: now, night: true, wakings });
+  refreshToday();
+  const asleep = now - n.start - wakingsMs(wakings);
+  toast(`Noche de ${dur(asleep)} con ${wakings.length} despertar${wakings.length === 1 ? "" : "es"}`);
 }
 function skipNap() {
   addEvent({ type: "omitida", ts: Date.now() });
@@ -988,11 +1216,31 @@ function series(days = 7) {
     state.events.forEach((e) => {
       if (e.type !== "sueno" || !e.end) return;
       const s = Math.max(e.ts, d0), en = Math.min(e.end, d1);
-      if (en > s) ms += en - s;
+      if (en <= s) return;
+      ms += en - s;
+      /* Un despertar nocturno pasó en la cuna pero no fue sueño: si no
+         se descuenta, la noche entera cuenta como dormida y el total del
+         día se infla más de una hora. */
+      (e.wakings || []).forEach((w) => {
+        const ws = Math.max(w.ts, s), we = Math.min(w.end, en);
+        if (we > ws) ms -= we - ws;
+      });
     });
     if (state.sleepingSince) {
       const s = Math.max(state.sleepingSince, d0), en = Math.min(Date.now(), d1);
       if (en > s) ms += en - s;
+    }
+    // La noche en curso, hasta ahora, también cuenta
+    if (state.night) {
+      const s = Math.max(state.night.start, d0), en = Math.min(Date.now(), d1);
+      if (en > s) {
+        ms += en - s;
+        [...state.night.wakings, ...(state.night.awakeSince ? [{ ts: state.night.awakeSince, end: Date.now() }] : [])]
+          .forEach((w) => {
+            const ws = Math.max(w.ts, s), we = Math.min(w.end, en);
+            if (we > ws) ms -= we - ws;
+          });
+      }
     }
     const feeds = state.events.filter((e) => FEEDS.includes(e.type) && e.ts >= d0 && e.ts < d1).length;
     out.push({ day: d0, hours: ms / HOUR, feeds });
@@ -1152,7 +1400,12 @@ $("#tabs").addEventListener("click", (e) => {
   if (v) show(v);
 });
 
-function refreshToday() { renderRing(); renderSheet(); renderRhythm(); }
+/* Qué reloj se ve lo decide el ciclo en curso, no la hora del reloj de
+   pared: una noche que empieza tarde sigue siendo la noche. */
+function refreshToday() {
+  if (inNight()) { renderNightRing(); renderNightSheet(); renderNightRhythm(); }
+  else { renderRing(); renderSheet(); renderRhythm(); }
+}
 function refreshAll() {
   $("#baby-name").textContent = state.baby.name;
   $("#baby-age").textContent = `${ageText()} · ${band().label}`;
@@ -1409,7 +1662,10 @@ $("#open-settings").innerHTML = svg("gear");
    así evita redibujar el SVG entero sesenta veces por minuto. */
 const onToday = () => state.baby && !$("#app").hidden && !$("#view-hoy").hidden;
 
-setInterval(() => { if (onToday()) renderCore(plan(), Date.now()); }, 1000);
+setInterval(() => {
+  if (!onToday()) return;
+  inNight() ? renderNightCore(nightPlan(), Date.now()) : renderCore(plan(), Date.now());
+}, 1000);
 setInterval(() => { if (onToday()) refreshToday(); }, 30000);
 setInterval(() => drawSky(), 60000);
 
