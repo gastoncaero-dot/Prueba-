@@ -9,6 +9,11 @@ async function initFirebase() {
     auth = window.firebase.auth();
     db = window.firebase.firestore();
 
+    /* La sesión sobrevive a cerrar la app. Sin esto habría que volver a
+       entrar cada vez, que a las cuatro de la mañana es exactamente lo
+       que nadie quiere hacer. */
+    await auth.setPersistence(window.firebase.auth.Auth.Persistence.LOCAL);
+
     auth.onAuthStateChanged(async (user) => {
       currentUser = user;
       updateAppUI();
@@ -111,6 +116,10 @@ function updateAppUI() {
     if (state.baby) {
       if (welcome) welcome.hidden = true;
       if (app) app.hidden = false;
+      /* Al volver con la sesión ya abierta hay que pintar el día: el
+         div deja de estar oculto, pero el anillo sigue vacío. */
+      refreshAll();
+      show("hoy");
     } else {
       if (welcome) welcome.hidden = false;
       if (app) app.hidden = true;

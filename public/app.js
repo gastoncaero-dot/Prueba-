@@ -16,7 +16,13 @@ const state = Object.assign(
   (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } })()
 );
 
+/* Durante una importación se guarda una sola vez al final: si no, cada
+   registro dispararía su propia escritura del estado entero a Firestore
+   y una respuesta tardía podría pisar a otra más nueva. */
+let bulk = false;
+
 const save = () => {
+  if (bulk) return;
   localStorage.setItem(KEY, JSON.stringify(state));
   if (typeof syncToFirestore === "function" && typeof currentUser !== "undefined" && currentUser) {
     syncToFirestore();
@@ -24,26 +30,31 @@ const save = () => {
 };
 
 function importData(jsonData) {
+  const snapshot = JSON.stringify(state);
+  bulk = true;
   try {
-    const data = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
+    const data = typeof jsonData === "string" ? JSON.parse(jsonData) : jsonData;
+    if (!data || typeof data !== "object") throw new Error("no es un objeto");
 
-    if (data.baby && data.baby.birthDate) {
-      state.baby = { name: data.baby.name || 'Bebé', birth: data.baby.birthDate.split('T')[0] };
+    if (data.baby?.birthDate) {
+      state.baby = { name: data.baby.name || "Bebé", birth: data.baby.birthDate.split("T")[0] };
     }
 
-    if (data.sleeps && Array.isArray(data.sleeps)) {
-      data.sleeps.forEach(sleep => {
-        const start = new Date(sleep.start).getTime();
-        const end = new Date(sleep.end).getTime();
-        if (start && end && start < end) {
-          addEvent({ type: 'sueno', ts: start, end });
-        }
+    if (Array.isArray(data.sleeps)) {
+      data.sleeps.forEach((s) => {
+        const start = new Date(s.start).getTime();
+        const end = new Date(s.end).getTime();
+        if (start && end && start < end) addEvent({ type: "sueno", ts: start, end });
       });
     }
 
+    bulk = false;
+    save();
     return true;
   } catch (e) {
-    console.error('Error importando datos:', e);
+    console.error("Error importando datos:", e);
+    Object.assign(state, JSON.parse(snapshot));   // no dejar a medias
+    bulk = false;
     return false;
   }
 }
@@ -223,6 +234,7 @@ const napName = (i) => `${ORDINAL[i] || `${i + 1}.ª`} siesta`;
    ═══════════════════════════════════════════════════════════════ */
 const LAST_WAKE_F = 1.09;   // la vigilia antes de la última siesta se estira
 const LAST_NAP_F  = 0.91;   // y esa siesta sale más corta
+const PRESSURE_K  = 0.4;    // cuánto arrastra la siesta anterior sobre la ventana siguiente
 const CUE_LEAD    = 30;     // minutos de antelación para buscar señales de sueño
 const LATEST_NAP  = 18.25;  // más tarde de esta hora ya no se propone siesta
 
@@ -234,10 +246,10 @@ function plan(now = Date.now()) {
   /* Encadena siestas desde un ancla. Primera pasada con el ritmo
      uniforme para saber cuántas entran; segunda aplicando los sesgos
      a la que resulte ser la última del día. */
-  const projectFrom = (anchor, from) => {
+  const projectFrom = (anchor, from, adj = 1) => {
     let n = 0, a = anchor;
     while (n < 8) {
-      const s = a + r.wakeFor(from + n, false) * MIN;
+      const s = a + Math.round(r.wakeFor(from + n, false) * (n === 0 ? adj : 1)) * MIN;
       if (s > t0 + LATEST_NAP * HOUR) break;
       a = s + r.napFor(from + n, false) * MIN;
       n++;
@@ -246,7 +258,7 @@ function plan(now = Date.now()) {
     a = anchor;
     for (let k = 0; k < n; k++) {
       const i = from + k, last = k === n - 1;
-      const start = a + r.wakeFor(i, last) * MIN;
+      const start = a + Math.round(r.wakeFor(i, last) * (k === 0 ? adj : 1)) * MIN;
       const end = start + r.napFor(i, last) * MIN;
       out.push({ kind: "nap", index: i, start, end, est: true });
       a = end;
@@ -283,7 +295,24 @@ function plan(now = Date.now()) {
     index++;
   }
 
-  const upcoming = projectFrom(anchor, index);
+  /* Presión de sueño: una siesta que sale más corta de lo habitual deja
+     al bebé con menos reserva y aguanta menos despierto, así que la
+     ventana siguiente se acorta; una siesta larga la estira. Se aplica
+     solo a la próxima ventana —la única que arrastra el efecto real— y
+     solo cuando la siesta ya terminó, porque hasta entonces su duración
+     es una estimación y no un dato. */
+  let pressure = 1, pressureNote = null;
+  if (!live && naps.length) {
+    const last = naps[naps.length - 1];
+    const got = Math.round((last.end - last.ts) / MIN);
+    const expected = r.napFor(naps.length - 1, false);
+    if (expected > 0 && got >= 10) {
+      pressure = Math.min(Math.max(1 + PRESSURE_K * (got / expected - 1), 0.78), 1.12);
+      if (Math.abs(pressure - 1) > 0.03) pressureNote = { got, expected, short: pressure < 1 };
+    }
+  }
+
+  const upcoming = projectFrom(anchor, index, pressure);
   blocks.push(...upcoming);
   if (upcoming.length) anchor = upcoming[upcoming.length - 1].end;
 
@@ -299,7 +328,7 @@ function plan(now = Date.now()) {
 
   return {
     b, r, morningWake, naps, blocks,
-    next, live, bedtime,
+    next, live, bedtime, pressureNote,
     firstAt: morningWake || t0 + 7 * HOUR,
     lastAt: night.start,
     hasData: !!morningWake,
@@ -567,6 +596,12 @@ function renderSheet() {
         ? `Empezá la rutina de la noche a partir de las ${hhmm(signsAt)}: luz baja, ambiente tranquilo y siempre el mismo orden.`
         : `Evitá las actividades emocionantes y buscá señales de sueño a partir de las ${hhmm(signsAt)}.`
     }</p>
+    ${
+      p.pressureNote && !late && !isNight
+        ? `<p class="sheet-why">La siesta anterior duró ${p.pressureNote.got} min y suele ser de
+           ${p.pressureNote.expected}, así que esta ventana se ${p.pressureNote.short ? "acorta" : "alarga"}.</p>`
+        : ""
+    }
     <div class="sheet-actions">
       <button class="btn btn-ghost" data-act="skip">Omitir</button>
       <button class="btn btn-primary" data-act="sleep">Registrar</button>
@@ -1194,6 +1229,25 @@ $("#s-export").addEventListener("click", () => {
   a.click();
   URL.revokeObjectURL(a.href);
 });
+/* Pegar en vez de elegir un archivo: en el teléfono, bajar un .json y
+   volver a encontrarlo en el selector es la parte que más se atasca. */
+$("#s-paste").addEventListener("click", () => {
+  $("#paste-zone").hidden = false;
+  $("#paste-box").value = "";
+  $("#paste-box").focus();
+});
+$("#paste-cancel").addEventListener("click", () => ($("#paste-zone").hidden = true));
+$("#paste-ok").addEventListener("click", () => {
+  const raw = $("#paste-box").value.trim();
+  if (!raw) return toast("Pegá el contenido primero");
+  const before = state.events.length;
+  if (!importData(raw)) return toast("Eso no parece un .json de sueños");
+  $("#paste-zone").hidden = true;
+  refreshAll();
+  $("#settings-dialog").close();
+  toast(`${state.events.length - before} registros importados`);
+});
+
 $("#s-reset").addEventListener("click", () => {
   if (!confirm("Se borrarán el bebé y todos los registros. Esta acción no se puede deshacer.")) return;
   localStorage.removeItem(KEY);
@@ -1230,20 +1284,81 @@ if ($("#auth-primary")) {
 }
 
 /* ─────────────── Cielo estrellado ─────────────── */
-function drawSky() {
+/* ═══════════════════════════════════════════════════════════════
+   CIELO — ciclo de día y de noche
+   La app se usa de noche, a oscuras y con una mano, así que el ciclo
+   no puede aclarar la pantalla: lo que cambia es el tono del cielo y
+   cuántas estrellas se ven. De madrugada, índigo profundo y estrellas
+   al máximo; al amanecer y al atardecer, violeta y magenta apagados;
+   al mediodía, azul pizarra sin estrellas. Nunca sale del oscuro.
+   ═══════════════════════════════════════════════════════════════ */
+const SKY = [
+  //  minuto  arriba        abajo         estrellas
+  [    0, [ 5,  7, 26], [ 7, 10, 28], 1.00 ],
+  [  300, [10, 13, 36], [11, 16, 48], 0.90 ],   // 05:00
+  [  390, [30, 22, 51], [16, 19, 50], 0.45 ],   // 06:30  amanecer
+  [  480, [22, 34, 66], [14, 21, 48], 0.12 ],   // 08:00
+  [  780, [28, 44, 86], [17, 27, 54], 0.00 ],   // 13:00  mediodía
+  [ 1050, [35, 33, 74], [18, 22, 51], 0.10 ],   // 17:30
+  [ 1140, [48, 28, 59], [16, 13, 40], 0.35 ],   // 19:00  atardecer
+  [ 1260, [12, 16, 41], [ 7, 10, 28], 0.85 ],   // 21:00
+  [ 1440, [ 5,  7, 26], [ 7, 10, 28], 1.00 ],
+];
+
+const mixRGB = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+const rgb = (c) => `rgb(${c[0]},${c[1]},${c[2]})`;
+
+function skyAt(now = Date.now()) {
+  const d = new Date(now);
+  const m = d.getHours() * 60 + d.getMinutes();
+  let i = 0;
+  while (i < SKY.length - 2 && SKY[i + 1][0] <= m) i++;
+  const [m0, top0, bot0, s0] = SKY[i];
+  const [m1, top1, bot1, s1] = SKY[i + 1];
+  const t = (m - m0) / (m1 - m0);
+  return { top: mixRGB(top0, top1, t), bottom: mixRGB(bot0, bot1, t), stars: s0 + (s1 - s0) * t };
+}
+
+/* Las estrellas se sortean una vez y se guardan en coordenadas
+   relativas: si se resortearan en cada repintado, el cielo parpadearía
+   entero cada minuto en lugar de apagarse despacio. */
+let STARS = null;
+const seedStars = (n) =>
+  Array.from({ length: n }, () => ({
+    x: Math.random(), y: Math.random(),
+    r: Math.random() * 1.1 + 0.25,
+    a: 0.15 + Math.random() * 0.55,
+    violet: Math.random() > 0.85,
+  }));
+
+function drawSky(now = Date.now()) {
   const c = $("#sky"), ctx = c.getContext("2d");
   const dpr = Math.min(devicePixelRatio || 1, 2);
-  c.width = innerWidth * dpr; c.height = innerHeight * dpr;
-  ctx.scale(dpr, dpr);
-  const n = Math.round((innerWidth * innerHeight) / 9000);
-  for (let i = 0; i < n; i++) {
-    const r = Math.random() * 1.1 + 0.25;
-    ctx.globalAlpha = 0.15 + Math.random() * 0.55;
-    ctx.fillStyle = Math.random() > 0.85 ? "#c2b4ff" : "#ffffff";
-    ctx.beginPath();
-    ctx.arc(Math.random() * innerWidth, Math.random() * innerHeight, r, 0, Math.PI * 2);
-    ctx.fill();
+  const w = innerWidth, h = innerHeight;
+  c.width = w * dpr; c.height = h * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const sky = skyAt(now);
+  const g = ctx.createLinearGradient(0, 0, 0, h);
+  g.addColorStop(0, rgb(sky.top));
+  g.addColorStop(1, rgb(sky.bottom));
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+
+  STARS ||= seedStars(Math.round((w * h) / 9000));
+  if (sky.stars > 0.01) {
+    STARS.forEach((s) => {
+      ctx.globalAlpha = s.a * sky.stars;
+      ctx.fillStyle = s.violet ? "#c2b4ff" : "#ffffff";
+      ctx.beginPath();
+      ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
   }
+
+  // La barra de estado de iOS acompaña al cielo
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", rgb(sky.top));
 }
 
 /* ─────────────── Arranque ─────────────── */
@@ -1252,9 +1367,13 @@ function init() {
   renderTabs();
   renderSounds();
 
+  /* Con Firebase activo, quién ve qué pantalla lo decide la sesión, no
+     este arranque: si init() destapara la app, se vería un instante
+     antes de que el login la volviera a tapar. */
+  const gated = typeof FIREBASE_ENABLED !== "undefined" && FIREBASE_ENABLED;
+
   if (!state.baby) {
     $("#welcome-mark").innerHTML = svg("night");
-    $("#welcome").hidden = false;
     $("#w-birth").max = new Date().toISOString().slice(0, 10);
     $("#w-birth").addEventListener("change", (e) => ($("#w-band").textContent = bandPreview(e.target.value)));
     $("#w-start").addEventListener("click", () => {
@@ -1267,14 +1386,17 @@ function init() {
       else {
         $("#welcome").hidden = true;
         $("#app").hidden = false;
+        refreshAll(); show("hoy");
       }
-      refreshAll(); show("hoy");
       toast(`Todo listo para ${name}`);
     });
+    if (gated) return;
+    $("#welcome").hidden = false;
     return;
   }
 
   $("#open-settings").innerHTML = svg("gear");
+  if (gated) return;                     // manda la sesión: la abre updateAppUI
   $("#app").hidden = false;
   refreshAll();
   show("hoy");
@@ -1282,10 +1404,21 @@ function init() {
 
 $("#open-settings").innerHTML = svg("gear");
 
-// El anillo y la cuenta atrás se refrescan cada 20 s
-setInterval(() => { if (state.baby && !$("#view-hoy").hidden) refreshToday(); }, 20000);
-addEventListener("visibilitychange", () => { if (!document.hidden && state.baby) refreshAll(); });
-addEventListener("resize", drawSky);
+/* Tres ritmos separados: la cuenta atrás late cada segundo, el anillo se
+   recalcula cada medio minuto y el cielo avanza cada minuto. Repartirlo
+   así evita redibujar el SVG entero sesenta veces por minuto. */
+const onToday = () => state.baby && !$("#app").hidden && !$("#view-hoy").hidden;
+
+setInterval(() => { if (onToday()) renderCore(plan(), Date.now()); }, 1000);
+setInterval(() => { if (onToday()) refreshToday(); }, 30000);
+setInterval(() => drawSky(), 60000);
+
+addEventListener("visibilitychange", () => {
+  if (document.hidden) return;
+  drawSky();
+  if (state.baby) refreshAll();
+});
+addEventListener("resize", () => drawSky());
 
 if ("serviceWorker" in navigator && location.protocol === "https:") {
   addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));

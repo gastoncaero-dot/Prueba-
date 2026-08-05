@@ -191,7 +191,7 @@ input:focus, select:focus { outline: none; border-color: var(--luna-d); }
 .node-ring { fill: none; stroke-width: 1.6; }
 .node-bg { fill: #151a41; }
 .ring-time { font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: .2px; }
-.tick-label { font: 700 11px var(--font); fill: var(--faint); letter-spacing: .04em; }
+.tick-label { font: 700 11px var(--font); fill: var(--dim); letter-spacing: .04em; }
 .now-hand { stroke: var(--amber); stroke-width: 2; stroke-linecap: round; }
 
 .orbit-core {
@@ -206,11 +206,11 @@ input:focus, select:focus { outline: none; border-color: var(--luna-d); }
   white-space: nowrap;
   color: var(--text);
 }
-.core-note { font-size: 13px; color: var(--faint); }
+.core-note { font-size: 13px; color: var(--dim); }
 
 .ring-legend {
   display: flex; justify-content: center; gap: 18px;
-  font-size: 11.5px; color: var(--faint);
+  font-size: 11.5px; color: var(--dim);
   margin-top: -4px;
 }
 .ring-legend span { display: inline-flex; align-items: center; gap: 6px; }
@@ -253,6 +253,23 @@ input:focus, select:focus { outline: none; border-color: var(--luna-d); }
 }
 .sheet-len { font-size: 14px; color: var(--luna); font-weight: 700; }
 .sheet-tip { font-size: 13.5px; color: var(--dim); margin: 11px auto 0; max-width: 34ch; line-height: 1.45; }
+.paste-zone { margin-top: 18px; display: flex; flex-direction: column; gap: 8px; }
+.paste-zone > label {
+  font-size: 12px; font-weight: 700; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--faint);
+}
+#paste-box {
+  font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+  width: 100%; padding: 12px 14px; resize: vertical;
+  border-radius: var(--r-sm); border: 1px solid var(--line);
+  background: rgba(0,0,0,.3); color: var(--text);
+}
+#paste-box:focus { outline: none; border-color: var(--luna-d); }
+
+.sheet-why {
+  font-size: 12.5px; color: var(--amber); opacity: .92;
+  margin: 9px auto 0; max-width: 34ch; line-height: 1.4;
+}
 .sheet-actions { display: flex; gap: 10px; margin-top: 16px; }
 .sheet-actions .btn { flex: 1; }
 

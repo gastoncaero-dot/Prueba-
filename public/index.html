@@ -229,8 +229,18 @@
   <div class="dlg-actions">
     <button type="button" class="btn btn-primary" id="s-save">Guardar</button>
   </div>
+  <div class="paste-zone" id="paste-zone" hidden>
+    <label for="paste-box">Pegá acá el contenido del archivo .json</label>
+    <textarea id="paste-box" rows="5" placeholder='{ "sleeps": [ … ] }' spellcheck="false"></textarea>
+    <div class="dlg-actions">
+      <button type="button" class="btn btn-ghost" id="paste-cancel">Cancelar</button>
+      <button type="button" class="btn btn-primary" id="paste-ok">Cargar</button>
+    </div>
+  </div>
+
   <div class="danger-zone">
-    <button type="button" class="btn btn-ghost" id="s-import">Importar datos (.json)</button>
+    <button type="button" class="btn btn-ghost" id="s-paste">Pegar datos</button>
+    <button type="button" class="btn btn-ghost" id="s-import">Importar archivo (.json)</button>
     <button type="button" class="btn btn-ghost" id="s-export">Exportar datos (.json)</button>
     <button type="button" class="btn btn-danger" id="s-reset">Borrar todo</button>
   </div>
